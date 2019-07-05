@@ -1,6 +1,7 @@
 # Data files
 *.fits
 data/
+tmp/
 
 # Editor files/dirs
 *.sw*
