@@ -8,3 +8,12 @@ $ mkdir data && cd data # The data directory is gitignored
 $ wget http://www.sos.siena.edu/~jmoustakas/tmp/LSLGA-v2.0.fits
 $ wget http://www.sos.siena.edu/~jmoustakas/tmp/README
 ```
+
+## Dependencies
+An environment can be created with Anaconda:
+```bash
+$ conda create --name lslga-inspect python=3 astropy wget Pillow
+```
+<!---
+TODO: May want to add a requirements.txt file instead of listing packages
+--->
