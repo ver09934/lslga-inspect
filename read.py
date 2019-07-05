@@ -3,12 +3,17 @@ import numpy as np
 import os
 import sys
 
+'''
+# assert len(sys.argv) == 2
 if len(sys.argv) != 2:
     print("Must pass path to LSLGA FITS file")
     exit(1)
 
 catalog_path = sys.argv[1]
 catalog_path = os.path.expanduser(catalog_path)
+'''
+
+catalog_path = 'data/LSLGA-v2.0.fits'
 t = Table.read(catalog_path)
 
 # Test with first several rows
@@ -35,7 +40,7 @@ indices_to_remove.sort(reverse = True)
 for i in indices_to_remove:
     t.remove_row(i)
 
-print(len(t))
+# print(len(t))
 
 # Generate URLs
 for ra, dec in t['RA','DEC']:
