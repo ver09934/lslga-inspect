@@ -1,0 +1,8 @@
+# Data files
+*.fits
+data/
+
+# Editor files/dirs
+*.sw*
+*~
+.vscode/
