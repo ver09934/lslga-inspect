@@ -24,28 +24,34 @@ if test_galaxy is not None:
     DEC = test_galaxy['DEC']
 
     PA = test_galaxy['PA']
-    D25 = test_galaxy['D25'] # arcminutes (diameter)
+    D25 = test_galaxy['D25'] # diameter in arcminutes
     BA = test_galaxy['BA']
 
-    # http://leda.univ-lyon1.fr/leda/param/logd25.html
+    pix_scale = 0.5
+    img_width = 400
+    img_height = 400
     
-    img_url = "http://legacysurvey.org/viewer/jpeg-cutout?ra={:.4f}&dec={:.4f}&zoom=13&layer=decals-dr7".format(RA, DEC)
-    viewer_url = "http://legacysurvey.org/viewer?ra={:.4f}&dec={:.4f}&zoom=13&layer=decals-dr7".format(RA, DEC)
-    
+    img_url = (
+        "http://legacysurvey.org/viewer/jpeg-cutout"
+        "?ra={:.4f}"
+        "&dec={:.4f}"
+        "&layer=decals-dr7"
+        "&pixscale={}"
+        "&width={:.0f}"
+        "&height={:.0f}"
+    ).format(RA, DEC, pix_scale, img_width, img_height)
+
     img_path = wget.download(img_url, 'tmp/{}.jpg'.format(GALAXY))
 
     img = Image.open(img_path)
     draw = ImageDraw.ImageDraw(img)
 
-    draw.ellipse((0, 0, 80, 80), fill=None, outline=(0, 0, 255), width=2)
+    draw.ellipse((150, 150, 250, 250), fill=None, outline=(0, 0, 255), width=2)
 
     img.save(img_path)
 
-    # img.show()
+    img.show()
     
-    print(img_url)
-    print(viewer_url)
-
 # pixscale: arcseconds/pixel
 # default; 0.262 arcsec/pix
 
