@@ -10,11 +10,15 @@ t = Table.read(catalog_path)
 test_galaxy = None
 
 # Obtain a test galaxy
+catalog = 'NGC'
+galaxy_num = 3
+counter = 0
 for i, row in enumerate(t):
-    catalog = 'NGC'
     if row['GALAXY'][0:len(catalog)] == catalog:
-        test_galaxy = row
-        break
+        counter += 1
+        if counter == galaxy_num:
+            test_galaxy = row
+            break
 
 if test_galaxy is not None:
 
@@ -23,13 +27,19 @@ if test_galaxy is not None:
     RA = test_galaxy['RA']
     DEC = test_galaxy['DEC']
 
-    PA = test_galaxy['PA']
+    PA = test_galaxy['PA'] # position angle (positive from north to east) [degrees]
     D25 = test_galaxy['D25'] # diameter in arcminutes
-    BA = test_galaxy['BA']
+    BA = test_galaxy['BA'] # minor-to-major axis ratio
 
-    pix_scale = 0.5
     img_width = 400
     img_height = 400
+
+    # TODO: Must insure that entire galaxy is contained in image width
+    # TODO: Consider how this must differ if it is to be run on a the server
+        # must obey all request parameters (could result in cut-off ellipse)
+    # scale so diameter of galaxy is 50% of image width
+    pix_scale = 0.5 # arcseconds/pixel, default 0.262 arcsec/pix
+
     
     img_url = (
         "http://legacysurvey.org/viewer/jpeg-cutout"
@@ -51,11 +61,6 @@ if test_galaxy is not None:
     img.save(img_path)
 
     img.show()
-    
-# pixscale: arcseconds/pixel
-# default; 0.262 arcsec/pix
-
-# http://legacysurvey.org/viewer/jpeg-cutout?ra=149.6670&dec=28.8776&pixscale=.5&layer=decals-dr7&width=100&height=100
 
 # https://github.com/legacysurvey/decals-web/blob/master/map/views.py
 # See get_tile, maybe (render_into_wcs, create_scaled_image)
