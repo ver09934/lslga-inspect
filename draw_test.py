@@ -45,15 +45,9 @@ if test_galaxy is not None:
     print("D25: {} arcmin".format(D25))
     print("PA: {}".format(PA))
 
-    # TODO: Insure all rounding is only done at the last possible moment
-
     img_width = 500
     img_height = 500
 
-    # TODO: Must insure that entire galaxy is contained in image width
-    # TODO: Consider how this must differ if it is to be run on a the server
-        # must obey all request parameters (could result in cut-off ellipse)
-    # scale so diameter of galaxy is 50% of image width
     pix_scale = 0.8 # arcseconds/pixel, default 0.262 arcsec/pix
 
     diameter_arcsec = D25 * 60
@@ -62,13 +56,8 @@ if test_galaxy is not None:
     semimajor_axis_length = diameter_pix / 2
     semiminor_axis_length = semimajor_axis_length * BA
 
-    '''
-    box_tl_x = int((img_width / 2) - semiminor_axis_length)
-    box_tl_y = int((img_height / 2) - semimajor_axis_length)
-
-    box_br_x = int((img_width / 2) + semiminor_axis_length)
-    box_br_y = int((img_height / 2) + semimajor_axis_length)
-    '''
+    # TODO: Insure all rounding is only done at the last possible moment
+    # TODO: For galaxy zoo catalog, must insure galaxy is conservatively contained in frame 
 
     img_url = (
         "http://legacysurvey.org/viewer/jpeg-cutout"
@@ -83,7 +72,7 @@ if test_galaxy is not None:
     img_path = wget.download(img_url, '{}/{}.jpg'.format(out_dir, GALAXY))
     print()
 
-    # IMPRECISION STARTS HERE
+    # NOTE: IMPRECISION STARTS HERE
 
     overlay_width = int(2 * semiminor_axis_length)
     overlay_height = int(2 * semimajor_axis_length)
@@ -93,46 +82,12 @@ if test_galaxy is not None:
 
     box_corners = ((0, 0), (overlay_width, overlay_height))
     draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=2) # Make thicker to test edge cutting
-    
-    tmp_width = 3
-    
-    fill_tmp = (0, 255, 0)
-    # Edges
-    draw.line((0, 0, 0, overlay.size[1]), fill=fill_tmp, width=tmp_width)
-    draw.line((0, 0, overlay.size[0], 0), fill=fill_tmp, width=tmp_width)
-    draw.line((0, overlay.size[1], overlay.size[0], overlay.size[1]), fill=fill_tmp, width=tmp_width)
-    draw.line((overlay.size[0], 0, overlay.size[0], overlay.size[1]), fill=fill_tmp, width=tmp_width)
-    # Diagonals
-    '''
-    draw.line((0, 0) + overlay.size, fill=fill_tmp, width=tmp_width)
-    draw.line((0, overlay.size[1], overlay.size[0], 0), fill=fill_tmp, width=tmp_width)
-    '''
-    draw.line((overlay.size[0]/2, 0, overlay.size[0]/2, overlay.size[1]), fill=fill_tmp, width=tmp_width)
-    draw.line((0, overlay.size[1]/2, overlay.size[0], overlay.size[1]/2), fill=fill_tmp, width=tmp_width)
 
-    # TODO: First arg is angle (PA)
     # TODO: Determine what expand=True does...
-    test_angle = 30
-    rotated = overlay.rotate(test_angle, expand=True)
-
-    draw = ImageDraw.ImageDraw(rotated)
-    fill_tmp = (255, 0, 0)
-    draw.line((0, 0, 0, rotated.size[1]), fill=fill_tmp, width=tmp_width)
-    draw.line((0, 0, rotated.size[0], 0), fill=fill_tmp, width=tmp_width)
-    draw.line((0, rotated.size[1], rotated.size[0], rotated.size[1]), fill=fill_tmp, width=tmp_width)
-    draw.line((rotated.size[0], 0, rotated.size[0], rotated.size[1]), fill=fill_tmp, width=tmp_width)
-    # Diagonals
-    '''
-    draw.line((0, 0) + rotated.size, fill=fill_tmp, width=tmp_width)
-    draw.line((0, rotated.size[1], rotated.size[0], 0), fill=fill_tmp, width=tmp_width)
-    '''
-    draw.line((rotated.size[0]/2, 0, rotated.size[0]/2, rotated.size[1]), fill=fill_tmp, width=tmp_width)
-    draw.line((0, rotated.size[1]/2, rotated.size[0], rotated.size[1]/2), fill=fill_tmp, width=tmp_width)
+    rotated = overlay.rotate(PA, expand=True)
 
     new_bounding_box_width = rotated.size[0]
     new_bounding_box_height = rotated.size[1]
-    # x, y diff created by correction for galaxy rotation
-    print(new_bounding_box_width - 2*semiminor_axis_length, new_bounding_box_height - 2*semimajor_axis_length)
 
     paste_shift_x = int(img_width/2 - new_bounding_box_width/2)
     paste_shift_y = int(img_height/2 - new_bounding_box_height/2)
@@ -143,17 +98,3 @@ if test_galaxy is not None:
     img.save(img_path)
 
     img.show()
-
-# https://github.com/legacysurvey/decals-web/blob/master/map/views.py
-# See get_tile, maybe (render_into_wcs, create_scaled_image)
-
-# https://github.com/moustakas/legacyhalos/blob/master/py/legacyhalos/html.py
-# See addbar, for adding a scale bar
-
-# TODO: Examine the galaxy zoo system and how this will integrate...
-# TODO: For the dependencies build:
-    # put into /usr/share (default for astrometry.net, for example)
-    # could also put other stuff into the conda environment (using --prefix=/path/to/dir, for example)
-    # Just make a nice, clean conda environment, not located in the directory or anything...
-    # Keep the checked out code separate from the libs
-# NOTE: ipython
