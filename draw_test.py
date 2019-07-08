@@ -43,7 +43,7 @@ if test_galaxy is not None:
     diameter_arcsec = D25 * 60
     diameter_pix = diameter_arcsec / pix_scale
 
-    semimajor_axis_length = diameter_pix
+    semimajor_axis_length = diameter_pix / 2
     semiminor_axis_length = semimajor_axis_length * BA
 
     box_tl_x = (img_width / 2) - semiminor_axis_length
