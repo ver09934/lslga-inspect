@@ -58,8 +58,11 @@ if test_galaxy is not None:
     semiminor_axis_arcsec = minor_axis_arcsec / 2
 
     # TODO: Option to set dimensions manually or set frame w/ same aspect ratio as galaxy - set max_dim or min_dim
+    # Set one or the other to None to have that dimension sized for dimensions of galaxy
     img_width = 500 # pixels
     img_height = 500 # pixels
+
+    assert img_width is not None or img_height is not None
 
     # TODO: Determine if a modified version of PA should be used for these calculations
     # i.e. PA = PA if PA < 90 else 180 - PA
@@ -79,11 +82,18 @@ if test_galaxy is not None:
     vspan_max *= dimension_conservatism
     hspan_max *= dimension_conservatism
 
-    # Compare aspect ratios
-    if (hspan_max / vspan_max) > (img_width / img_height):
+    if img_width is None and img_height is not None:
+        img_width = int(img_height * (hspan_max / vspan_max))
+        pix_scale = vspan_max / img_height
+    elif img_height is None and img_width is not None:
+        img_height = int(img_width * (vspan_max / hspan_max))
         pix_scale = hspan_max / img_width
     else:
-        pix_scale = vspan_max / img_height
+        # Compare aspect ratios
+        if (hspan_max / vspan_max) > (img_width / img_height):
+            pix_scale = hspan_max / img_width
+        else:
+            pix_scale = vspan_max / img_height
 
     # pix_scale = 0.8 # arcseconds/pixel, default 0.262 arcsec/pix
 
