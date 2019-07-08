@@ -14,6 +14,22 @@ An environment can be created with Anaconda:
 ```bash
 $ conda create --name lslga-inspect python=3 astropy wget Pillow
 ```
+
 <!---
-TODO: May want to add a requirements.txt file instead of listing packages
+TODO:
+- May want to add a requirements.txt file instead of listing packages
+- Building deps
+    - put into /usr/share (default for astrometry.net, for example)
+    - could also put other stuff into the conda environment (using --prefix=/path/to/dir, for example)
+    - Just make a nice, clean conda environment, not located in the directory or anything...
+    - Keep the checked out code separate from the libs
+- Rendering ellipses on server
+    - https://github.com/legacysurvey/decals-web/blob/master/map/views.py
+    - See get_tile, maybe (render_into_wcs, create_scaled_image)
+- Rendering scale bar
+    - https://github.com/moustakas/legacyhalos/blob/master/py/legacyhalos/html.py
+    - See addbar, for adding a scale bar
+    - May want to add text as well
+- Examine the galaxy zoo system and how this will integrate...
+    - Look into SSL/TLS issue...
 --->
