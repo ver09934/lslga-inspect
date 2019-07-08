@@ -119,7 +119,7 @@ if test_galaxy is not None:
 
     overlay = Image.new('RGBA', (overlay_width, overlay_height))
     draw = ImageDraw.ImageDraw(overlay)
-    box_corners = ((0, 0), (overlay_width, overlay_height))
+    box_corners = (0, 0, overlay_width, overlay_height)
     draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=3)
 
     # TODO: Determine what expand=True does...
