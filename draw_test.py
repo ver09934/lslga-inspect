@@ -72,29 +72,26 @@ if test_galaxy is not None:
     img_path = wget.download(img_url, '{}/{}.jpg'.format(out_dir, GALAXY))
     print()
 
-    # NOTE: IMPRECISION STARTS HERE
-
     overlay_width = int(2 * semiminor_axis_length)
     overlay_height = int(2 * semimajor_axis_length)
 
     overlay = Image.new('RGBA', (overlay_width, overlay_height))
     draw = ImageDraw.ImageDraw(overlay)
-
     box_corners = ((0, 0), (overlay_width, overlay_height))
-    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=2) # Make thicker to test edge cutting
+    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=2)
+    # TODO: Make line thicker to test edge cutting
 
     # TODO: Determine what expand=True does...
     rotated = overlay.rotate(PA, expand=True)
 
-    new_bounding_box_width = rotated.size[0]
-    new_bounding_box_height = rotated.size[1]
+    rotated_width = rotated.size[0]
+    rotated_height = rotated.size[1]
 
-    paste_shift_x = int(img_width/2 - new_bounding_box_width/2)
-    paste_shift_y = int(img_height/2 - new_bounding_box_height/2)
+    paste_shift_x = int(img_width/2 - rotated_width/2)
+    paste_shift_y = int(img_height/2 - rotated_height/2)
 
     img = Image.open(img_path)
     img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
 
     img.save(img_path)
-
     img.show()
