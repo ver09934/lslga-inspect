@@ -3,6 +3,7 @@ import os
 import sys
 import wget
 from PIL import Image, ImageDraw
+import numpy as np
 
 catalog_path = 'data/LSLGA-v2.0.fits'
 out_dir = 'tmp'
@@ -41,6 +42,12 @@ if test_galaxy is not None:
     D25 = test_galaxy['D25'] # diameter in arcminutes
     BA = test_galaxy['BA'] # minor-to-major axis ratio
 
+    print("GALAXY: {}".format(GALAXY))
+    print("D25: {} arcmin".format(D25))
+    print("PA: {}".format(PA))
+
+    # TODO: Insure all rounding is only done at the last possible moment
+
     img_width = 500
     img_height = 500
 
@@ -77,9 +84,7 @@ if test_galaxy is not None:
     img_path = wget.download(img_url, '{}/{}.jpg'.format(out_dir, GALAXY))
     print()
 
-    print("GALAXY: {}".format(GALAXY))
-    print("D25: {} arcmin".format(D25))
-    print("PA: {}".format(PA))
+    # IMPRECISION STARTS HERE
 
     overlay_width = int(2 * semiminor_axis_length)
     overlay_height = int(2 * semimajor_axis_length)
@@ -88,7 +93,7 @@ if test_galaxy is not None:
     draw = ImageDraw.ImageDraw(overlay)
 
     box_corners = ((0, 0), (overlay_width, overlay_height))
-    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=2)
+    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=2) # Make thicker to test edge cutting
     
     tmp_width = 3
     
@@ -99,12 +104,20 @@ if test_galaxy is not None:
     draw.line((0, overlay.size[1], overlay.size[0], overlay.size[1]), fill=fill_tmp, width=tmp_width)
     draw.line((overlay.size[0], 0, overlay.size[0], overlay.size[1]), fill=fill_tmp, width=tmp_width)
     # Diagonals
+    '''
     draw.line((0, 0) + overlay.size, fill=fill_tmp, width=tmp_width)
     draw.line((0, overlay.size[1], overlay.size[0], 0), fill=fill_tmp, width=tmp_width)
+    '''
+    draw.line((overlay.size[0]/2, 0, overlay.size[0]/2, overlay.size[1]), fill=fill_tmp, width=tmp_width)
+    draw.line((0, overlay.size[1]/2, overlay.size[0], overlay.size[1]/2), fill=fill_tmp, width=tmp_width)
 
     # TODO: First arg is angle (PA)
     # TODO: Determine what expand=True does...
-    rotated = overlay.rotate(45, expand=True)
+    test_angle = 30
+    rotated = overlay.rotate(test_angle, expand=True)
+
+    if test_angle > 90:
+        test_angle = 180 - test_angle
 
     draw = ImageDraw.ImageDraw(rotated)
     fill_tmp = (255, 0, 0)
@@ -113,11 +126,26 @@ if test_galaxy is not None:
     draw.line((0, rotated.size[1], rotated.size[0], rotated.size[1]), fill=fill_tmp, width=tmp_width)
     draw.line((rotated.size[0], 0, rotated.size[0], rotated.size[1]), fill=fill_tmp, width=tmp_width)
     # Diagonals
+    '''
     draw.line((0, 0) + rotated.size, fill=fill_tmp, width=tmp_width)
     draw.line((0, rotated.size[1], rotated.size[0], 0), fill=fill_tmp, width=tmp_width)
+    '''
+    draw.line((rotated.size[0]/2, 0, rotated.size[0]/2, rotated.size[1]), fill=fill_tmp, width=tmp_width)
+    draw.line((0, rotated.size[1]/2, rotated.size[0], rotated.size[1]/2), fill=fill_tmp, width=tmp_width)
+
+    new_bounding_box_width = (2*semiminor_axis_length) * np.cos(np.radians(test_angle)) \
+        + (2*semimajor_axis_length) * np.sin(np.radians(test_angle))
+    new_bounding_box_height = (2*semiminor_axis_length) * np.sin(np.radians(test_angle)) \
+        + (2*semimajor_axis_length) * np.cos(np.radians(test_angle))
+
+    # x, y diff created by correction for galaxy rotation
+    print(new_bounding_box_width - 2*semiminor_axis_length, new_bounding_box_height - 2*semimajor_axis_length)
+
+    paste_shift_x = int(img_width/2 - new_bounding_box_width/2)
+    paste_shift_y = int(img_height/2 - new_bounding_box_height/2)
 
     img = Image.open(img_path)
-    img.paste(rotated, (0, 0), rotated)
+    img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
 
     img.save(img_path)
 
