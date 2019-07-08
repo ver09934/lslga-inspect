@@ -71,7 +71,7 @@ if test_galaxy is not None:
     )
     hspan_max = np.maximum(
         major_axis_arcsec * np.absolute(np.sin(np.radians(PA))),
-        minor_axis_arcsec * np.absolute(np.sin(np.radians(PA)))
+        minor_axis_arcsec * np.absolute(np.cos(np.radians(PA)))
     )
 
     dimension_conservatism = 2
