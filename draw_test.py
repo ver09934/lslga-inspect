@@ -51,19 +51,46 @@ if test_galaxy is not None:
     print("D25: {} arcmin".format(D25))
     print("PA: {}".format(PA))
 
-    img_width = 500
-    img_height = 500
+    major_axis_arcsec = D25 * 60
+    minor_axis_arcsec = major_axis_arcsec * BA
 
-    pix_scale = 0.8 # arcseconds/pixel, default 0.262 arcsec/pix
+    semimajor_axis_arcsec = major_axis_arcsec / 2
+    semiminor_axis_arcsec = minor_axis_arcsec / 2
 
-    diameter_arcsec = D25 * 60
-    diameter_pix = diameter_arcsec / pix_scale
+    # TODO: Option to set dimensions manually or set frame w/ same aspect ratio as galaxy - set max_dim or min_dim
+    img_width = 500 # pixels
+    img_height = 500 # pixels
 
-    semimajor_axis_length = diameter_pix / 2
-    semiminor_axis_length = semimajor_axis_length * BA
+    # TODO: Determine if a modified version of PA should be used for these calculations
+    # i.e. PA = PA if PA < 90 else 180 - PA
+
+    # Determine how to frame the galaxy (not needed on cutout server)
+    vspan_max = np.maximum(
+        major_axis_arcsec * np.absolute(np.cos(np.radians(PA))),
+        minor_axis_arcsec * np.absolute(np.sin(np.radians(PA)))
+    )
+    hspan_max = np.maximum(
+        major_axis_arcsec * np.absolute(np.sin(np.radians(PA))),
+        minor_axis_arcsec * np.absolute(np.sin(np.radians(PA)))
+    )
+
+    dimension_conservatism = 2
+
+    vspan_max *= dimension_conservatism
+    hspan_max *= dimension_conservatism
+
+    # Compare aspect ratios
+    if (hspan_max / vspan_max) > (img_width / img_height):
+        pix_scale = hspan_max / img_width
+    else:
+        pix_scale = vspan_max / img_height
+
+    # pix_scale = 0.8 # arcseconds/pixel, default 0.262 arcsec/pix
+
+    major_axis_pix = major_axis_arcsec / pix_scale
+    minor_axis_pix = minor_axis_arcsec / pix_scale
 
     # TODO: Insure all rounding is only done at the last possible moment
-    # TODO: For galaxy zoo catalog, must insure galaxy is conservatively contained in frame 
 
     img_url = (
         "http://legacysurvey.org/viewer/jpeg-cutout"
@@ -78,8 +105,8 @@ if test_galaxy is not None:
     img_path = wget.download(img_url, '{}/{}.jpg'.format(out_dir, GALAXY))
     print()
 
-    overlay_width = int(2 * semiminor_axis_length)
-    overlay_height = int(2 * semimajor_axis_length)
+    overlay_width = int(minor_axis_pix)
+    overlay_height = int(major_axis_pix)
 
     overlay = Image.new('RGBA', (overlay_width, overlay_height))
     draw = ImageDraw.ImageDraw(overlay)
