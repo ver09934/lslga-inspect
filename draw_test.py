@@ -3,7 +3,6 @@ import os
 import sys
 import wget
 from PIL import Image, ImageDraw
-import numpy as np
 
 catalog_path = 'data/LSLGA-v2.0.fits'
 out_dir = 'tmp'
@@ -116,9 +115,6 @@ if test_galaxy is not None:
     test_angle = 30
     rotated = overlay.rotate(test_angle, expand=True)
 
-    if test_angle > 90:
-        test_angle = 180 - test_angle
-
     draw = ImageDraw.ImageDraw(rotated)
     fill_tmp = (255, 0, 0)
     draw.line((0, 0, 0, rotated.size[1]), fill=fill_tmp, width=tmp_width)
@@ -133,11 +129,8 @@ if test_galaxy is not None:
     draw.line((rotated.size[0]/2, 0, rotated.size[0]/2, rotated.size[1]), fill=fill_tmp, width=tmp_width)
     draw.line((0, rotated.size[1]/2, rotated.size[0], rotated.size[1]/2), fill=fill_tmp, width=tmp_width)
 
-    new_bounding_box_width = (2*semiminor_axis_length) * np.cos(np.radians(test_angle)) \
-        + (2*semimajor_axis_length) * np.sin(np.radians(test_angle))
-    new_bounding_box_height = (2*semiminor_axis_length) * np.sin(np.radians(test_angle)) \
-        + (2*semimajor_axis_length) * np.cos(np.radians(test_angle))
-
+    new_bounding_box_width = rotated.size[0]
+    new_bounding_box_height = rotated.size[1]
     # x, y diff created by correction for galaxy rotation
     print(new_bounding_box_width - 2*semiminor_axis_length, new_bounding_box_height - 2*semimajor_axis_length)
 
