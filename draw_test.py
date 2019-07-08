@@ -11,7 +11,7 @@ test_galaxy = None
 
 # Obtain a test galaxy
 catalog = 'NGC'
-galaxy_num = 3
+galaxy_num = 19 # 3, 5, 6, 10, 14, 18!, 19
 counter = 0
 for i, row in enumerate(t):
     if row['GALAXY'][0:len(catalog)] == catalog:
@@ -31,16 +31,27 @@ if test_galaxy is not None:
     D25 = test_galaxy['D25'] # diameter in arcminutes
     BA = test_galaxy['BA'] # minor-to-major axis ratio
 
-    img_width = 400
-    img_height = 400
+    img_width = 500
+    img_height = 500
 
     # TODO: Must insure that entire galaxy is contained in image width
     # TODO: Consider how this must differ if it is to be run on a the server
         # must obey all request parameters (could result in cut-off ellipse)
     # scale so diameter of galaxy is 50% of image width
-    pix_scale = 0.5 # arcseconds/pixel, default 0.262 arcsec/pix
+    pix_scale = 1.5 # arcseconds/pixel, default 0.262 arcsec/pix
 
-    
+    diameter_arcsec = D25 * 60
+    diameter_pix = diameter_arcsec / pix_scale
+
+    semimajor_axis_length = diameter_pix
+    semiminor_axis_length = semimajor_axis_length * BA
+
+    box_tl_x = (img_width / 2) - semiminor_axis_length
+    box_tl_y = (img_height / 2) - semimajor_axis_length
+
+    box_br_x = (img_width / 2) + semiminor_axis_length
+    box_br_y = (img_height / 2) + semimajor_axis_length
+
     img_url = (
         "http://legacysurvey.org/viewer/jpeg-cutout"
         "?ra={:.4f}"
@@ -52,11 +63,16 @@ if test_galaxy is not None:
     ).format(RA, DEC, pix_scale, img_width, img_height)
 
     img_path = wget.download(img_url, 'tmp/{}.jpg'.format(GALAXY))
+    print()
+
+    print("GALAXY: {}".format(GALAXY))
+    print("PA: {}".format(PA))
 
     img = Image.open(img_path)
     draw = ImageDraw.ImageDraw(img)
 
-    draw.ellipse((150, 150, 250, 250), fill=None, outline=(0, 0, 255), width=2)
+    box_corners = ((box_tl_x, box_tl_y), (box_br_x, box_br_y))
+    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=2)
 
     img.save(img_path)
 
