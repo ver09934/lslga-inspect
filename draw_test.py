@@ -57,15 +57,11 @@ if test_galaxy is not None:
     semimajor_axis_arcsec = major_axis_arcsec / 2
     semiminor_axis_arcsec = minor_axis_arcsec / 2
 
-    # TODO: Option to set dimensions manually or set frame w/ same aspect ratio as galaxy - set max_dim or min_dim
-    # Set one or the other to None to have that dimension sized for dimensions of galaxy
+    # Set width or height to None to have that dimension sized for aspect ratio of galaxy
     img_width = 500 # pixels
     img_height = 500 # pixels
 
     assert img_width is not None or img_height is not None
-
-    # TODO: Determine if a modified version of PA should be used for these calculations
-    # i.e. PA = PA if PA < 90 else 180 - PA
 
     # Determine how to frame the galaxy (not needed on cutout server)
     vspan_max = np.maximum(
@@ -95,12 +91,11 @@ if test_galaxy is not None:
         else:
             pix_scale = vspan_max / img_height
 
+    # Set pix_scale manually
     # pix_scale = 0.8 # arcseconds/pixel, default 0.262 arcsec/pix
 
     major_axis_pix = major_axis_arcsec / pix_scale
     minor_axis_pix = minor_axis_arcsec / pix_scale
-
-    # TODO: Insure all rounding is only done at the last possible moment
 
     img_url = (
         "http://legacysurvey.org/viewer/jpeg-cutout"
@@ -121,8 +116,7 @@ if test_galaxy is not None:
     overlay = Image.new('RGBA', (overlay_width, overlay_height))
     draw = ImageDraw.ImageDraw(overlay)
     box_corners = ((0, 0), (overlay_width, overlay_height))
-    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=2)
-    # TODO: Make line thicker to test edge cutting
+    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=3)
 
     # TODO: Determine what expand=True does...
     rotated = overlay.rotate(PA, expand=True)
