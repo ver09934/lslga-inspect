@@ -5,11 +5,21 @@ import wget
 from PIL import Image, ImageDraw
 
 catalog_path = 'data/LSLGA-v2.0.fits'
+out_dir = 'tmp'
+
+# Do some handling for relative paths, etc.
+out_dir = os.path.expanduser(out_dir)
+if out_dir.endswith('/'):
+    out_dir  = out_dir[:-1]
+if not os.path.exists(out_dir):
+    os.mkdir(out_dir)
+catalog_path = os.path.expanduser(catalog_path)
+
+# Read in LSLGA catalog
 t = Table.read(catalog_path)
 
-test_galaxy = None
-
 # Obtain a test galaxy
+test_galaxy = None
 catalog = 'NGC'
 galaxy_num = 19 # 3, 5, 6, 10, 14, 18!, 19
 counter = 0
@@ -38,7 +48,7 @@ if test_galaxy is not None:
     # TODO: Consider how this must differ if it is to be run on a the server
         # must obey all request parameters (could result in cut-off ellipse)
     # scale so diameter of galaxy is 50% of image width
-    pix_scale = 1.5 # arcseconds/pixel, default 0.262 arcsec/pix
+    pix_scale = 0.3 # arcseconds/pixel, default 0.262 arcsec/pix
 
     diameter_arcsec = D25 * 60
     diameter_pix = diameter_arcsec / pix_scale
@@ -62,17 +72,26 @@ if test_galaxy is not None:
         "&height={:.0f}"
     ).format(RA, DEC, pix_scale, img_width, img_height)
 
-    img_path = wget.download(img_url, 'tmp/{}.jpg'.format(GALAXY))
+    img_path = wget.download(img_url, '{}/{}.jpg'.format(out_dir, GALAXY))
     print()
 
     print("GALAXY: {}".format(GALAXY))
+    print("D25: {} arcmin".format(D25))
     print("PA: {}".format(PA))
 
-    img = Image.open(img_path)
-    draw = ImageDraw.ImageDraw(img)
+    # TODO: Insure dimensions contain ellipse
+    overlay = Image.new('RGBA', (img_width, img_height))
+    draw = ImageDraw.ImageDraw(overlay)
 
     box_corners = ((box_tl_x, box_tl_y), (box_br_x, box_br_y))
     draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=2)
+
+    # TODO: First arg is angle (PA)
+    # TODO: Determine what expand=True does...
+    rotated = overlay.rotate(PA, expand=True)
+
+    img = Image.open(img_path)
+    img.paste(rotated, (0, 0), rotated)
 
     img.save(img_path)
 
