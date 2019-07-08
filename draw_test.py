@@ -3,6 +3,7 @@ import os
 import sys
 import wget
 from PIL import Image, ImageDraw
+import numpy as np
 
 catalog_path = 'data/LSLGA-v2.0.fits'
 out_dir = 'tmp'
@@ -40,6 +41,11 @@ if test_galaxy is not None:
     PA = test_galaxy['PA'] # position angle (positive from north to east) [degrees]
     D25 = test_galaxy['D25'] # diameter in arcminutes
     BA = test_galaxy['BA'] # minor-to-major axis ratio
+
+    # TODO: Determine whether these instances should just be discarded
+    # assert np.isnan(PA)
+    if np.isnan(PA):
+        PA = 0
 
     print("GALAXY: {}".format(GALAXY))
     print("D25: {} arcmin".format(D25))
