@@ -16,6 +16,20 @@ catalog_path = os.path.expanduser(catalog_path)
 catalog_path = 'data/LSLGA-v2.0.fits'
 t = Table.read(catalog_path)
 
+'''
+print("Test 1")
+for row in t:
+    if float(row['PA']) >= 180 or float(row['PA'] <= 0):
+        print("PA: {} GALAXY: {}".format(row['PA'], row['PA']))
+
+print("Test 2")
+for row in t:
+    if float(row['PA']) > 180 or float(row['PA'] < 0):
+        print("PA: {} GALAXY: {}".format(row['PA'], row['PA']))
+
+exit()
+'''
+
 # Test with first several rows
 t = t[:40]
 
