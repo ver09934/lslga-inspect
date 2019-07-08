@@ -117,10 +117,13 @@ if test_galaxy is not None:
     overlay_width = int(minor_axis_pix)
     overlay_height = int(major_axis_pix)
 
-    overlay = Image.new('RGBA', (overlay_width, overlay_height))
-    draw = ImageDraw.ImageDraw(overlay)
+    overlay = Image.new('RGB', (overlay_width, overlay_height))
+    draw = ImageDraw.ImageDraw(overlay, 'RGBA')
     box_corners = (0, 0, overlay_width, overlay_height)
-    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=3)
+    # draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=3)
+    w = 3
+    draw.ellipse(tuple(np.add(box_corners, (w, w, -w, -w))), fill=(0, 255, 255, 0))
+    draw.ellipse(box_corners, fill=(0, 0, 255, 255))
 
     # TODO: Determine what expand=True does...
     rotated = overlay.rotate(PA, expand=True)
