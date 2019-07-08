@@ -48,7 +48,7 @@ if test_galaxy is not None:
     # TODO: Consider how this must differ if it is to be run on a the server
         # must obey all request parameters (could result in cut-off ellipse)
     # scale so diameter of galaxy is 50% of image width
-    pix_scale = 0.3 # arcseconds/pixel, default 0.262 arcsec/pix
+    pix_scale = 0.8 # arcseconds/pixel, default 0.262 arcsec/pix
 
     diameter_arcsec = D25 * 60
     diameter_pix = diameter_arcsec / pix_scale
@@ -56,11 +56,13 @@ if test_galaxy is not None:
     semimajor_axis_length = diameter_pix / 2
     semiminor_axis_length = semimajor_axis_length * BA
 
-    box_tl_x = (img_width / 2) - semiminor_axis_length
-    box_tl_y = (img_height / 2) - semimajor_axis_length
+    '''
+    box_tl_x = int((img_width / 2) - semiminor_axis_length)
+    box_tl_y = int((img_height / 2) - semimajor_axis_length)
 
-    box_br_x = (img_width / 2) + semiminor_axis_length
-    box_br_y = (img_height / 2) + semimajor_axis_length
+    box_br_x = int((img_width / 2) + semiminor_axis_length)
+    box_br_y = int((img_height / 2) + semimajor_axis_length)
+    '''
 
     img_url = (
         "http://legacysurvey.org/viewer/jpeg-cutout"
@@ -79,16 +81,40 @@ if test_galaxy is not None:
     print("D25: {} arcmin".format(D25))
     print("PA: {}".format(PA))
 
-    # TODO: Insure dimensions contain ellipse
-    overlay = Image.new('RGBA', (img_width, img_height))
+    overlay_width = int(2 * semiminor_axis_length)
+    overlay_height = int(2 * semimajor_axis_length)
+
+    overlay = Image.new('RGBA', (overlay_width, overlay_height))
     draw = ImageDraw.ImageDraw(overlay)
 
-    box_corners = ((box_tl_x, box_tl_y), (box_br_x, box_br_y))
+    box_corners = ((0, 0), (overlay_width, overlay_height))
     draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=2)
+    
+    tmp_width = 3
+    
+    fill_tmp = (0, 255, 0)
+    # Edges
+    draw.line((0, 0, 0, overlay.size[1]), fill=fill_tmp, width=tmp_width)
+    draw.line((0, 0, overlay.size[0], 0), fill=fill_tmp, width=tmp_width)
+    draw.line((0, overlay.size[1], overlay.size[0], overlay.size[1]), fill=fill_tmp, width=tmp_width)
+    draw.line((overlay.size[0], 0, overlay.size[0], overlay.size[1]), fill=fill_tmp, width=tmp_width)
+    # Diagonals
+    draw.line((0, 0) + overlay.size, fill=fill_tmp, width=tmp_width)
+    draw.line((0, overlay.size[1], overlay.size[0], 0), fill=fill_tmp, width=tmp_width)
 
     # TODO: First arg is angle (PA)
     # TODO: Determine what expand=True does...
-    rotated = overlay.rotate(PA, expand=True)
+    rotated = overlay.rotate(45, expand=True)
+
+    draw = ImageDraw.ImageDraw(rotated)
+    fill_tmp = (255, 0, 0)
+    draw.line((0, 0, 0, rotated.size[1]), fill=fill_tmp, width=tmp_width)
+    draw.line((0, 0, rotated.size[0], 0), fill=fill_tmp, width=tmp_width)
+    draw.line((0, rotated.size[1], rotated.size[0], rotated.size[1]), fill=fill_tmp, width=tmp_width)
+    draw.line((rotated.size[0], 0, rotated.size[0], rotated.size[1]), fill=fill_tmp, width=tmp_width)
+    # Diagonals
+    draw.line((0, 0) + rotated.size, fill=fill_tmp, width=tmp_width)
+    draw.line((0, rotated.size[1], rotated.size[0], 0), fill=fill_tmp, width=tmp_width)
 
     img = Image.open(img_path)
     img.paste(rotated, (0, 0), rotated)
