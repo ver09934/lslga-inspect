@@ -22,7 +22,9 @@ t = Table.read(catalog_path)
 # Obtain a test galaxy
 test_galaxy = None
 catalog = 'NGC'
-galaxy_num = 19 # 3, 5, 6, 10, 14, 18!, 19
+galaxy_num = 19
+# Tests: 3, 5, 6, 10, 14, 18, 19
+# Interesting: 33, 42, 49, 73, 75
 counter = 0
 for i, row in enumerate(t):
     if row['GALAXY'][0:len(catalog)] == catalog:
@@ -109,6 +111,8 @@ if test_galaxy is not None:
 
     img_path = wget.download(img_url, '{}/{}.jpg'.format(out_dir, GALAXY))
     print()
+
+    # TODO: assert that image is not empty / has requested dimensions
 
     overlay_width = int(minor_axis_pix)
     overlay_height = int(major_axis_pix)
