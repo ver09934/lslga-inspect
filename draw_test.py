@@ -65,8 +65,8 @@ if test_galaxy is not None:
 
     assert img_width is not None or img_height is not None
 
-    img_width = int(img_width) if img_width is not None else None
-    img_height = int(img_height) if img_height is not None else None
+    img_width = int(np.round(img_width, 0)) if img_width is not None else None
+    img_height = int(np.round(img_height, 0)) if img_height is not None else None
 
     # Determine how to frame the galaxy (not needed on cutout server)
     hspan_max = np.maximum(
@@ -85,10 +85,10 @@ if test_galaxy is not None:
     vspan_max *= dimension_conservatism
 
     if img_width is None and img_height is not None:
-        img_width = int(img_height * (hspan_max / vspan_max))
+        img_width = int(np.round(img_height * (hspan_max / vspan_max), 0))
         pix_scale = vspan_max / img_height
     elif img_height is None and img_width is not None:
-        img_height = int(img_width * (vspan_max / hspan_max))
+        img_height = int(np.round(img_width * (vspan_max / hspan_max), 0))
         pix_scale = hspan_max / img_width
     else:
         # Compare aspect ratios
@@ -118,8 +118,8 @@ if test_galaxy is not None:
 
     # TODO: assert that image is not empty / has requested dimensions
 
-    overlay_width = int(minor_axis_pix)
-    overlay_height = int(major_axis_pix)
+    overlay_width = int(np.round(minor_axis_pix, 0))
+    overlay_height = int(np.round(major_axis_pix, 0))
 
     overlay = Image.new('RGBA', (overlay_width, overlay_height))
     draw = ImageDraw.ImageDraw(overlay)
@@ -132,8 +132,8 @@ if test_galaxy is not None:
     rotated_width = rotated.size[0]
     rotated_height = rotated.size[1]
 
-    paste_shift_x = int(img_width/2 - rotated_width/2)
-    paste_shift_y = int(img_height/2 - rotated_height/2)
+    paste_shift_x = int(np.round(img_width/2 - rotated_width/2, 0))
+    paste_shift_y = int(np.round(img_height/2 - rotated_height/2, 0))
 
     img = Image.open(img_path)
     img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
