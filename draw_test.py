@@ -120,6 +120,10 @@ if test_galaxy is not None:
     print()
 
     # TODO: assert that image is not empty / has requested dimensions
+    # Some options for checking (after img has been created):
+        # assert img.size == (img_width, img_height)
+        # assert img.convert('L').getextrema() != (36, 36)
+        # ext = img.convert('L').getextrema(); assert ext[0] != ext[1]
 
     overlay_width = int(np.round(minor_axis_pix, 0))
     overlay_height = int(np.round(major_axis_pix, 0))
