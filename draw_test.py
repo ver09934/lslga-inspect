@@ -44,14 +44,14 @@ if test_galaxy is not None:
     D25 = test_galaxy['D25'] # diameter in arcminutes
     BA = test_galaxy['BA'] # minor-to-major axis ratio
 
-    # TODO: Determine whether these instances should just be discarded
-    # assert np.isnan(PA)
-    if np.isnan(PA):
-        PA = 0
-
     print("GALAXY: {}".format(GALAXY))
     print("D25: {} arcmin".format(D25))
     print("PA: {}".format(PA))
+
+    # TODO: Determine whether these instances should just be discarded
+    # assert np.isnan(PA)
+    if np.isnan(PA):
+        PA = 0 # 90?
 
     major_axis_arcsec = D25 * 60
     minor_axis_arcsec = major_axis_arcsec * BA
@@ -65,20 +65,24 @@ if test_galaxy is not None:
 
     assert img_width is not None or img_height is not None
 
+    img_width = int(img_width) if img_width is not None else None
+    img_height = int(img_height) if img_height is not None else None
+
     # Determine how to frame the galaxy (not needed on cutout server)
-    vspan_max = np.maximum(
-        major_axis_arcsec * np.absolute(np.cos(np.radians(PA))),
-        minor_axis_arcsec * np.absolute(np.sin(np.radians(PA)))
-    )
     hspan_max = np.maximum(
         major_axis_arcsec * np.absolute(np.sin(np.radians(PA))),
         minor_axis_arcsec * np.absolute(np.cos(np.radians(PA)))
     )
+    vspan_max = np.maximum(
+        major_axis_arcsec * np.absolute(np.cos(np.radians(PA))),
+        minor_axis_arcsec * np.absolute(np.sin(np.radians(PA)))
+    )
 
+    # A float >= 1, how much larger the image is than the galaxy
     dimension_conservatism = 2
 
-    vspan_max *= dimension_conservatism
     hspan_max *= dimension_conservatism
+    vspan_max *= dimension_conservatism
 
     if img_width is None and img_height is not None:
         img_width = int(img_height * (hspan_max / vspan_max))
