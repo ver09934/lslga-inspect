@@ -129,7 +129,7 @@ if test_galaxy is not None:
     box_corners = (0, 0, overlay_width, overlay_height)
     draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=3)
 
-    # TODO: Determine what expand=True does...
+    # Need expand=True, or else the overlay gets clipped when rotating
     rotated = overlay.rotate(PA, expand=True)
 
     rotated_width = rotated.size[0]
