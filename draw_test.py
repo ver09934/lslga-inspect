@@ -108,10 +108,13 @@ if test_galaxy is not None:
         "?ra={:.4f}"
         "&dec={:.4f}"
         "&layer=decals-dr7"
-        "&pixscale={}"
+        "&pixscale={:.4f}"
         "&width={:.0f}"
         "&height={:.0f}"
     ).format(RA, DEC, pix_scale, img_width, img_height)
+
+    # print(img_url) # Cutout server URL
+    # print(img_url.replace('/jpeg-cutout', '') + '&lslga') # Viewer URL
 
     img_path = wget.download(img_url, '{}/{}.jpg'.format(out_dir, GALAXY))
     print()
