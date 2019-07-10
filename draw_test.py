@@ -105,10 +105,10 @@ if test_galaxy is not None:
 
     img_url = (
         "http://legacysurvey.org/viewer/jpeg-cutout"
-        "?ra={:.4f}"
-        "&dec={:.4f}"
+        "?ra={:.7f}"
+        "&dec={:.7f}"
         "&layer=decals-dr7"
-        "&pixscale={:.4f}"
+        "&pixscale={:.6f}"
         "&width={:.0f}"
         "&height={:.0f}"
     ).format(RA, DEC, pix_scale, img_width, img_height)
