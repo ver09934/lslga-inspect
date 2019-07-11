@@ -1,4 +1,4 @@
-from flask import Flask, make_response, render_template, request
+from flask import Flask, make_response, render_template, request, abort
 import requests
 from PIL import Image, ImageDraw
 from io import BytesIO
@@ -23,13 +23,23 @@ def test():
     def long_print():
         print(mystr)
 
+    if not ('dec' in request.args and 'ra' in request.args):
+        abort(500) # Return http 500 error
+    
+    ra = request.args['ra']
+    dec = request.args['dec']
+    
+    default_pixscale = 0.262
+    if 'pixscale' in request.args:
+        pixscale = request.args['pixscale']
+    else:
+        pixscale = default_pixscale
+
     # Would be easy to add new url args here
     for i, (key, value) in enumerate(request.args.items()):
         prefix = '?' if i == 0 else '&'
         url += "{}{}={}".format(prefix, key, value)
-    
-    # --------------------------------------------------------------
-        
+            
     r = requests.get(url)
 
     img = Image.open(BytesIO(r.content))
@@ -48,7 +58,7 @@ def test():
     response.headers['Content-Type'] = 'image/jpeg'
     return response
 
-def draw_ellipses(pil_image):
+def draw_ellipses(pil_image, ra, dec, pixscale):
     pass
 
 if __name__ == "__main__":
