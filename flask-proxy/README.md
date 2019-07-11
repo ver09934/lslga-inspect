@@ -10,4 +10,7 @@ TODO:
 
 # FLASK_APP=test.py FLASK_ENV=development FLASK_DEBUG=1 flask run
 # while true; do python3 serve.py; sleep 1; done
+
+TODO: For large images, there is a lot of error!
+This needs to be fixed, unless we will only ever be using relatively zoomed-in images
 --->

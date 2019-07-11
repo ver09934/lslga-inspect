@@ -2,6 +2,9 @@ from flask import Flask, make_response, render_template, request, abort, Respons
 import requests
 from PIL import Image, ImageDraw
 from io import BytesIO
+import os
+from astropy.table import Table
+import numpy as np
 
 app = Flask(__name__)
 
@@ -119,8 +122,65 @@ def draw_ellipses(img, ra, dec, pixscale):
         img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
 
 # Using a local FITS catalog
-def draw_ellipses_alt():
-    pass
+def draw_ellipses_alt(img, ra, dec, pixscale):
+    
+    catalog_path = '../data/LSLGA-v2.0.fits'
+    catalog_path = os.path.expanduser(catalog_path)
+    t = Table.read(catalog_path)
+    
+    width, height = img.size
+
+    ralo = ra - ((width / 2) * pixscale / 3600)
+    rahi = ra + ((width / 2) * pixscale / 3600)
+    declo = dec - ((height / 2) * pixscale / 3600)
+    dechi = dec + ((height / 2) * pixscale / 3600)
+
+    galaxies = []
+    for galaxy in t:
+        RA = galaxy['RA']
+        DEC = galaxy['DEC']
+        if RA > ralo and RA < rahi and DEC > declo and DEC < dechi:
+            galaxies.append(galaxy)
+
+    for galaxy in galaxies:
+
+        print("Rendering {}".format(galaxy['GALAXY']))
+
+        RA = galaxy['RA']
+        DEC = galaxy['DEC']
+
+        PA = galaxy['PA']
+        D25 = galaxy['D25']
+        BA = galaxy['BA']
+
+        if np.isnan(PA):
+            PA = 0
+        if np.isnan(BA):
+            BA = 1
+        if np.isnan(D25):
+            continue
+
+        major_axis_arcsec = D25 * 60
+        minor_axis_arcsec = major_axis_arcsec * BA
+
+        overlay_height = int(major_axis_arcsec / pixscale)
+        overlay_width = int(minor_axis_arcsec / pixscale)
+
+        overlay = Image.new('RGBA', (overlay_width, overlay_height))
+        draw = ImageDraw.ImageDraw(overlay)
+        box_corners = (0, 0, overlay_width, overlay_height)
+        draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=3)
+
+        rotated = overlay.rotate(PA, expand=True)
+        rotated_width, rotated_height = rotated.size
+
+        pix_from_left = (rahi - RA) * 3600 / pixscale
+        pix_from_top = (dechi - DEC) * 3600 / pixscale
+
+        paste_shift_x = int(pix_from_left - rotated_width / 2)
+        paste_shift_y = int(pix_from_top - rotated_height / 2)
+
+        img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
 
 if __name__ == "__main__":
     app.run(debug=True)
