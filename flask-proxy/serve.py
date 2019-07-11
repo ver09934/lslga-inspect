@@ -23,20 +23,22 @@ def test():
     def long_print():
         print(mystr)
 
-    if not ('dec' in request.args and 'ra' in request.args):
+    args = request.args
+
+    if not ('dec' in args and 'ra' in args):
         abort(500) # Return http 500 error
     
-    ra = request.args['ra']
-    dec = request.args['dec']
+    ra = args['ra']
+    dec = args['dec']
     
     default_pixscale = 0.262
-    if 'pixscale' in request.args:
-        pixscale = request.args['pixscale']
+    if 'pixscale' in args:
+        pixscale = args['pixscale']
     else:
         pixscale = default_pixscale
 
     # Would be easy to add new url args here
-    for i, (key, value) in enumerate(request.args.items()):
+    for i, (key, value) in enumerate(args.items()):
         prefix = '?' if i == 0 else '&'
         url += "{}{}={}".format(prefix, key, value)
             
@@ -44,11 +46,7 @@ def test():
 
     img = Image.open(BytesIO(r.content))
 
-    draw = ImageDraw.Draw(img)
-    fill = (0, 255, 0)
-    width = 3
-    draw.line((img.size[0]/2, 0, img.size[0]/2, img.size[1]), fill=fill, width=width)
-    draw.line((0, img.size[1]/2, img.size[0], img.size[1]/2), fill=fill, width=width)
+    draw_ellipses(img, ra, dec, pixscale)
 
     img_io = BytesIO()
     img.save(img_io, 'JPEG', quality=70)
@@ -58,8 +56,12 @@ def test():
     response.headers['Content-Type'] = 'image/jpeg'
     return response
 
-def draw_ellipses(pil_image, ra, dec, pixscale):
-    pass
+def draw_ellipses(img, ra, dec, pixscale):
+    draw = ImageDraw.Draw(img)
+    fill = (0, 255, 0)
+    width = 3
+    draw.line((img.size[0]/2, 0, img.size[0]/2, img.size[1]), fill=fill, width=width)
+    draw.line((0, img.size[1]/2, img.size[0], img.size[1]/2), fill=fill, width=width)
 
 if __name__ == "__main__":
     app.run(debug=True)
