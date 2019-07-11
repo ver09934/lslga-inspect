@@ -1,4 +1,7 @@
-from flask import Flask, make_response, render_template
+from flask import Flask, make_response, render_template, request
+import requests
+from PIL import Image, ImageDraw
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -7,15 +10,32 @@ def hello():
     test_label = "Test image:"
     return render_template('index.html', test_label=test_label)
 
-@app.route('/test.jpg')
+@app.route('/jpeg-cutout')
 def test():
 
-    import requests
-    from PIL import Image, ImageDraw
-    from io import StringIO
-    from io import BytesIO
-
+    # url = 'http://legacysurvey.org/viewer/jpeg-cutout?ra=149.6670&dec=28.8776&zoom=13&layer=decals-dr7'
     url = 'http://legacysurvey.org/viewer/jpeg-cutout?ra=149.6670&dec=28.8776&zoom=13&layer=decals-dr7'
+        
+    base_image_url = 'http://legacysurvey.org/viewer/jpeg-cutout'
+    
+    # Professional debugging
+    mystr = '-'*60
+    def fancy_print(thing):
+        print("{mystr}\n{}\n{mystr}".format(thing, mystr=mystr))
+    def long_print():
+        print(mystr)
+
+    fancy_print(request.args)
+
+    url_args = request.args
+
+    for key, value in url_args.items():
+        print("{}: {}".format(key, value))
+
+    long_print()
+    
+    # --------------------------------------------------------------
+        
     r = requests.get(url)
 
     img = Image.open(BytesIO(r.content))
