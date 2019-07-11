@@ -7,3 +7,7 @@ tmp/
 *.sw*
 *~
 .vscode/
+
+# Python files
+*.pyc
+__pycache__

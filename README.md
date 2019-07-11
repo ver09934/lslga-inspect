@@ -34,3 +34,16 @@ TODO:
 - Examine the galaxy zoo system and how this will integrate...
     - Look into SSL/TLS issue...
 --->
+
+<!---
+New TODO:
+- In read.py, methodize all the separate little tests
+    - perhaps pass the table object in
+    - Make a main method
+    - This will reduce the amount of commented stuff and make it easier to re-run tests
+- Features to add to draw_test.py (should also focus on further methodizing this file, perhaps on a separate branch)
+    - May want to include some of the things written for the decals-web annotator
+    - May want to break the different methods into separate files
+    - Should rename some of the now-more-developed files to give a better indication of what they do
+- Make the decals-web annotator use the URL arguments
+--->
