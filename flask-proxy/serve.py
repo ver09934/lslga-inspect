@@ -7,16 +7,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    test_label = "Test image:"
-    return render_template('index.html', test_label=test_label)
+    test_label = "Test image"
+    test_url = "/jpeg-cutout?ra=352.6064&dec=0.1568&zoom=13&layer=dr8&width=500&height=500"
+    return render_template('index.html', test_label=test_label, test_url=test_url)
 
 @app.route('/jpeg-cutout')
 def test():
-
-    # url = 'http://legacysurvey.org/viewer/jpeg-cutout?ra=149.6670&dec=28.8776&zoom=13&layer=decals-dr7'
-    url = 'http://legacysurvey.org/viewer/jpeg-cutout?ra=149.6670&dec=28.8776&zoom=13&layer=decals-dr7'
         
-    base_image_url = 'http://legacysurvey.org/viewer/jpeg-cutout'
+    url = 'http://legacysurvey.org/viewer/jpeg-cutout'
     
     # Professional debugging
     mystr = '-'*60
@@ -25,14 +23,10 @@ def test():
     def long_print():
         print(mystr)
 
-    fancy_print(request.args)
-
-    url_args = request.args
-
-    for key, value in url_args.items():
-        print("{}: {}".format(key, value))
-
-    long_print()
+    # Would be easy to add new url args here
+    for i, (key, value) in enumerate(request.args.items()):
+        prefix = '?' if i == 0 else '&'
+        url += "{}{}={}".format(prefix, key, value)
     
     # --------------------------------------------------------------
         
@@ -53,6 +47,9 @@ def test():
     response = make_response(img_io.getvalue())
     response.headers['Content-Type'] = 'image/jpeg'
     return response
+
+def draw_ellipses(pil_image):
+    pass
 
 if __name__ == "__main__":
     app.run(debug=True)

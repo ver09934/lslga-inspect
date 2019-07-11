@@ -16,10 +16,13 @@
                 text-align: center;
                 padding: 10px;
             }
+            a {
+                color: #75aaff;
+            }
         </style>
     </head>
     <body>
-        <div class="text-center">{{test_label}}</div>
-        <a href="/test.jpg"><img class="center" src="/test.jpg"></img></a>
+        <div class="text-center">{{test_label}}: <a href="{{test_url}}">{{test_url}}</a></div>
+        <a href="{{test_url}}"><img class="center" src="{{test_url}}"></img></a>
     </body>
 </html>
