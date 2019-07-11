@@ -1,6 +1,6 @@
 from astropy.table import Table
 import wget
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
 out_dir = 'tmp'
@@ -58,6 +58,25 @@ coords = (
 )
 
 draw.rectangle(coords, fill=(255, 255, 255), outline=None, width=0)
+
+est_width = 0
+est_height = 0
+
+horiz_offset = 0
+vert_offset = 0
+
+font_coords = (
+    width - bar_offset - est_width - horiz_offset,
+    height - bar_offset - bar_height - est_height - vert_offset
+)
+
+# font=ImageFont.load_default()
+draw.text(
+    font_coords,
+    "{}{}".format(str(bar_width_arcsec), '"'),
+    font=ImageFont.truetype(font="FreeMono", size=14),
+    fill=(0, 255, 00)
+)
 
 img.save(img_path)
 img.show()
