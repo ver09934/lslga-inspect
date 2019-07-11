@@ -1,6 +1,7 @@
 from astropy.table import Table
 import wget
 from PIL import Image, ImageDraw
+import numpy as np
 
 out_dir = 'tmp'
 t = Table.read('data/LSLGA-v2.0.fits')
@@ -41,6 +42,22 @@ print()
 
 img = Image.open(img_path)
 draw = ImageDraw.ImageDraw(img)
+
+bar_offset = 15
+bar_height = 3
+bar_width_arcsec = 60
+bar_width_pix = int(np.round(bar_width_arcsec / pix_scale, 0))
+
+print("Bar width: {}\nBar height: {}".format(bar_width_pix, bar_height))
+
+coords = (
+    width - bar_offset,
+    height - bar_offset, 
+    width - bar_offset - (bar_width_pix - 1),
+    height - bar_offset - (bar_height - 1)
+)
+
+draw.rectangle(coords, fill=(255, 255, 255), outline=None, width=0)
 
 img.save(img_path)
 img.show()
