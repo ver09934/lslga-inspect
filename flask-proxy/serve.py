@@ -18,13 +18,6 @@ def hello():
 def test():
         
     url = 'http://legacysurvey.org/viewer/jpeg-cutout'
-    
-    # Professional debugging
-    mystr = '-'*60
-    def fancy_print(thing):
-        print("{mystr}\n{}\n{mystr}".format(thing, mystr=mystr))
-    def long_print():
-        print(mystr)
 
     args = request.args
 
