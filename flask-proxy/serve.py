@@ -25,15 +25,21 @@ def test():
 
     args = request.args
 
-    if not ('dec' in args and 'ra' in args):
-        abort(500) # Return http 500 error
-    
+    # Throw HTTP 500 error if ra/dec are nonexistent/empty
+    if not ('ra' in args and 'dec' in args):
+        abort(500)
+    if args['ra'] == '' or args['dec'] == '':
+        abort(500)
+
     ra = args['ra']
     dec = args['dec']
     
     default_pixscale = 0.262
     if 'pixscale' in args:
-        pixscale = args['pixscale']
+        if args['pixscale'] == '':
+            pixscale = default_pixscale
+        else:
+            pixscale = args['pixscale']
     else:
         pixscale = default_pixscale
 
