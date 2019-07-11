@@ -1,3 +1,5 @@
+# TODO: Refactor pix_scale to pixscale for consistency
+
 from astropy.table import Table
 import os
 import sys
