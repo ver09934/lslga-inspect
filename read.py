@@ -31,11 +31,24 @@ exit()
 '''
 
 # Test with first several rows
-t = t[:40]
+# t = t[:40]
 
-indices_to_remove = []
+# indices_to_remove = []
+
+ralo=228.36846888888888
+rahi=228.40573111111112
+declo=5.415868888888888
+dechi=5.453131111111111
 
 for i, row in enumerate(t, 0):
+
+    RA = row['RA']
+    DEC = row['DEC']
+
+    if RA > ralo and RA < rahi and DEC > declo and DEC < dechi:
+        print("GALAXY: {} PA: {}".format(row['GALAXY'], row['PA']))
+
+'''
 
     # Remove galaxies not in DESI footprint
     if not row['IN_DESI']:
@@ -66,3 +79,4 @@ url_list = [
 ]
 
 # for line in $(python3 read.py); do wget $line; done
+'''
