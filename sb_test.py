@@ -45,7 +45,7 @@ draw = ImageDraw.ImageDraw(img)
 
 bar_offset = 15
 bar_height = 3
-bar_width_arcsec = 60
+bar_width_arcsec = 60 # TODO: Choose this intelligently based on image width and pixscale
 bar_width_pix = int(np.round(bar_width_arcsec / pix_scale, 0))
 
 print("Bar width: {}\nBar height: {}".format(bar_width_pix, bar_height))
@@ -59,23 +59,44 @@ coords = (
 
 draw.rectangle(coords, fill=(255, 255, 255), outline=None, width=0)
 
-est_width = 0
-est_height = 0
+scale_str = "{}{}".format(str(bar_width_arcsec), '"')
+# font = ImageFont.load_default()
+mono_font = ImageFont.truetype(font="FreeMono", size=14)
+sans_font = ImageFont.truetype(font="FreeSans", size=14)
+serif_font = ImageFont.truetype(font="FreeSerif", size=14)
 
-horiz_offset = 0
-vert_offset = 0
+sb_label_font = mono_font
+
+# str_width = font.getsize(scale_str)[0]
+str_width, str_height = draw.textsize(scale_str, font=sb_label_font)
+str_digits_width, _ = draw.textsize(scale_str.replace('"', ''), font=sb_label_font)
+
+vert_offset = 4
 
 font_coords = (
-    width - bar_offset - est_width - horiz_offset,
-    height - bar_offset - bar_height - est_height - vert_offset
+    # width - bar_offset - str_width,
+    # width - bar_offset - (bar_width_pix)/2 - (str_width)/2,
+    width - bar_offset - (bar_width_pix)/2 - (str_digits_width)/2,
+    # width - bar_offset - bar_width_pix
+    height - bar_offset - bar_height - str_height - vert_offset
 )
 
-# font=ImageFont.load_default()
 draw.text(
     font_coords,
-    "{}{}".format(str(bar_width_arcsec), '"'),
-    font=ImageFont.truetype(font="FreeMono", size=14),
-    fill=(0, 255, 00)
+    scale_str,
+    font=sb_label_font,
+    fill=(255, 255, 255)
+)
+
+galaxy_label = GALAXY
+galaxy_label_offset = 15
+galaxy_label_font = serif_font
+
+draw.text(
+    (galaxy_label_offset, galaxy_label_offset),
+    galaxy_label,
+    font=galaxy_label_font,
+    fill=(255, 255, 255)
 )
 
 img.save(img_path)
