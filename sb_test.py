@@ -125,16 +125,38 @@ draw.text(
     fill=(255, 255, 255)
 )
 
-galaxy_label = GALAXY
-galaxy_label_offset = 15
-galaxy_label_font = serif_font
+fields_offset = 15
+fields_font = serif_font
 
-draw.text(
-    (galaxy_label_offset, galaxy_label_offset),
-    galaxy_label,
-    font=galaxy_label_font,
-    fill=(255, 255, 255)
-)
+height_accumulator = 0
+vert_spacing = 5
+
+fields = [1, 3, 4, 11, 12, 13]
+
+for i, field in enumerate(galaxy):
+
+    if i > max(fields):
+        break
+    if not i in fields:
+        continue
+    
+    try:
+        field = np.round(float(field), 6)
+    except:
+        pass
+    
+    fields_label = "{}: {}".format(galaxy.colnames[i], field)
+
+    scale_label_height = draw.textsize(fields_label, font=fields_font)[1]
+
+    draw.text(
+        (fields_offset, fields_offset + height_accumulator),
+        fields_label,
+        font=fields_font,
+        fill=(255, 255, 255)
+    )
+
+    height_accumulator += scale_label_height + vert_spacing
 
 img.save(img_path)
 img.show()
