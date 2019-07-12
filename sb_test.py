@@ -45,7 +45,29 @@ draw = ImageDraw.ImageDraw(img)
 
 bar_offset = 15
 bar_height = 3
-bar_width_arcsec = 60 # TODO: Choose this intelligently based on image width and pixscale
+
+bar_width_increment = 60
+desired_width_fraction = 1/8
+
+max_bar_width_arcsec = (img.size[0] - 2 * bar_offset) * pix_scale
+desired_bar_width_arcsec = max_bar_width_arcsec * desired_width_fraction
+
+while True:
+    
+    bar_width_arcsec = 0
+    
+    while bar_width_arcsec < desired_bar_width_arcsec:
+        bar_width_arcsec += bar_width_increment
+    # bar_width_arcsec -= bar_width_increment
+
+    if bar_width_arcsec > max_bar_width_arcsec: # An emperical factor: max_bar_width_arcsec * 0.9
+        # bar_width_increment *= 0.5
+        bar_width_increment = int(bar_width_increment * 0.5)
+    else:
+        break
+
+# bar_width_arcsec = 60 # Set manually
+
 bar_width_pix = int(np.round(bar_width_arcsec / pix_scale, 0))
 
 print("Bar width: {}\nBar height: {}".format(bar_width_pix, bar_height))
@@ -58,6 +80,9 @@ coords = (
 )
 
 draw.rectangle(coords, fill=(255, 255, 255), outline=None, width=0)
+
+if bar_width_arcsec % 1 == 0:
+    bar_width_arcsec = int(bar_width_arcsec)
 
 scale_label_digits = str(bar_width_arcsec)
 scale_label_units = '"'
