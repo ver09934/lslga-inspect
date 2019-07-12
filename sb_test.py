@@ -59,32 +59,44 @@ coords = (
 
 draw.rectangle(coords, fill=(255, 255, 255), outline=None, width=0)
 
-scale_str = "{}{}".format(str(bar_width_arcsec), '"')
+scale_label_digits = str(bar_width_arcsec)
+scale_label_units = '"'
+
+'''
+bar_width_arcmin = bar_width_arcsec / 60
+if bar_width_arcmin % 1 == 0:
+    scale_label_digits = str(int(bar_width_arcmin))
+    scale_label_units = "'"
+elif bar_width_arcmin % 0.5 == 0:
+    scale_label_digits = str(bar_width_arcmin)
+    scale_label_units = "'"
+'''
+
+scale_label = "{}{}".format(scale_label_digits, scale_label_units)
 # font = ImageFont.load_default()
 mono_font = ImageFont.truetype(font="FreeMono", size=14)
 sans_font = ImageFont.truetype(font="FreeSans", size=14)
 serif_font = ImageFont.truetype(font="FreeSerif", size=14)
 
-sb_label_font = mono_font
+scale_label_font = mono_font
 
-# str_width = font.getsize(scale_str)[0]
-str_width, str_height = draw.textsize(scale_str, font=sb_label_font)
-str_digits_width, _ = draw.textsize(scale_str.replace('"', ''), font=sb_label_font)
+scale_label_width, scale_label_height = draw.textsize(scale_label, font=scale_label_font)
+scale_label_digits_width, _ = draw.textsize(scale_label_digits, font=scale_label_font)
 
 vert_offset = 4
 
 font_coords = (
-    # width - bar_offset - str_width,
-    # width - bar_offset - (bar_width_pix)/2 - (str_width)/2,
-    width - bar_offset - (bar_width_pix)/2 - (str_digits_width)/2,
+    # width - bar_offset - scale_label_width,
+    # width - bar_offset - (bar_width_pix)/2 - (scale_label_width)/2,
+    width - bar_offset - (bar_width_pix)/2 - (scale_label_digits_width)/2,
     # width - bar_offset - bar_width_pix
-    height - bar_offset - bar_height - str_height - vert_offset
+    height - bar_offset - bar_height - scale_label_height - vert_offset
 )
 
 draw.text(
     font_coords,
-    scale_str,
-    font=sb_label_font,
+    scale_label,
+    font=scale_label_font,
     fill=(255, 255, 255)
 )
 
