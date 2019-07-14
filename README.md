@@ -12,7 +12,7 @@ $ wget http://www.sos.siena.edu/~jmoustakas/tmp/README
 ## Dependencies
 An environment can be created with Anaconda:
 ```bash
-$ conda create --name lslga-inspect python=3 numpy astropy pillow wget
+$ conda create --name lslga-inspect python=3 numpy astropy pillow wget flask requests
 $ conda activate lslga-inspect
 ```
 
