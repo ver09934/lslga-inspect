@@ -1,5 +1,3 @@
-# TODO: Refactor pix_scale to pixscale for consistency
-
 from astropy.table import Table
 import os
 import sys
@@ -88,22 +86,22 @@ if test_galaxy is not None:
 
     if img_width is None and img_height is not None:
         img_width = int(np.round(img_height * (hspan_max / vspan_max), 0))
-        pix_scale = vspan_max / img_height
+        pixscale = vspan_max / img_height
     elif img_height is None and img_width is not None:
         img_height = int(np.round(img_width * (vspan_max / hspan_max), 0))
-        pix_scale = hspan_max / img_width
+        pixscale = hspan_max / img_width
     else:
         # Compare aspect ratios
         if (hspan_max / vspan_max) > (img_width / img_height):
-            pix_scale = hspan_max / img_width
+            pixscale = hspan_max / img_width
         else:
-            pix_scale = vspan_max / img_height
+            pixscale = vspan_max / img_height
 
-    # Set pix_scale manually
-    # pix_scale = 0.8 # arcseconds/pixel, default 0.262 arcsec/pix
+    # Set pixscale manually
+    # pixscale = 0.8 # arcseconds/pixel, default 0.262 arcsec/pix
 
-    major_axis_pix = major_axis_arcsec / pix_scale
-    minor_axis_pix = minor_axis_arcsec / pix_scale
+    major_axis_pix = major_axis_arcsec / pixscale
+    minor_axis_pix = minor_axis_arcsec / pixscale
 
     img_url = (
         "http://legacysurvey.org/viewer/jpeg-cutout"
@@ -113,7 +111,7 @@ if test_galaxy is not None:
         "&pixscale={:.6f}"
         "&width={:.0f}"
         "&height={:.0f}"
-    ).format(RA, DEC, pix_scale, img_width, img_height)
+    ).format(RA, DEC, pixscale, img_width, img_height)
 
     # print(img_url) # Cutout server URL
     # print(img_url.replace('/jpeg-cutout', '') + '&lslga') # Viewer URL
