@@ -81,6 +81,8 @@ def test_gallery():
 
     for i, galaxy in enumerate(t):
 
+        print("---------- {} ----------".format(i))
+
     # -------------------------------------------------------------------------------
 
         GALAXY = galaxy['GALAXY']
@@ -159,7 +161,10 @@ def test_gallery():
 
         r = requests.get(url)
 
-        img = Image.open(BytesIO(r.content))
+        try:
+            img = Image.open(BytesIO(r.content))
+        except:
+            continue
 
         # draw_ellipses(img, RA, DEC, pixscale)
 
