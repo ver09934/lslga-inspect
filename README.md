@@ -9,6 +9,9 @@ $ wget http://www.sos.siena.edu/~jmoustakas/tmp/LSLGA-v2.0.fits
 $ wget http://www.sos.siena.edu/~jmoustakas/tmp/README
 ```
 
+# flask-proxy
+A flask application that grabs cutout images from the legacysurvey server and draws LSLGA galaxies on them.
+
 ## Dependencies
 An environment can be created with Anaconda:
 ```bash
@@ -46,4 +49,18 @@ New TODO:
     - May want to break the different methods into separate files
     - Should rename some of the now-more-developed files to give a better indication of what they do
 - Make the decals-web annotator use the URL arguments
+--->
+
+<!---
+TODO:
+- Have two separate methods for getting the LSLGA info:
+    - Using the LSLGA fits catalog
+    - Using the legacysurvey.org/viewer/lslga/1/cat/json?ralo=... service
+    - Each return the same data format for simplicity of switching, or something like that
+
+# FLASK_APP=test.py FLASK_ENV=development FLASK_DEBUG=1 flask run
+# while true; do python3 serve.py; sleep 1; done
+
+TODO: For large images, there is a lot of error!
+This needs to be fixed, unless we will only ever be using relatively zoomed-in images
 --->
