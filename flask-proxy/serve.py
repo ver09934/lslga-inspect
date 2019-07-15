@@ -67,7 +67,7 @@ def test():
 @app.route('/gallery')
 def test_gallery():
 
-    # return render_template('gallery.html')
+    return render_template('gallery.html')
 
     # Bad, because all the images are accessed twice
     # Also, code duplication is bad --> methodization

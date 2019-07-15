@@ -7,9 +7,17 @@
     <body>
         <h1>Images</h1>
         
+        {% for i in range(0, 201) %}
+            <img src="/lslga?num={{i}}" alt=""></img>
+            <!-- <img src="/lslga?num={{i}}" onerror="this.style.display='none'"></img> -->
+            <!-- <img src="/lslga?num={{i}}" onerror="this.parentNode.removeChild(this)"></img> -->
+        {% endfor %}
+
+        <!--
         {% for i in good_rows %}
             <img src="/lslga?num={{i}}"></img>
         {% endfor %}
+        -->
 
         <!--
         {% for i in good_rows %}
