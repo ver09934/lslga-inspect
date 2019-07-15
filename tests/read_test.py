@@ -5,7 +5,7 @@ import sys
 
 # assert len(sys.argv) == 2
 # catalog_path = os.path.expanduser(sys.argv[1])
-catalog_path = 'data/LSLGA-v2.0.fits'
+catalog_path = '../data/LSLGA-v2.0.fits'
 
 def main():
     

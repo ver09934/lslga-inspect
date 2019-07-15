@@ -7,7 +7,7 @@ import wget
 from PIL import Image, ImageDraw
 import numpy as np
 
-catalog_path = 'data/LSLGA-v2.0.fits'
+catalog_path = '../data/LSLGA-v2.0.fits'
 out_dir = 'tmp'
 
 # Do some handling for relative paths, etc.

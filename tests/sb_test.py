@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 
 out_dir = 'tmp'
-t = Table.read('data/LSLGA-v2.0.fits')
+t = Table.read('../data/LSLGA-v2.0.fits')
 
 catalog = 'NGC'
 galaxy_num = 19
