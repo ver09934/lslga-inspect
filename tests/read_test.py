@@ -19,6 +19,7 @@ def main():
     # gen_urls(t)
     # filter_radec(t)
     # test_pa_range(t)
+    test_id_order(t)
 
 def filter_survey_footprint(t):    
 
@@ -106,6 +107,11 @@ def test_pa_range(t):
     for row in t:
         if float(row['PA']) > 180 or float(row['PA'] < 0):
             print("PA: {} GALAXY: {}".format(row['PA'], row['GALAXY']))
+
+def test_id_order(t):
+
+    for row in t:
+        print(row['LSLGA_ID'])
 
 if __name__ == '__main__':
     main()

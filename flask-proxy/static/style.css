@@ -1,0 +1,16 @@
+body {
+    color: #E0E0E0;
+    background-color: #333333;
+    font-family: sans-serif;
+}
+.center {
+    display: block;
+    margin: auto;
+}
+.text-center {
+    text-align: center;
+    padding: 10px;
+}
+a {
+    color: #75aaff;
+}
