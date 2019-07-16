@@ -26,6 +26,31 @@ def get_img_response(img):
 def get_lslga_tablerow(lslga_index): 
     return t[lslga_index]
 
+def test_footprint(lslga_index):
+    ra, dec = t[lslga_index]['RA'], t[lslga_index]['DEC']
+    return test_footprint_radec(ra, dec)
+
+def test_footprint_radec(ra, dec, layer="dr8", pixscale=3, width=20, height=20):
+
+    url = (
+        "http://legacysurvey.org/viewer/jpeg-cutout"
+        "?ra={:.7f}"
+        "&dec={:.7f}"
+        "&layer={}"
+        "&pixscale={:.6f}"
+        "&width={:.0f}"
+        "&height={:.0f}"
+    ).format(ra, dec, layer, pixscale, width, height)
+
+    r = requests.get(url)
+
+    try:
+        img = Image.open(BytesIO(r.content))
+    except IOError:
+        return False
+    ext = img.convert('L').getextrema()
+    return ext[0] != ext[1]
+
 def render_galaxy_img(lslga_index, layer="dr8", alt_ellipsedraw=False):
 
     galaxy = get_lslga_tablerow(lslga_index)

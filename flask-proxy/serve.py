@@ -89,7 +89,7 @@ def lslga():
     rendered = lslgautils.render_galaxy_img(lslga_index, layer=layer)
 
     if rendered is None:
-        error_msg = 'The LSLGA image could not be rendered.'
+        error_msg = 'The LSLGA image could not be rendered (likely not in survey footprint).'
         abort(Response(render_template('500.html', error_msg=error_msg), 500))
     else:
         galaxy_img, pixscale = rendered
@@ -102,16 +102,35 @@ def lslga():
 
     return lslgautils.get_img_response(galaxy_img)
 
+# TODO: Might be better to have each galaxy have sub-url, so one could go back to them?
 @app.route('/inspect')
 def inspect():
 
-    length = len(lslgautils.t)
-    rand_index = random.randint(0, length - 1)
+    args = request.args
+
+    catalog = None
+    if 'sdss' in args:
+        catalog = 'SDSS'
+    elif 'ngc' in args:
+        catalog = "NGC"
+
+    # Should maybe cache the bad list somehow
+    while True:
+
+        length = len(lslgautils.t)
+        rand_index = random.randint(0, length - 1)
+
+        if catalog is not None:
+            if lslgautils.t[rand_index]['GALAXY'][:len(catalog)] == catalog:
+                if lslgautils.test_footprint(rand_index):
+                    break
+        else:
+            if lslgautils.test_footprint(rand_index):
+                break
 
     galaxy_info = lslgautils.get_lslga_tablerow(rand_index)
-    GALAXY = galaxy_info['GALAXY']
 
-    return render_template("inspect.html", rand=rand_index, name=GALAXY)
+    return render_template("inspect.html", rand=rand_index, info=galaxy_info)
 
 if __name__ == "__main__":
     app.run(debug=True)
