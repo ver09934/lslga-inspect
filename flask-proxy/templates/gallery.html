@@ -7,38 +7,12 @@
     <body>
         <h1>Images</h1>
         
-        {% for i in range(0, 201) %}
-            <img src="/lslga?num={{i}}" alt=""></img>
+        {% for i in range(0, 501) %}
+            <img src="/lslga?num={{i}}"></img>
+            <!-- <img src="/lslga?num={{i}}" alt=""></img> -->
             <!-- <img src="/lslga?num={{i}}" onerror="this.style.display='none'"></img> -->
             <!-- <img src="/lslga?num={{i}}" onerror="this.parentNode.removeChild(this)"></img> -->
         {% endfor %}
-
-        <!--
-        {% for i in good_rows %}
-            <img src="/lslga?num={{i}}"></img>
-        {% endfor %}
-        -->
-
-        <!--
-        {% for i in good_rows %}
-            <img src="/lslga?num={{i}}"></img>
-            {% if loop.index is divisibleby 3 %}
-            <br/>
-            {% endif %}
-        {% endfor %}
-        -->
-
-        <!--
-        {% for i in good_rows %}
-            <img src="/lslga?num={{i}}"></img> <br/>
-        {% endfor %}
-        -->
-
-        <!--
-        {% for i in range(0, 11) %}
-            <img src="/lslga?num={{i}}"></img> <br/>
-        {% endfor %}
-        -->
 
     </body>
 </html>
