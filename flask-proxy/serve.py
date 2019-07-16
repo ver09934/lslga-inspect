@@ -12,47 +12,56 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    test_url = "/jpeg-cutout?ra=352.6064&dec=0.1568&pixscale=0.3&layer=dr8&width=500&height=500"
-    return render_template('index.html', test_url=test_url)
+    test_urls = [
+        '/gallery',
+        '/inspect',
+        '/jpeg-cutout',
+        '/lslga'
+    ]
+    test_images = [
+        "/jpeg-cutout?ra=352.6064&dec=0.1568&pixscale=0.2&layer=dr8&width=500&height=500",
+        "/jpeg-cutout?ra=139.843&dec=33.743&pixscale=0.2&layer=dr8&width=500&height=500",
+        "/jpeg-cutout?ra=228.385&dec=5.437&pixscale=0.3&layer=dr8&width=500&height=500"
+    ]
+    return render_template('index.html', test_urls=test_urls, test_images=test_images)
 
 @app.route('/jpeg-cutout')
 def jpeg_cutout():
 
-    url = 'http://legacysurvey.org/viewer/jpeg-cutout'
-
     args = request.args
 
-    error_str = "<!DOCTYPE HTML><title>500 Internal Server Error</title><h1>Internal Server Error</h1><p>{}</p>"
-
-    # Throw HTTP 500 error if ra/dec are nonexistent/empty
+    # Throw HTTP 500 errors for specific bad URL arguments
     if not ('ra' in args and 'dec' in args):
-        abort(Response(error_str.format("At least one of the <code>ra</code> and <code>dec</code> URL arguments was not passed.")))
+        error_msg = 'The <code>ra</code> and/or <code>dec</code> URL args were not passed.'
+        abort(Response(render_template('500.html', error_msg=error_msg), 500))
     if args['ra'] == '' or args['dec'] == '':
-        abort(Response(error_str.format("At least one of the <code>ra</code> and <code>dec</code> URL arguments was empty.")))
+        error_msg = 'The <code>ra</code> and/or <code>dec</code> URL args were empty.'
+        abort(Response(render_template('500.html', error_msg=error_msg), 500))
+    if 'zoom' in args:
+        error_msg = 'Please use <code>pixscale</code> instead of <code>zoom</code>.'
+        abort(Response(render_template('500.html', error_msg=error_msg), 500))
 
     ra = float(args['ra'])
     dec = float(args['dec'])
-
-    # Throw HTTP 500 error if zoom isused
-    if 'zoom' in args:
-        abort(Response(error_str.format("Please use <code>pixscale</code> instead of <code>zoom</code>.")))
     
     default_pixscale = 0.262
     if 'pixscale' in args:
-        if args['pixscale'] == '':
-            pixscale = default_pixscale
-        else:
-            pixscale = float(args['pixscale'])
+        pixscale = float(args['pixscale'])
     else:
         pixscale = default_pixscale
 
-    # Would be easy to add new url args here
+    url = 'http://legacysurvey.org/viewer/jpeg-cutout'
+
     for i, (key, value) in enumerate(args.items()):
         prefix = '?' if i == 0 else '&'
         url += "{}{}={}".format(prefix, key, value)
-            
+
     r = requests.get(url)
-    img = Image.open(BytesIO(r.content))
+    try:
+        img = Image.open(BytesIO(r.content))
+    except:
+        error_msg = 'The received image could not be read.'
+        abort(Response(render_template('500.html', error_msg=error_msg), 500))
 
     lslgautils.draw_all_ellipses(img, ra, dec, pixscale)
 
@@ -65,21 +74,23 @@ def gallery():
 @app.route('/lslga')
 def lslga():
     
-    if 'num' in request.args:
-        lslga_index = int(request.args['num'])
+    args = request.args
+
+    if 'num' in args:
+        lslga_index = int(args['num'])
     else:
         lslga_index = 0
     
-    if 'layer' in request.args:
-        layer = str(request.args['layer'])
+    if 'layer' in args:
+        layer = str(args['layer'])
     else:
         layer = "dr8"
 
     rendered = lslgautils.render_galaxy_img(lslga_index, layer=layer)
 
     if rendered is None:
-        # print('-'*40 + '\n' + 'GALAXY {} COULD NOT BE RENDERED'.format(lslga_index) + '\n' + '-'*40)
-        return "The galaxy image could not be rendered."
+        error_msg = 'The LSLGA image could not be rendered.'
+        abort(Response(render_template('500.html', error_msg=error_msg), 500))
     else:
         galaxy_img, pixscale = rendered
     
@@ -87,11 +98,9 @@ def lslga():
     GALAXY = galaxy_info['GALAXY']
 
     lslgautils.draw_scalebar(galaxy_img, pixscale, GALAXY)
+    lslgautils.draw_galaxyname(galaxy_img, GALAXY)
 
     return lslgautils.get_img_response(galaxy_img)
-
-# TODO: Don't show duplicates for one session... kind of hard
-# Just only show each up to 3 times until database cleared?
 
 @app.route('/inspect')
 def inspect():

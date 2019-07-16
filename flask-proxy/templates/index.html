@@ -5,7 +5,18 @@
         <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
-        <div class="text-center">Test image:</div>
-        <a href="{{test_url}}"><img class="img-center" src="{{test_url}}"></img></a>
+        
+        <h2>Subpage Links</h2>
+        <ul></ul>
+        {% for url in test_urls %}
+           <li><a href="{{url}}">{{url}}</a></li>
+        {% endfor %}
+
+        <h2>Example Images</h2>
+        <ul></ul>
+        {% for url in test_images %}
+            <img src="{{url}}"></img>
+        {% endfor %}
+
     </body>
 </html>

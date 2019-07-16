@@ -6,8 +6,9 @@ import os
 from astropy.table import Table
 import numpy as np
 
-# TODO: Add options to render_galaxy_img and get_lslga_tablerow to use specific catalog
-    # NGC, SDSS, etc.
+# TODO: Add options to render_galaxy_img and get_lslga_tablerow to use specific catalog - NGC, SDSS, etc.
+# TODO: use alt_ellipsedraw in render_galaxy_img
+# TODO: Determine whether galaxy should be discarded is PA is NaN
 
 catalog_path = '../data/LSLGA-v2.0.fits'
 catalog_path = os.path.expanduser(catalog_path)
@@ -25,7 +26,6 @@ def get_img_response(img):
 def get_lslga_tablerow(lslga_index): 
     return t[lslga_index]
 
-# TODO: use alt_ellipsedraw
 def render_galaxy_img(lslga_index, layer="dr8", alt_ellipsedraw=False):
 
     galaxy = get_lslga_tablerow(lslga_index)
@@ -37,10 +37,8 @@ def render_galaxy_img(lslga_index, layer="dr8", alt_ellipsedraw=False):
     D25 = galaxy['D25'] # diameter in arcminutes
     BA = galaxy['BA'] # minor-to-major axis ratio
 
-    # TODO: Determine whether these instances should just be discarded
-    # assert np.isnan(PA)
     if np.isnan(PA):
-        PA = 0 # 90?
+        PA = 0
 
     major_axis_arcsec = D25 * 60
     minor_axis_arcsec = major_axis_arcsec * BA
@@ -198,12 +196,13 @@ def draw_scalebar(img, pixscale, galaxy_name):
     '''
 
     scale_label = "{}{}".format(scale_label_digits, scale_label_units)
-    # font = ImageFont.load_default()
-    mono_font = ImageFont.truetype(font="FreeMono", size=14)
-    sans_font = ImageFont.truetype(font="FreeSans", size=14)
-    serif_font = ImageFont.truetype(font="FreeSerif", size=14)
 
-    scale_label_font = mono_font
+    # font = ImageFont.load_default()
+    # mono_font = ImageFont.truetype(font="FreeMono", size=14)
+    # sans_font = ImageFont.truetype(font="FreeSans", size=14)
+    # serif_font = ImageFont.truetype(font="FreeSerif", size=14)
+
+    scale_label_font = ImageFont.truetype(font="FreeMono", size=14)
 
     scale_label_width, scale_label_height = draw.textsize(scale_label, font=scale_label_font)
     scale_label_digits_width, _ = draw.textsize(scale_label_digits, font=scale_label_font)
@@ -225,9 +224,13 @@ def draw_scalebar(img, pixscale, galaxy_name):
         fill=(255, 255, 255)
     )
 
+def draw_galaxyname(img, galaxy_name):
+
+    draw = ImageDraw.ImageDraw(img)
+
     galaxy_label = galaxy_name
     galaxy_label_offset = 15
-    galaxy_label_font = serif_font
+    galaxy_label_font = ImageFont.truetype(font="FreeSerif", size=14)
 
     draw.text(
         (galaxy_label_offset, galaxy_label_offset),

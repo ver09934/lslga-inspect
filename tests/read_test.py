@@ -12,14 +12,15 @@ def main():
     t = Table.read(catalog_path)
 
     # test with first several rows
-    t = t[:40]
+    # t = t[:40]
 
     # filter_survey_footprint(t)
     # filter_survey_footprint_alt(t)
     # gen_urls(t)
     # filter_radec(t)
     # test_pa_range(t)
-    test_id_order(t)
+    # test_id_order(t)
+    testing(t)
 
 def filter_survey_footprint(t):    
 
@@ -112,6 +113,11 @@ def test_id_order(t):
 
     for row in t:
         print(row['LSLGA_ID'])
+
+def testing(t):
+
+    t = t[:40]
+    print(t.info)
 
 if __name__ == '__main__':
     main()
