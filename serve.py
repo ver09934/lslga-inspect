@@ -1,4 +1,4 @@
-from flask import Flask, make_response, render_template, request, abort, Response
+from flask import Flask, make_response, render_template, request, abort, Response, redirect, url_for
 import requests
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
@@ -131,6 +131,40 @@ def inspect():
     galaxy_info = lslgautils.get_lslga_tablerow(rand_index)
 
     return render_template("inspect.html", rand=rand_index, info=galaxy_info)
+
+@app.route('/test')
+def toast():
+
+    args = request.args
+
+    catalog = None
+    if 'sdss' in args:
+        catalog = 'SDSS'
+    elif 'ngc' in args:
+        catalog = "NGC"
+
+    while True:
+
+        length = len(lslgautils.t)
+        rand_index = random.randint(0, length - 1)
+
+        if catalog is not None:
+            if lslgautils.t[rand_index]['GALAXY'][:len(catalog)] == catalog:
+                if lslgautils.test_footprint(rand_index):
+                    break
+        else:
+            if lslgautils.test_footprint(rand_index):
+                break
+    
+    return redirect(url_for('test', galaxy_index=rand_index))
+
+@app.route('/test/<int:galaxy_index>')
+def test(galaxy_index):
+
+    galaxy_info = lslgautils.get_lslga_tablerow(galaxy_index)
+
+    return render_template("inspect.html", rand=galaxy_index, info=galaxy_info)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
