@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Index Page</title>
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+    <body>
+        <h1>{{info['GALAXY']}}</h1>
+        <b>RA:</b> {{info['RA']}}<br/>
+        <b>DEC:</b> {{info['DEC']}}<br/>
+        <b>PA:</b> {{info['PA']}}<br/>
+        <b>D25:</b> {{info['D25']}}<br/>
+        <b>BA:</b> {{info['BA']}}<br/>
+
+        <p></p>
+
+        <img src="/lslga?num={{rand}}&layer=dr8"></img>
+        <img src="/lslga?num={{rand}}&layer=dr8-model"></img>
+        <img src="/lslga?num={{rand}}&layer=dr8-resid"></img>
+
+        <p></p>
+
+        <a href="/test/{{catalog_raw}}">[New {{catalog_raw}} galaxy]</a>
+
+    </body>
+</html>

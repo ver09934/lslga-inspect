@@ -15,6 +15,7 @@ def index():
     test_urls = [
         '/gallery',
         '/inspect',
+        '/test',
         '/jpeg-cutout',
         '/lslga'
     ]
@@ -135,13 +136,16 @@ def inspect():
 @app.route('/test')
 def toast():
 
-    args = request.args
+    return render_template('test.html')
 
-    catalog = None
-    if 'sdss' in args:
-        catalog = 'SDSS'
-    elif 'ngc' in args:
-        catalog = "NGC"
+@app.route('/test/<string:catalog_raw>')
+def test(catalog_raw):
+
+    # Could instead do a dict lookup here if needed
+    catalog = catalog_raw.upper()
+
+    if catalog_raw == 'all':
+        catalog = None
 
     while True:
 
@@ -156,15 +160,14 @@ def toast():
             if lslgautils.test_footprint(rand_index):
                 break
     
-    return redirect(url_for('test', galaxy_index=rand_index))
+    return redirect(url_for('test2', catalog_raw=catalog_raw, galaxy_index=rand_index))
 
-@app.route('/test/<int:galaxy_index>')
-def test(galaxy_index):
+@app.route('/test/<string:catalog_raw>/<int:galaxy_index>')
+def test2(catalog_raw, galaxy_index):
 
     galaxy_info = lslgautils.get_lslga_tablerow(galaxy_index)
 
-    return render_template("inspect.html", rand=galaxy_index, info=galaxy_info)
-
+    return render_template("test-inspect.html", catalog_raw=catalog_raw, rand=galaxy_index, info=galaxy_info)
 
 if __name__ == "__main__":
     app.run(debug=True)
