@@ -20,7 +20,8 @@ def main():
     # filter_radec(t)
     # test_pa_range(t)
     # test_id_order(t)
-    testing(t)
+    # testing(t)
+    testing_new(t)
 
 def filter_survey_footprint(t):    
 
@@ -116,8 +117,33 @@ def test_id_order(t):
 
 def testing(t):
 
-    t = t[:40]
-    print(t.info)
+    lsl = t['LSLGA_ID']
+    pl = lsl[0]
+    tmp = []
+
+    for cl in lsl:
+        tmp.append(cl - pl)
+        pl = cl
+
+    print(len(lsl))
+    print(min(lsl))
+    print(max(lsl))
+    print(np.mean(tmp))
+    print(max(lsl)/len(lsl))
+
+def testing_new(t):
+
+    lsl = t['LSLGA_ID']
+
+    for cl in lsl:
+        if cl is None or np.isnan(cl):
+            print(cl)
+    
+    lsl = t['PGC']
+
+    for cl in lsl:
+        if cl is None or np.isnan(cl):
+            print(cl)
 
 if __name__ == '__main__':
     main()
