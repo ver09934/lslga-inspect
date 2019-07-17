@@ -1,5 +1,5 @@
 # lslga-inspect
-Inspecting large galaxies in the [Legacy Surveys](http://legacysurvey.org/), using the [Legacy Survey Large Galaxy Atlas](https://github.com/moustakas/LSLGA).
+Inspecting large galaxies in the [Legacy Surveys](http://legacysurvey.org/), using the [Legacy Survey Large Galaxy Atlas](https://github.com/moustakas/LSLGA). The flask application grabs cutout images from the legacysurvey server and draws LSLGA galaxies on them.
 
 ## Data
 The files used can be obtained as follows:
@@ -8,9 +8,6 @@ $ mkdir data && cd data # The data directory is gitignored
 $ wget http://www.sos.siena.edu/~jmoustakas/tmp/LSLGA-v2.0.fits
 $ wget http://www.sos.siena.edu/~jmoustakas/tmp/README
 ```
-
-# flask-proxy
-A flask application that grabs cutout images from the legacysurvey server and draws LSLGA galaxies on them.
 
 ## Dependencies
 An environment can be created with Anaconda:
