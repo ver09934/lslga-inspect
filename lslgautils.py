@@ -263,6 +263,23 @@ def draw_galaxyname(img, galaxy_name):
         fill=(255, 255, 255)
     )
 
+def draw_annotation(img, annotation):
+
+    draw = ImageDraw.ImageDraw(img)
+    width, _ = img.size
+
+    annotation_font = ImageFont.truetype(font="FreeSerif", size=14)
+    annotation_width, _ = draw.textsize(annotation, font=annotation_font)
+    annotation_offset = 15
+
+    draw.text(
+        (width - annotation_offset - annotation_width, annotation_offset),
+        annotation,
+        font=annotation_font,
+        fill=(255, 255, 255)
+    )
+
+
 # Draw all lslga galaxies in frame using the legacysurvey.org's json query catalog
 def draw_all_ellipses(img, ra, dec, pixscale):
 

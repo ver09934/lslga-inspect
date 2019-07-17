@@ -100,6 +100,11 @@ def lslga():
 
     lslgautils.draw_scalebar(galaxy_img, pixscale, GALAXY)
     lslgautils.draw_galaxyname(galaxy_img, GALAXY)
+    
+    if 'annotation' in args:
+        annotation = str(args['annotation'])
+        if annotation != '':
+            lslgautils.draw_annotation(galaxy_img, annotation)
 
     return lslgautils.get_img_response(galaxy_img)
 
