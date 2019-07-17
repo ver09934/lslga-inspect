@@ -5,13 +5,15 @@
         <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
-        <h1>{{info['GALAXY']}}</h1>
-        <b>PGC:</b> {{info['PGC']}}<br/>
-        <b>RA:</b> {{info['RA']}}<br/>
-        <b>DEC:</b> {{info['DEC']}}<br/>
-        <b>PA:</b> {{info['PA']}}<br/>
-        <b>D25:</b> {{info['D25']}}<br/>
-        <b>BA:</b> {{info['BA']}}<br/>
+        <h1>{{ info['GALAXY'] }}</h1>
+        <b>PGC:</b> {{ info['PGC'] }} <br/>
+        <b>RA:</b> {{ '{:.6f}'.format(info['RA'], 6) }}<br/>
+        <b>DEC:</b> {{ '{:.6f}'.format(info['DEC'], 6) }}<br/>
+        <b>PA:</b> {{ '{:.1f} deg'.format(info['PA'], 1) }}<br/>
+        <b>D(25):</b> {{ '{:.3f} arcmin'.format(info['D25'], 3) }}<br/>
+        <b>B/A:</b> {{ '{:.2f}'.format(info['BA'], 2) }}<br/>
+        <b>Type: </b> {{ info['TYPE'] }}<br/>
+        <b>Redshift:</b> {{ '{:.4f}'.format(info['Z']) }}<br/>
 
         <p></p>
 
@@ -23,7 +25,7 @@
 
         <a href="/test/{{catalog_raw}}">[New {{catalog_pretty}} galaxy]</a>
         <br/>
-        <a href="{{viewer_link|safe}}">[Inspect in Viewer]</a>
+        <a href="{{viewer_link|safe}}" target="_blank">[Inspect in Viewer]</a>
         <br/>
         <a href="/test">[Back to catalog list]</a>
 
