@@ -183,8 +183,7 @@ def draw_scalebar(img, pixscale, galaxy_name):
             bar_width_arcsec += bar_width_increment
         # bar_width_arcsec -= bar_width_increment
 
-        if bar_width_arcsec > max_bar_width_arcsec: # An emperical factor: max_bar_width_arcsec * 0.9
-            # bar_width_increment *= 0.5
+        if bar_width_arcsec > max_bar_width_arcsec:
             bar_width_increment = int(bar_width_increment * 0.5)
         else:
             break
