@@ -182,13 +182,24 @@ def test2(catalog_raw, galaxy_index):
     actual_galaxy_index = lslgautils.get_lslga_index(galaxy_index)
     galaxy_info = lslgautils.get_lslga_tablerow(actual_galaxy_index)
 
+    viewer_link = (
+        "http://legacysurvey.org/viewer"
+        "?ra={:.7f}"
+        "&dec={:.7f}"
+        "&zoom=14"
+        "&lslga"
+    ).format(galaxy_info['RA'], galaxy_info['DEC'])
+
     return render_template(
         "test-inspect.html",
         catalog_raw=catalog_raw,
         catalog_pretty=catalog_pretty_strings[catalog_raw],
         rand=galaxy_index,
-        info=galaxy_info
+        info=galaxy_info,
+        viewer_link = viewer_link
     )
+
+# Other catalogs: UGC?
 
 catalog_match_strings = {
     'ngc': 'NGC',
