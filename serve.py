@@ -78,7 +78,8 @@ def lslga():
     args = request.args
 
     if 'num' in args:
-        lslga_index = int(args['num'])
+        lslga_id = int(args['num'])
+        lslga_index = lslgautils.get_lslga_index(lslga_id)
     else:
         lslga_index = 0
     
@@ -134,9 +135,10 @@ def inspect():
             if lslgautils.test_footprint(rand_index):
                 break
 
+    rand_id = lslgautils.get_lslga_id(rand_index)
     galaxy_info = lslgautils.get_lslga_tablerow(rand_index)
 
-    return render_template("inspect.html", rand=rand_index, info=galaxy_info)
+    return render_template("inspect.html", rand=rand_id, info=galaxy_info)
 
 @app.route('/test')
 def toast():
@@ -167,7 +169,8 @@ def test(catalog_raw):
             if lslgautils.test_footprint(rand_index):
                 break
     
-    return redirect(url_for('test2', catalog_raw=catalog_raw, galaxy_index=rand_index))
+    galaxy_id = lslgautils.get_lslga_id(rand_index)
+    return redirect(url_for('test2', catalog_raw=catalog_raw, galaxy_index=galaxy_id))
 
 @app.route('/test/<string:catalog_raw>/<int:galaxy_index>')
 def test2(catalog_raw, galaxy_index):
@@ -176,7 +179,8 @@ def test2(catalog_raw, galaxy_index):
         error_msg = 'Catalog name not found.'
         abort(Response(render_template('500.html', error_msg=error_msg), 500))
 
-    galaxy_info = lslgautils.get_lslga_tablerow(galaxy_index)
+    actual_galaxy_index = lslgautils.get_lslga_index(galaxy_index)
+    galaxy_info = lslgautils.get_lslga_tablerow(actual_galaxy_index)
 
     return render_template(
         "test-inspect.html",

@@ -21,7 +21,8 @@ def main():
     # test_pa_range(t)
     # test_id_order(t)
     # testing(t)
-    testing_new(t)
+    # testing_new(t)
+    testing_again(t)
 
 def filter_survey_footprint(t):    
 
@@ -144,6 +145,24 @@ def testing_new(t):
     for cl in lsl:
         if cl is None or np.isnan(cl):
             print(cl)
+
+def testing_again(t):
+
+    '''
+    lsl = t['LSLGA_ID']
+    pl = lsl[0]
+
+    for cl in lsl:
+        if not cl > pl:
+            print('TMP')
+    
+    exit()
+    '''
+
+    # print(t[:40]['LSLGA_ID'])
+
+    t.add_index('LSLGA_ID')
+    print(t.loc_indices[7])
 
 if __name__ == '__main__':
     main()

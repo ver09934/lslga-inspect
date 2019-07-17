@@ -13,6 +13,7 @@ import numpy as np
 catalog_path = 'data/LSLGA-v2.0.fits'
 catalog_path = os.path.expanduser(catalog_path)
 t = Table.read(catalog_path)
+t.add_index('LSLGA_ID')
 
 def get_img_response(img):
     img_io = BytesIO()
@@ -25,6 +26,13 @@ def get_img_response(img):
 
 def get_lslga_tablerow(lslga_index): 
     return t[lslga_index]
+
+def get_lslga_id(lslga_index):
+    return t['LSLGA_ID'][lslga_index]
+
+# Don't need to worry about multiple, instances, identifiers are unique
+def get_lslga_index(lslga_id):
+    return t.loc_indices[lslga_id]
 
 def test_footprint(lslga_index):
     ra, dec = t[lslga_index]['RA'], t[lslga_index]['DEC']
