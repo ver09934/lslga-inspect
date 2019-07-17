@@ -136,16 +136,18 @@ def inspect():
 @app.route('/test')
 def toast():
 
-    return render_template('test.html')
+    return render_template('test.html', pretty_strings=catalog_pretty_strings)
 
 @app.route('/test/<string:catalog_raw>')
 def test(catalog_raw):
 
-    # Could instead do a dict lookup here if needed
-    catalog = catalog_raw.upper()
-
     if catalog_raw == 'all':
         catalog = None
+    elif catalog_raw not in catalog_match_strings:
+        error_msg = 'Catalog name not found.'
+        abort(Response(render_template('500.html', error_msg=error_msg), 500))
+    else:
+        catalog = catalog_match_strings[catalog_raw]
 
     while True:
 
@@ -165,9 +167,34 @@ def test(catalog_raw):
 @app.route('/test/<string:catalog_raw>/<int:galaxy_index>')
 def test2(catalog_raw, galaxy_index):
 
+    if catalog_raw != 'all' and catalog_raw not in catalog_match_strings:
+        error_msg = 'Catalog name not found.'
+        abort(Response(render_template('500.html', error_msg=error_msg), 500))
+
     galaxy_info = lslgautils.get_lslga_tablerow(galaxy_index)
 
-    return render_template("test-inspect.html", catalog_raw=catalog_raw, rand=galaxy_index, info=galaxy_info)
+    return render_template(
+        "test-inspect.html",
+        catalog_raw=catalog_raw,
+        catalog_pretty=catalog_pretty_strings[catalog_raw],
+        rand=galaxy_index,
+        info=galaxy_info
+    )
+
+catalog_match_strings = {
+    'ngc': 'NGC',
+    'sdss': 'SDSS',
+    '2mas': '2MAS',
+    'pgc': 'PGC'
+}
+
+catalog_pretty_strings = {
+    'all': '',
+    'ngc': 'NGC',
+    'sdss': 'SDSS',
+    '2mas': '2MASS/2MASX',
+    'pgc': 'PGC'
+}
 
 if __name__ == "__main__":
     app.run(debug=True)

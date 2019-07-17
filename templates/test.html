@@ -6,10 +6,19 @@
     </head>
     <body>
         <h3>Select a catalog to inspect:</h3>
+        {% for key, value in pretty_strings.items() %}
+            {% if key == 'all' %}
+                <a href="/test/{{key}}">Inspect {{key}} galaxies</a><br/>
+            {% else %}
+                <a href="/test/{{key}}">Inspect {{value}} galaxies</a><br/>
+            {% endif %}
+        {% endfor %}
+        <!--
         <a href="/test/all">Inspect all galaxies</a><br/>
         <a href="/test/ngc">Inspect NGC galaxies</a><br/>
         <a href="/test/sdss">Inspect SDSS galaxies</a><br/>
         <a href="/test/2mas">Inspect 2MASS/2MASX galaxies</a><br/>
         <a href="/test/pgc">Inspect PGC galaxies</a><br/>
+        -->
     </body>
 </html>
