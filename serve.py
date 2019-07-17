@@ -190,7 +190,7 @@ catalog_match_strings = {
     'ngc': 'NGC',
     'sdss': 'SDSS',
     '2mas': '2MAS',
-    'pgc': 'PGC'
+    # 'pgc': 'PGC'
 }
 
 catalog_pretty_strings = {
@@ -198,7 +198,7 @@ catalog_pretty_strings = {
     'ngc': 'NGC',
     'sdss': 'SDSS',
     '2mas': '2MASS/2MASX',
-    'pgc': 'PGC'
+    # 'pgc': 'PGC'
 }
 
 if __name__ == "__main__":
