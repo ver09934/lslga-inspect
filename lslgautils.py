@@ -76,7 +76,9 @@ def render_galaxy_img(lslga_index, layer="dr8", alt_ellipsedraw=False):
     BA = galaxy['BA'] # minor-to-major axis ratio
 
     if np.isnan(PA):
-        PA = 0
+        PA = 90
+    if np.isnan(BA):
+        BA = 1
 
     major_axis_arcsec = D25 * 60
     minor_axis_arcsec = major_axis_arcsec * BA
@@ -376,7 +378,7 @@ def draw_all_ellipses_local(img, ra, dec, pixscale):
         BA = galaxy['BA']
 
         if np.isnan(PA):
-            PA = 0
+            PA = 90
         if np.isnan(BA):
             BA = 1
         if np.isnan(D25):
