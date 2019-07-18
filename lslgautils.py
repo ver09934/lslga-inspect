@@ -14,6 +14,19 @@ catalog_path = 'data/LSLGA-v2.0.fits'
 catalog_path = os.path.expanduser(catalog_path)
 t = Table.read(catalog_path)
 
+'''
+# Converting from indices to LSLGA_ID or PGC identifier
+
+t.add_index('LSLGA_ID')
+
+def get_lslga_id(lslga_index):
+    return t['LSLGA_ID'][lslga_index]
+
+# Don't need to worry about multiple, instances, identifiers are unique
+def get_lslga_index(lslga_id):
+    return t.loc_indices[lslga_id]
+'''
+
 def get_img_response(img):
     img_io = BytesIO()
     img.save(img_io, 'JPEG', quality=70)
