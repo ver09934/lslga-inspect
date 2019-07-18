@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    
     test_urls = [
         '/gallery',
         '/inspect',
@@ -112,6 +113,8 @@ def lslga():
 # TODO: Might be better to have each galaxy have sub-url, so one could go back to them?
 @app.route('/inspect')
 def inspect():
+
+    return redirect(url_for('toast'))
 
     args = request.args
 
