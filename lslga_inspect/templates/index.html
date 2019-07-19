@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Index Page</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <h1>LSLGA Inspection Tool</h1>
+        <h3>Select a catalog to inspect:</h3>
+        {% for key, value in pretty_strings.items() %}
+            {% if key == 'all' %}
+                <a href="{{ url_for('inspect.inspect_catalog', catalog_raw=key) }}">Inspect {{key}} galaxies</a><br/>
+            {% else %}
+                <a href="{{ url_for('inspect.inspect_catalog', catalog_raw=key) }}">Inspect {{value}} galaxies</a><br/>
+            {% endif %}
+        {% endfor %}
+    </body>
+</html>

@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Index Page</title>
-        <link rel="stylesheet" href="/static/style.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     </head>
     <body>
         <h1>{{ info['GALAXY'] }}</h1>
@@ -23,11 +23,11 @@
 
         <p></p>
 
-        <a href="/test/{{catalog_raw}}">[New {{catalog_pretty}} galaxy]</a>
+        <a href="{{ url_for('inspect.inspect_catalog', catalog_raw=catalog_raw) }}">[New {{catalog_pretty}} galaxy]</a>
         <br/>
-        <a href="{{viewer_link|safe}}" target="_blank">[Inspect in Viewer]</a>
+        <a href="{{ viewer_link|safe }}" target="_blank">[Inspect in Viewer]</a>
         <br/>
-        <a href="/test">[Back to catalog list]</a>
+        <a href="{{ url_for('inspect.inspect') }}">[Back to catalog list]</a>
 
     </body>
 </html>

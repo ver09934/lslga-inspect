@@ -11,7 +11,6 @@ import numpy as np
 # TODO: Determine whether galaxy should be discarded is PA is NaN
 
 catalog_path = 'data/LSLGA-v2.0.fits'
-catalog_path = os.path.expanduser(catalog_path)
 t = Table.read(catalog_path)
 
 '''
