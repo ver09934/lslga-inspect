@@ -1,4 +1,4 @@
-from flask import make_response
+from flask import make_response, current_app
 import requests
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
@@ -10,8 +10,9 @@ import numpy as np
 # TODO: use alt_ellipsedraw in render_galaxy_img
 # TODO: Determine whether galaxy should be discarded is PA is NaN
 
-catalog_path = 'data/LSLGA-v2.0.fits'
-t = Table.read(catalog_path)
+# catalog_path = current_app.config['FITS_PATH']
+# catalog_path = 'data/LSLGA-v2.0.fits'
+# t = Table.read(catalog_path)
 
 '''
 # Converting from indices to LSLGA_ID or PGC identifier
@@ -26,6 +27,11 @@ def get_lslga_index(lslga_id):
     return t.loc_indices[lslga_id]
 '''
 
+def get_t():
+    catalog_path = current_app.config['FITS_PATH']
+    t = Table.read(catalog_path)
+    return t
+
 def get_img_response(img):
     img_io = BytesIO()
     img.save(img_io, 'JPEG', quality=70)
@@ -36,9 +42,11 @@ def get_img_response(img):
     return response
 
 def get_lslga_tablerow(lslga_index): 
+    t = get_t()
     return t[lslga_index]
 
 def test_footprint(lslga_index):
+    t = get_t()
     ra, dec = t[lslga_index]['RA'], t[lslga_index]['DEC']
     return test_footprint_radec(ra, dec)
 
@@ -347,9 +355,7 @@ def draw_all_ellipses(img, ra, dec, pixscale):
 # Draw all lslga galaxies in frame using a local FITS catalog
 def draw_all_ellipses_local(img, ra, dec, pixscale):
     
-    catalog_path = '../data/LSLGA-v2.0.fits'
-    catalog_path = os.path.expanduser(catalog_path)
-    t = Table.read(catalog_path)
+    t = get_t()
     
     width, height = img.size
 

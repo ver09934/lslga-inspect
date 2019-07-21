@@ -22,11 +22,12 @@ def inspect_catalog(catalog_raw):
 
     while True:
 
-        length = len(lslgautils.t)
+        t = lslgautils.get_t()
+        length = len(t)
         rand_index = random.randint(0, length - 1)
 
         if catalog is not None:
-            if lslgautils.t[rand_index]['GALAXY'][:len(catalog)] == catalog:
+            if t[rand_index]['GALAXY'][:len(catalog)] == catalog:
                 if lslgautils.test_footprint(rand_index):
                     break
         else:
