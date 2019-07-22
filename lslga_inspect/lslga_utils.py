@@ -59,7 +59,7 @@ def test_footprint_radec(ra, dec, layer="dr8", pixscale=3, width=20, height=20):
     ext = img.convert('L').getextrema()
     return ext[0] != ext[1]
 
-def render_galaxy_img(lslga_index, layer="dr8", alt_ellipsedraw=False):
+def render_galaxy_img(lslga_index, layer="dr8"):
 
     galaxy = get_lslga_tablerow(lslga_index)
 
