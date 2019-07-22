@@ -2,6 +2,7 @@
 *.fits
 data/
 tmp/
+README
 
 # Editor files/dirs
 *.sw*
