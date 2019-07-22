@@ -1,6 +1,6 @@
-from flask import Blueprint, url_for, redirect, render_template, request, abort, Response
-from . import lslga_utils
+from flask import abort, Blueprint, redirect, render_template, request, Response, url_for
 import random
+from . import lslga_utils
 
 bp = Blueprint('inspect', __name__)
 

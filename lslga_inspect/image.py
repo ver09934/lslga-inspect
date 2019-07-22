@@ -1,4 +1,4 @@
-from flask import Blueprint, request, abort, Response, render_template
+from flask import abort, Blueprint, render_template, request, Response
 import requests
 from PIL import Image
 from io import BytesIO
