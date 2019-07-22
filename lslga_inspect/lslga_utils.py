@@ -15,18 +15,13 @@ def init_t(app):
     t.add_index('LSLGA_ID')
 
 def get_t():
-    # catalog_path = current_app.config['FITS_PATH']
-    # t = Table.read(catalog_path)
-    '''
-    # Converting from indices to LSLGA_ID or PGC identifier
-    t.add_index('LSLGA_ID')
-    def get_lslga_id(lslga_index):
-        return t['LSLGA_ID'][lslga_index]
-    # Don't need to worry about multiple, instances, identifiers are unique
-    def get_lslga_index(lslga_id):
-        return t.loc_indices[lslga_id]
-    '''
     return t
+
+def get_lslga_id(lslga_index):
+    return t['LSLGA_ID'][lslga_index]
+
+def get_lslga_index(lslga_id):
+    return t.loc_indices[lslga_id]
 
 def get_img_response(img):
     img_io = BytesIO()
