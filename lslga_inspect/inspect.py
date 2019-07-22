@@ -4,8 +4,6 @@ import random
 
 bp = Blueprint('inspect', __name__)
 
-# TODO: return abort(500, 'This is the custom error message to be displayed.')
-
 # Other catalogs: UGC, PGC
 catalog_match_strings = {
     'ngc': 'NGC',
@@ -33,8 +31,7 @@ def inspect_catalog(catalog_raw):
     if catalog_raw == 'all':
         catalog = None
     elif catalog_raw not in catalog_match_strings:
-        error_msg = 'Catalog name not found.'
-        abort(Response(render_template('500.html', error_msg=error_msg), 500))
+        return abort(500, 'Catalog name not found.')
     else:
         catalog = catalog_match_strings[catalog_raw]
 
@@ -60,9 +57,8 @@ def inspect_catalog(catalog_raw):
 def inspect_galaxy(catalog_raw, galaxy_index):
 
     if catalog_raw != 'all' and catalog_raw not in catalog_match_strings:
-        error_msg = 'Catalog name not found.'
-        abort(Response(render_template('500.html', error_msg=error_msg), 500))
-
+        return abort(500, 'Catalog name not found.')
+        
     galaxy_info = lslga_utils.get_lslga_tablerow(galaxy_index)
 
     viewer_link = (
