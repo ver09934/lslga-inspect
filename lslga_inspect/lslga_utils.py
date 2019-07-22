@@ -6,9 +6,17 @@ import os
 from astropy.table import Table
 import numpy as np
 
-def get_t():
-    catalog_path = current_app.config['FITS_PATH']
+t = None
+
+def init_t(app):
+    catalog_path = app.config['FITS_PATH']
+    global t
     t = Table.read(catalog_path)
+    t.add_index('LSLGA_ID')
+
+def get_t():
+    # catalog_path = current_app.config['FITS_PATH']
+    # t = Table.read(catalog_path)
     '''
     # Converting from indices to LSLGA_ID or PGC identifier
     t.add_index('LSLGA_ID')
