@@ -1,4 +1,4 @@
-from flask import make_response
+from flask import make_response, current_app
 import requests
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
@@ -6,26 +6,22 @@ import os
 from astropy.table import Table
 import numpy as np
 
-# TODO: Add options to render_galaxy_img and get_lslga_tablerow to use specific catalog - NGC, SDSS, etc.
-# TODO: use alt_ellipsedraw in render_galaxy_img
+# TODO: Add option to use alt_ellipsedraw in render_galaxy_img
 # TODO: Determine whether galaxy should be discarded is PA is NaN
 
-catalog_path = 'data/LSLGA-v2.0.fits'
-catalog_path = os.path.expanduser(catalog_path)
-t = Table.read(catalog_path)
-
-'''
-# Converting from indices to LSLGA_ID or PGC identifier
-
-t.add_index('LSLGA_ID')
-
-def get_lslga_id(lslga_index):
-    return t['LSLGA_ID'][lslga_index]
-
-# Don't need to worry about multiple, instances, identifiers are unique
-def get_lslga_index(lslga_id):
-    return t.loc_indices[lslga_id]
-'''
+def get_t():
+    catalog_path = current_app.config['FITS_PATH']
+    t = Table.read(catalog_path)
+    '''
+    # Converting from indices to LSLGA_ID or PGC identifier
+    t.add_index('LSLGA_ID')
+    def get_lslga_id(lslga_index):
+        return t['LSLGA_ID'][lslga_index]
+    # Don't need to worry about multiple, instances, identifiers are unique
+    def get_lslga_index(lslga_id):
+        return t.loc_indices[lslga_id]
+    '''
+    return t
 
 def get_img_response(img):
     img_io = BytesIO()
@@ -36,10 +32,12 @@ def get_img_response(img):
     response.headers['Content-Type'] = 'image/jpeg'
     return response
 
-def get_lslga_tablerow(lslga_index): 
+def get_lslga_tablerow(lslga_index):
+    t = get_t()
     return t[lslga_index]
 
 def test_footprint(lslga_index):
+    t = get_t()
     ra, dec = t[lslga_index]['RA'], t[lslga_index]['DEC']
     return test_footprint_radec(ra, dec)
 
@@ -348,9 +346,7 @@ def draw_all_ellipses(img, ra, dec, pixscale):
 # Draw all lslga galaxies in frame using a local FITS catalog
 def draw_all_ellipses_local(img, ra, dec, pixscale):
     
-    catalog_path = '../data/LSLGA-v2.0.fits'
-    catalog_path = os.path.expanduser(catalog_path)
-    t = Table.read(catalog_path)
+    t = get_t()
     
     width, height = img.size
 

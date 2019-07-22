@@ -8,6 +8,6 @@ tmp/
 *~
 .vscode/
 
-# Python files
+# Python files/dirs
 *.pyc
-__pycache__
+__pycache__/
