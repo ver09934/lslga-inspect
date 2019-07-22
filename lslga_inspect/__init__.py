@@ -18,16 +18,13 @@ def create_app():
     return app
 
 # To run (dev): FLASK_APP=lslga_inspect FLASK_ENV=development flask run
-# TODO: Update README with newest flask application info
-# TODO: Add docstrings
-# TODO: Remove TODOs from README
+
+# TODO: Run 'ag TODO' and complete all TODOs
 # TODO: Figure out how to use base templates in Jinja
 # TODO: Incorporate changes from decals-web into these image methods
-# TODO: Run 'ag TODO' and complete all TODOs
-# TODO: Remove unneeded imports
 # TODO: Use LSLGA_ID in URLs instead of FITS table index
-# TODO: Use a visible section in README for TODOs
 # TODO: Transfer ownership to legacysurvey as requested by Dr. Moustakas
-# TODO: Put flask imports in alphabetical order
-# TODO: Figure out a better way to do things than returning None and HTTP errors
 # TODO: Check handling of if PA, BA, D25, etc. are NaN
+# TODO: Add option to use alt_ellipsedraw in render_galaxy_img
+# TODO: Add docstrings
+# NOTE: Should figure out a better way to do things than returning None and HTTP errors

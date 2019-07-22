@@ -6,9 +6,6 @@ import os
 from astropy.table import Table
 import numpy as np
 
-# TODO: Add option to use alt_ellipsedraw in render_galaxy_img
-# TODO: Determine whether galaxy should be discarded is PA is NaN
-
 def get_t():
     catalog_path = current_app.config['FITS_PATH']
     t = Table.read(catalog_path)
