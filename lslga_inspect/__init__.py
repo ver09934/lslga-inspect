@@ -10,12 +10,12 @@ def create_app():
 
     app.config.from_pyfile('config.cfg')
 
+    from . import lslga_utils
+    lslga_utils.init_t(app)
+
     from . import inspect, image
     app.register_blueprint(inspect.bp)
     app.register_blueprint(image.bp)
-
-    from . import lslga_utils
-    lslga_utils.init_t(app)
 
     return app
 
