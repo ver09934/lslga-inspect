@@ -7,6 +7,20 @@ from astropy.table import Table
 import numpy as np
 
 def get_t():
+
+    with open('/tmp/counter', 'r') as f:
+        try:
+            val = int(f.read().strip())
+        except:
+            val = 0
+    with open('/tmp/counter', 'w') as f:
+        val += 1
+        f.write(str(val))
+
+    print('-'*60)
+    print("Printer count: {}".format(val))
+    print('-'*60)
+
     catalog_path = current_app.config['FITS_PATH']
     t = Table.read(catalog_path)
     '''
