@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Index Page</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+
+        {% for message in get_flashed_messages() %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+
+        {% if action == "register" %}
+            <h1>Register</h1>
+        {% elif action == "login" %}
+            <h1>Log In</h1>
+        {% endif %}
+
+        <!-- Pro HTML Tips: How to add space to your page -->
+        <p></p>
+
+        <form method="post">
+            <label for="username">Username</label>
+            <input name="username" id="username" required>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+            {% if action == "register" %}
+                <input type="submit" value="Register">
+            {% elif action == "login" %}
+                <input type="submit" value="Log In">
+            {% endif %}
+        </form>
+
+    </body>
+</html>

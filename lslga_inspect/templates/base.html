@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+
+        <nav>
+            <h1>Flaskr</h1>
+            <ul>
+                
+                <!-- TODO: Use span tag here? (See flaskr) -->
+
+                {% if g.user %}
+                    <li>{{ g.user['username'] }}</li>
+                    <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                    <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <section class="content">
+            <header>
+            {% block header %}{% endblock %}
+            </header>
+            {% for message in get_flashed_messages() %}
+            <div class="flash">{{ message }}</div>
+            {% endfor %}
+            {% block content %}{% endblock %}
+        </section>
+
+    </body>
+</html>
+
+<!-- =============================================================================================== -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Index Page</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <h1>{{ info['GALAXY'] }}</h1>
+        <b>PGC:</b> {{ info['PGC'] }} <br/>
+        <b>RA:</b> {{ '{:.6f}'.format(info['RA'], 6) }}<br/>
+        <b>DEC:</b> {{ '{:.6f}'.format(info['DEC'], 6) }}<br/>
+        <b>PA:</b> {{ '{:.1f} deg'.format(info['PA'], 1) }}<br/>
+        <b>D(25):</b> {{ '{:.3f} arcmin'.format(info['D25'], 3) }}<br/>
+        <b>B/A:</b> {{ '{:.2f}'.format(info['BA'], 2) }}<br/>
+        <b>Type: </b> {{ info['TYPE'] }}<br/>
+        <b>Redshift:</b> {{ '{:.4f}'.format(info['Z']) }}<br/>
+
+        <p></p>
+        
+        <img src="{{ url_for('image.lslga', id=id, layer='dr8', annotation='Data')|safe }}"></img>
+        <img src="{{ url_for('image.lslga', id=id, layer='dr8-model', annotation='Model')|safe }}"></img>
+        <img src="{{ url_for('image.lslga', id=id, layer='dr8-resid', annotation='Residual')|safe }}"></img>
+        
+        <!--
+        <img src="/lslga?id={{rand}}&layer=dr8&annotation=Data"></img>
+        <img src="/lslga?id={{rand}}&layer=dr8-model&annotation=Model"></img>
+        <img src="/lslga?id={{rand}}&layer=dr8-resid&annotation=Residual"></img>
+        -->
+
+        <p></p>
+
+        <a href="{{ url_for('inspect.inspect_catalog', catalog_raw=catalog_raw) }}">[New {{catalog_pretty}} galaxy]</a>
+        <br/>
+        <a href="{{viewer_link|safe}}" target="_blank">[Inspect in Viewer]</a>
+        <br/>
+        <a href="{{ url_for('inspect.inspect') }}">[Back to catalog list]</a>
+    </body>
+</html>

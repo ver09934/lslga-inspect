@@ -13,6 +13,13 @@ def init_t(app):
     global t
     t = Table.read(catalog_path)
     t.add_index('LSLGA_ID')
+    '''
+    TODO: Would somewhere about here be the best place
+    to generate cuts, or should it be in the view method
+    generating the next galaxy to inspect? Want the whole
+    system to be as 'aware' as possible of what subset
+    is being inspected
+    '''
 
 # In case we want to change the way t is returned
 def get_t():

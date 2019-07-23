@@ -12,3 +12,6 @@ README
 # Python files/dirs
 *.pyc
 __pycache__/
+
+# Database files
+*.sqlite

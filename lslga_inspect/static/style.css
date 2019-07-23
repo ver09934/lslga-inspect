@@ -1,3 +1,102 @@
+/* --- Main --- */
+
+html, body {
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif;
+    font-weight: 300;
+  }
+  
+  #main {
+    margin: 0px;
+    margin-top: 50px;
+    padding: 0px;
+  }
+  
+  #content-container-center {
+    text-align: center;
+    margin: 0px;
+    padding: 0px 15px 15px 15px; /* top right bottom left */
+  }
+  
+  #content-container {
+    margin: 0px;
+    padding: 0px 15px 15px 15px;
+  }
+  
+  /* --- Navbar --- */
+  
+  nav {
+    background-color: #555555;
+    position: fixed;
+    width: 100%;
+    z-index: 1;  
+    top: 0px;
+  }
+  
+  nav ul {
+    padding-left: 0px; /* Justify to the left of the navbar */
+    display: inline;
+    line-height: 50px;
+  }
+  
+  nav li {
+    display: inline-block;
+    position: relative;
+  }
+  
+  nav a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 8px 18px;
+    font-weight: 400;
+  }
+  
+  nav a:hover {
+    color: #8e8e8e;
+  }
+  
+  /* --- Titles and Subtitles --- */
+  
+  /*
+  .title {
+    font-weight: 400;
+    width: 100%;
+    background-color: #bbb;
+    padding: 30px 0px;
+    text-align: center;
+    margin: 0px;
+  }
+  
+  .subtitle {
+    font-weight: 300;
+    background-color: #3a3b60;
+    padding: 15px;
+    color: #fff;
+    border-radius: 5px;
+    text-align: center;
+    margin: 20px 0px;
+  }
+  
+  .title-simple {
+    font-weight: 400;
+  }
+  
+  .subtitle-simple {
+    font-weight: 300;
+  }
+  
+  .title-simple.center {
+    text-align: center;
+  }
+  
+  .subtitle-simple.center {
+    text-align: center;
+  }
+  */
+
+/*
 body {
     color: #E0E0E0;
     background-color: #333333;
@@ -14,3 +113,4 @@ body {
 a {
     color: #75aaff;
 }
+*/

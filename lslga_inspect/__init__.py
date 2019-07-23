@@ -1,4 +1,5 @@
 from flask import Flask
+import os
 
 def create_app():
     
@@ -17,8 +18,18 @@ def create_app():
     app.register_blueprint(inspect.bp)
     app.register_blueprint(image.bp)
 
+    if not os.path.exists(app.instance_path):
+        os.makedirs(app.instance_path)
+
+    from . import db
+    db.init_app(app)
+
+    from . import user
+    app.register_blueprint(user.bp)
+
     return app
 
+# export FLASK_APP=lslga_inspect && export FLASK_ENV=development
 # To run (dev): FLASK_APP=lslga_inspect FLASK_ENV=development flask run
 
 # TODO: Run 'ag TODO' and complete all TODOs
