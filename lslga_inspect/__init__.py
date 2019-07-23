@@ -23,9 +23,6 @@ def create_app():
 
 # TODO: Run 'ag TODO' and complete all TODOs
 # TODO: Figure out how to use base templates in Jinja
-# TODO: Incorporate changes from decals-web into these image methods
 # TODO: Transfer ownership to legacysurvey as requested by Dr. Moustakas
-# TODO: Check handling of if PA, BA, D25, etc. are NaN
-# TODO: Add option to use alt_ellipsedraw in render_galaxy_img
 # TODO: Add docstrings
 # NOTE: Should figure out a better way to do things than returning None and HTTP errors

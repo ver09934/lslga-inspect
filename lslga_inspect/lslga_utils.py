@@ -298,7 +298,6 @@ def draw_annotation(img, annotation):
         fill=(255, 255, 255)
     )
 
-
 # Draw all lslga galaxies in frame using the legacysurvey.org's json query catalog
 def draw_all_ellipses(img, ra, dec, pixscale):
 
@@ -360,6 +359,10 @@ def draw_all_ellipses_local(img, ra, dec, pixscale):
     rahi = ra + ((width / 2) * pixscale / 3600 / np.cos(np.deg2rad(dec)))
     declo = dec - ((height / 2) * pixscale / 3600)
     dechi = dec + ((height / 2) * pixscale / 3600)
+
+    # TODO: See the method 'query_lslga_radecbox' in
+    # https://github.com/legacysurvey/decals-web/blob/master/map/cats.py
+    # for a better way to do this
 
     galaxies = []
     for galaxy in t:
