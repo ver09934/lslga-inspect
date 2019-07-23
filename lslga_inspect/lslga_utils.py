@@ -75,7 +75,7 @@ def test_footprint_radec(ra, dec, layer="dr8", pixscale=3, width=20, height=20):
     ext = img.convert('L').getextrema()
     return ext[0] != ext[1]
 
-def render_galaxy_img(lslga_id, layer="dr8"):
+def render_galaxy_img(lslga_id, layer="dr8", width=500, height=500, draw_ellipse=True, ellipse_width=3):
     
     galaxy = get_lslga_tablerow(lslga_id)
 
@@ -98,8 +98,8 @@ def render_galaxy_img(lslga_id, layer="dr8"):
     # semiminor_axis_arcsec = minor_axis_arcsec / 2
 
     # Set width or height to None to have that dimension sized for aspect ratio of galaxy
-    img_width = 500 # pixels
-    img_height = 500 # pixels
+    img_width = width # pixels
+    img_height = height # pixels
 
     assert img_width is not None or img_height is not None
 
@@ -170,7 +170,7 @@ def render_galaxy_img(lslga_id, layer="dr8"):
     overlay = Image.new('RGBA', (overlay_width, overlay_height))
     draw = ImageDraw.ImageDraw(overlay)
     box_corners = (0, 0, overlay_width, overlay_height)
-    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=3)
+    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=ellipse_width)
 
     # Need expand=True, or else the overlay gets clipped when rotating
     rotated = overlay.rotate(PA, expand=True)
@@ -181,18 +181,22 @@ def render_galaxy_img(lslga_id, layer="dr8"):
     paste_shift_x = int(np.round(img_width/2 - rotated_width/2, 0))
     paste_shift_y = int(np.round(img_height/2 - rotated_height/2, 0))
 
-    img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
+    if draw_ellipse:
+        img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
 
     return img, pixscale
 
 # Take an img object and draw the galaxy name and a scalebar
-def draw_scalebar(img, pixscale, galaxy_name):
+def draw_scalebar(img, pixscale, fontsize=14):
 
     width, height = img.size
     draw = ImageDraw.ImageDraw(img)
     
-    bar_offset = 15
-    bar_height = 3
+    # bar_offset = 15
+    bar_offset = np.maximum(15, int(4 * np.sqrt(fontsize))) # Seems about right
+    
+    # bar_height = 3
+    bar_height = np.maximum(3, int(fontsize / 4.6)) # Emperically determined
 
     bar_width_increment = 15 
     desired_width_fraction = 1/8
@@ -252,12 +256,13 @@ def draw_scalebar(img, pixscale, galaxy_name):
     # sans_font = ImageFont.truetype(font="FreeSans", size=14)
     # serif_font = ImageFont.truetype(font="FreeSerif", size=14)
 
-    scale_label_font = ImageFont.truetype(font="FreeMono", size=14)
+    scale_label_font = ImageFont.truetype(font="FreeMono", size=fontsize)
 
     scale_label_width, scale_label_height = draw.textsize(scale_label, font=scale_label_font)
     scale_label_digits_width, _ = draw.textsize(scale_label_digits, font=scale_label_font)
 
-    vert_offset = 4
+    # vert_offset = 4
+    vert_offset = np.maximum(4, int(fontsize / 3.5)) # Emperically determined
 
     font_coords = (
         # width - bar_offset - scale_label_width,
@@ -274,13 +279,14 @@ def draw_scalebar(img, pixscale, galaxy_name):
         fill=(255, 255, 255)
     )
 
-def draw_galaxyname(img, galaxy_name):
+def draw_galaxyname(img, galaxy_name, fontsize=14):
 
     draw = ImageDraw.ImageDraw(img)
 
     galaxy_label = galaxy_name
-    galaxy_label_offset = 15
-    galaxy_label_font = ImageFont.truetype(font="FreeSerif", size=14)
+    # galaxy_label_offset = 15
+    galaxy_label_offset = np.maximum(15, int(4 * np.sqrt(fontsize)))
+    galaxy_label_font = ImageFont.truetype(font="FreeSerif", size=fontsize)
 
     draw.text(
         (galaxy_label_offset, galaxy_label_offset),
@@ -289,14 +295,15 @@ def draw_galaxyname(img, galaxy_name):
         fill=(255, 255, 255)
     )
 
-def draw_annotation(img, annotation):
+def draw_annotation(img, annotation, fontsize=14):
 
     draw = ImageDraw.ImageDraw(img)
     width, _ = img.size
 
-    annotation_font = ImageFont.truetype(font="FreeSerif", size=14)
+    annotation_font = ImageFont.truetype(font="FreeSerif", size=fontsize)
     annotation_width, _ = draw.textsize(annotation, font=annotation_font)
-    annotation_offset = 15
+    # annotation_offset = 15
+    annotation_offset = np.maximum(15, int(4 * np.sqrt(fontsize)))
 
     draw.text(
         (width - annotation_offset - annotation_width, annotation_offset),

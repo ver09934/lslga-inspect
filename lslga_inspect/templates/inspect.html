@@ -15,9 +15,17 @@
 
     <p></p>
 
+    <!-- When it gets as convoluted as this, hardcoding is just easier -->
+
+    <img src="/lslga?id={{id}}&layer=dr8&annotation=Data"></img>
+    <img src="/lslga?id={{id}}&layer=dr8-model&annotation=Model"></img>
+    <img src="/lslga?id={{id}}&layer=dr8-resid&annotation=Residual"></img>
+
+    <!--
     <img src="{{ url_for('image.lslga', id=id, layer='dr8', annotation='Data')|safe }}"></img>
     <img src="{{ url_for('image.lslga', id=id, layer='dr8-model', annotation='Model')|safe }}"></img>
     <img src="{{ url_for('image.lslga', id=id, layer='dr8-resid', annotation='Residual')|safe }}"></img>
+    -->
 
     <p></p>
 

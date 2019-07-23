@@ -59,7 +59,29 @@ def lslga():
     else:
         layer = "dr8"
 
-    rendered = lslga_utils.render_galaxy_img(lslga_id, layer=layer)
+    kwargs = {}
+
+    if 'width' in args:
+        if str(args['width']).lower() == 'none':
+            width = None
+        else:
+            width = int(args['width'])
+        kwargs['width'] = width
+
+    if 'height' in args:
+        if str(args['height']).lower() == 'none':
+            height = None
+        else:
+            height = int(args['height'])
+        kwargs['height'] = height
+
+    if 'noellipse' in args:
+        kwargs['draw_ellipse'] = False
+    
+    if 'ellipsewidth' in args:
+        kwargs['ellipse_width'] = int(args['ellipsewidth'])
+
+    rendered = lslga_utils.render_galaxy_img(lslga_id, layer=layer, **kwargs)
 
     if rendered is None:
         return abort(500, 'The LSLGA image could not be rendered (likely not in survey footprint).')
@@ -69,12 +91,16 @@ def lslga():
     galaxy_info = lslga_utils.get_lslga_tablerow(lslga_id)
     GALAXY = galaxy_info['GALAXY']
 
-    lslga_utils.draw_scalebar(galaxy_img, pixscale, GALAXY)
-    lslga_utils.draw_galaxyname(galaxy_img, GALAXY)
+    fontarg = {}
+    if 'fontsize' in args:
+        fontarg['fontsize'] = int(args['fontsize'])
+
+    lslga_utils.draw_scalebar(galaxy_img, pixscale, **fontarg)
+    lslga_utils.draw_galaxyname(galaxy_img, GALAXY, **fontarg)
     
     if 'annotation' in args:
         annotation = str(args['annotation'])
         if annotation != '':
-            lslga_utils.draw_annotation(galaxy_img, annotation)
+            lslga_utils.draw_annotation(galaxy_img, annotation, **fontarg)
 
     return lslga_utils.get_img_response(galaxy_img)
