@@ -49,24 +49,24 @@ def lslga():
     
     args = request.args
 
-    if 'num' in args:
-        lslga_index = int(args['num'])
+    if 'id' in args:
+        lslga_id = int(args['id'])
     else:
-        lslga_index = 0
+        lslga_id = 2
     
     if 'layer' in args:
         layer = str(args['layer'])
     else:
         layer = "dr8"
 
-    rendered = lslga_utils.render_galaxy_img(lslga_index, layer=layer)
+    rendered = lslga_utils.render_galaxy_img(lslga_id, layer=layer)
 
     if rendered is None:
         return abort(500, 'The LSLGA image could not be rendered (likely not in survey footprint).')
     else:
         galaxy_img, pixscale = rendered
     
-    galaxy_info = lslga_utils.get_lslga_tablerow(lslga_index)
+    galaxy_info = lslga_utils.get_lslga_tablerow(lslga_id)
     GALAXY = galaxy_info['GALAXY']
 
     lslga_utils.draw_scalebar(galaxy_img, pixscale, GALAXY)

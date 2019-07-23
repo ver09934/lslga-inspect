@@ -17,14 +17,14 @@
 
         <p></p>
         
-        <img src="{{ url_for('image.lslga', num=rand, layer='dr8', annotation='Data')|safe }}"></img>
-        <img src="{{ url_for('image.lslga', num=rand, layer='dr8-model', annotation='Model')|safe }}"></img>
-        <img src="{{ url_for('image.lslga', num=rand, layer='dr8-resid', annotation='Residual')|safe }}"></img>
+        <img src="{{ url_for('image.lslga', id=id, layer='dr8', annotation='Data')|safe }}"></img>
+        <img src="{{ url_for('image.lslga', id=id, layer='dr8-model', annotation='Model')|safe }}"></img>
+        <img src="{{ url_for('image.lslga', id=id, layer='dr8-resid', annotation='Residual')|safe }}"></img>
         
         <!--
-        <img src="/lslga?num={{rand}}&layer=dr8&annotation=Data"></img>
-        <img src="/lslga?num={{rand}}&layer=dr8-model&annotation=Model"></img>
-        <img src="/lslga?num={{rand}}&layer=dr8-resid&annotation=Residual"></img>
+        <img src="/lslga?id={{rand}}&layer=dr8&annotation=Data"></img>
+        <img src="/lslga?id={{rand}}&layer=dr8-model&annotation=Model"></img>
+        <img src="/lslga?id={{rand}}&layer=dr8-resid&annotation=Residual"></img>
         -->
 
         <p></p>

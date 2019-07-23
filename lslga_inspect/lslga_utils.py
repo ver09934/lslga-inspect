@@ -14,6 +14,7 @@ def init_t(app):
     t = Table.read(catalog_path)
     t.add_index('LSLGA_ID')
 
+# In case we want to change the way t is returned
 def get_t():
     return t
 
@@ -32,7 +33,11 @@ def get_img_response(img):
     response.headers['Content-Type'] = 'image/jpeg'
     return response
 
-def get_lslga_tablerow(lslga_index):
+# NOTE: This now accepts lslga_id, not index
+# To access by index, just access
+# lslga_utils.get(t)[index][index]
+def get_lslga_tablerow(lslga_id):
+    lslga_index = get_lslga_index(lslga_id)
     t = get_t()
     return t[lslga_index]
 
@@ -41,6 +46,7 @@ def test_footprint(lslga_index):
     ra, dec = t[lslga_index]['RA'], t[lslga_index]['DEC']
     return test_footprint_radec(ra, dec)
 
+# This is not a good solution
 def test_footprint_radec(ra, dec, layer="dr8", pixscale=3, width=20, height=20):
 
     url = (
@@ -62,9 +68,9 @@ def test_footprint_radec(ra, dec, layer="dr8", pixscale=3, width=20, height=20):
     ext = img.convert('L').getextrema()
     return ext[0] != ext[1]
 
-def render_galaxy_img(lslga_index, layer="dr8"):
-
-    galaxy = get_lslga_tablerow(lslga_index)
+def render_galaxy_img(lslga_id, layer="dr8"):
+    
+    galaxy = get_lslga_tablerow(lslga_id)
 
     RA = galaxy['RA']
     DEC = galaxy['DEC']

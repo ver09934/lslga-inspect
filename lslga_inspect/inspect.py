@@ -51,15 +51,16 @@ def inspect_catalog(catalog_raw):
             if lslga_utils.test_footprint(rand_index):
                 break
     
-    return redirect(url_for('.inspect_galaxy', catalog_raw=catalog_raw, galaxy_index=rand_index))
+    rand_id = lslga_utils.get_lslga_id(rand_index)
+    return redirect(url_for('.inspect_galaxy', catalog_raw=catalog_raw, galaxy_id=rand_id))
 
-@bp.route('/inspect/<string:catalog_raw>/<int:galaxy_index>')
-def inspect_galaxy(catalog_raw, galaxy_index):
+@bp.route('/inspect/<string:catalog_raw>/<int:galaxy_id>')
+def inspect_galaxy(catalog_raw, galaxy_id):
 
     if catalog_raw != 'all' and catalog_raw not in catalog_match_strings:
         return abort(500, 'Catalog name not found.')
         
-    galaxy_info = lslga_utils.get_lslga_tablerow(galaxy_index)
+    galaxy_info = lslga_utils.get_lslga_tablerow(galaxy_id)
 
     viewer_link = (
         "http://legacysurvey.org/viewer"
@@ -73,7 +74,7 @@ def inspect_galaxy(catalog_raw, galaxy_index):
         "inspect.html",
         catalog_raw=catalog_raw,
         catalog_pretty=catalog_pretty_strings[catalog_raw],
-        rand=galaxy_index,
+        id=galaxy_id,
         info=galaxy_info,
         viewer_link = viewer_link
     )

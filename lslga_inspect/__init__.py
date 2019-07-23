@@ -24,7 +24,6 @@ def create_app():
 # TODO: Run 'ag TODO' and complete all TODOs
 # TODO: Figure out how to use base templates in Jinja
 # TODO: Incorporate changes from decals-web into these image methods
-# TODO: Use LSLGA_ID in URLs instead of FITS table index
 # TODO: Transfer ownership to legacysurvey as requested by Dr. Moustakas
 # TODO: Check handling of if PA, BA, D25, etc. are NaN
 # TODO: Add option to use alt_ellipsedraw in render_galaxy_img
