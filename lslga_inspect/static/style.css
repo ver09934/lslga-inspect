@@ -23,6 +23,8 @@ html, body {
 
     /* color: #E0E0E0;
     background-color: #333333; */
+    color: #cfd9e5;
+    background-color: #303640;
     font-family: sans-serif;
 }
 
@@ -40,7 +42,7 @@ a {
 /* --- Navbar --- */
 
 nav {
-    background-color: #666666;
+    background-color: #101826;
     position: fixed;
     width: 100%;
     z-index: 1;  
@@ -56,20 +58,21 @@ nav ul {
 nav li {
     display: inline-block;
     position: relative;
-    padding: 0px 0px 0px 10px;
-    color: #000000;
+    padding: 0px 0px 0px 15px;
+    /* color: #000000; */
 }
 
 .floatright {
     float: right;
-    padding: 0px 10px 0px 0px;
+    padding: 0px 15px 0px 0px;
 }
 
 nav a {
-    color: #77aaff;   
+    color: #75a8ff;   
     padding: 0px;
     margin: 0px;
-    text-decoration: underline;
+    /* text-decoration: underline; */
+    text-decoration: none;
 }
 
 nav a:hover {

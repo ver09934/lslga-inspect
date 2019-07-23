@@ -7,8 +7,9 @@
     <body>
         <nav>
             <ul>
-                <li>LSLGA Inspection Tool</li>
+                <!-- <li>Inspect</li> -->
                 <!-- <li><a href="">Dummy</a></li> -->
+                <li><a href="{{ url_for('inspect.index') }}">Catalog List</a></li>
                 {% if g.user %}
                     <li class="floatright">{{ g.user['username'] }}</li>
                     <li class="floatright"><a href="{{ url_for('user.logout') }}">Log Out</a></li>
