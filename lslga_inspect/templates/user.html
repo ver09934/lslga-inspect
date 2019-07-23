@@ -1,35 +1,30 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Index Page</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    </head>
-    <body>
+{% extends 'base.html' %}
 
-        {% for message in get_flashed_messages() %}
-            <div class="flash">{{ message }}</div>
-        {% endfor %}
+{% block title %}
+    {% if action == "register" %}
+        Register
+    {% elif action == "login" %}
+        Log In
+    {% endif %}
+{% endblock %}
 
+{% block content %}
+    {% if action == "register" %}
+        <h1 class="title">Register</h1>
+    {% elif action == "login" %}
+        <h1 class="title">Log In</h1>
+    {% endif %}
+    <form method="post">
+        <label for="username">Username</label>
+        <input name="username" id="username" required>
+        <br/> <!-- TODO -->
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required>
+        <br/> <!-- TODO -->
         {% if action == "register" %}
-            <h1>Register</h1>
+            <input type="submit" value="Register">
         {% elif action == "login" %}
-            <h1>Log In</h1>
+            <input type="submit" value="Log In">
         {% endif %}
-
-        <!-- Pro HTML Tips: How to add space to your page -->
-        <p></p>
-
-        <form method="post">
-            <label for="username">Username</label>
-            <input name="username" id="username" required>
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" required>
-            {% if action == "register" %}
-                <input type="submit" value="Register">
-            {% elif action == "login" %}
-                <input type="submit" value="Log In">
-            {% endif %}
-        </form>
-
-    </body>
-</html>
+    </form>
+{% endblock %}

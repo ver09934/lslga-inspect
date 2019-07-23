@@ -36,4 +36,6 @@ def create_app():
 # TODO: Figure out how to use base templates in Jinja
 # TODO: Transfer ownership to legacysurvey as requested by Dr. Moustakas
 # TODO: Add docstrings
-# NOTE: Should figure out a better way to do things than returning None and HTTP errors
+# TODO: Figure out a better way to do things than returning None and HTTP errors
+# TODO: Make drawing look better by sampling larger and downscaling?
+# https://stackoverflow.com/questions/16640338/python3-pil-pillow-draw-pieslice-bad-arc

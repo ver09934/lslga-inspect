@@ -18,11 +18,11 @@ catalog_pretty_strings = {
 }
 
 @bp.route('/')
-def index():
-    return redirect(url_for('.inspect'))
+def tmp_function():
+    return redirect(url_for('.index'))
 
 @bp.route('/inspect')
-def inspect():
+def index():
     return render_template('catalog-list.html', pretty_strings=catalog_pretty_strings)
 
 @bp.route('/inspect/<string:catalog_raw>')

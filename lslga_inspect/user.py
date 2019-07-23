@@ -61,7 +61,6 @@ def login():
             return redirect(url_for('inspect.index'))
 
         flash(error)
-        flash('This is another error I just made.')
 
     return render_template('user.html', action="login")
 
@@ -78,7 +77,7 @@ def load_logged_in_user():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('inspect.index'))
 
 def login_required(view):
     @functools.wraps(view)
