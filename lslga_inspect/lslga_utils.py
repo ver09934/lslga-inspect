@@ -20,6 +20,7 @@ def init_t(app):
     system to be as 'aware' as possible of what subset
     is being inspected
     '''
+    # TODO: Cut based on IN_DESI?
 
 # In case we want to change the way t is returned
 def get_t():
