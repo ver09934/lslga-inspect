@@ -76,7 +76,7 @@ def test_footprint_radec(ra, dec, layer="dr8", pixscale=3, width=20, height=20):
     ext = img.convert('L').getextrema()
     return ext[0] != ext[1]
 
-def render_galaxy_img(lslga_id, layer="dr8", width=500, height=500, draw_ellipse=True, ellipse_width=3):
+def render_galaxy_img(lslga_id, layer="dr8", width=500, height=500, draw_ellipse=True, ellipse_width=3, pixscale=None):
     
     galaxy = get_lslga_tablerow(lslga_id)
 
@@ -102,8 +102,6 @@ def render_galaxy_img(lslga_id, layer="dr8", width=500, height=500, draw_ellipse
     img_width = width # pixels
     img_height = height # pixels
 
-    assert img_width is not None or img_height is not None
-
     img_width = int(np.round(img_width, 0)) if img_width is not None else None
     img_height = int(np.round(img_height, 0)) if img_height is not None else None
 
@@ -116,25 +114,38 @@ def render_galaxy_img(lslga_id, layer="dr8", width=500, height=500, draw_ellipse
         major_axis_arcsec * np.absolute(np.cos(np.radians(PA))),
         minor_axis_arcsec * np.absolute(np.sin(np.radians(PA)))
     )
-
+    
     # A float >= 1, how much larger the image is than the galaxy
     dimension_conservatism = 3
 
     hspan_max *= dimension_conservatism
     vspan_max *= dimension_conservatism
 
-    if img_width is None and img_height is not None:
-        img_width = int(np.round(img_height * (hspan_max / vspan_max), 0))
-        pixscale = vspan_max / img_height
-    elif img_height is None and img_width is not None:
-        img_height = int(np.round(img_width * (vspan_max / hspan_max), 0))
-        pixscale = hspan_max / img_width
-    else:
-        # Compare aspect ratios
-        if (hspan_max / vspan_max) > (img_width / img_height):
+    if pixscale is None:
+
+        assert img_width is not None or img_height is not None
+
+        if img_width is None and img_height is not None:
+            img_width = int(np.round(img_height * (hspan_max / vspan_max), 0))
+            pixscale = vspan_max / img_height
+        elif img_height is None and img_width is not None:
+            img_height = int(np.round(img_width * (vspan_max / hspan_max), 0))
             pixscale = hspan_max / img_width
         else:
-            pixscale = vspan_max / img_height
+            # Compare aspect ratios
+            if (hspan_max / vspan_max) > (img_width / img_height):
+                pixscale = hspan_max / img_width
+            else:
+                pixscale = vspan_max / img_height
+    else:
+        
+        if img_width is None and img_height is not None:
+            img_width = img_height * (hspan_max / vspan_max)
+        elif img_width is not None and img_height is None:
+            img_height = img_width * (vspan_max / hspan_max)
+        elif img_width is None and img_height is None:
+            img_width = hspan_max / pixscale
+            img_height = vspan_max / pixscale
 
     # Set pixscale manually
     # pixscale = 0.8 # arcseconds/pixel, default 0.262 arcsec/pix

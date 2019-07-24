@@ -75,6 +75,9 @@ def lslga():
             height = int(args['height'])
         kwargs['height'] = height
 
+    if 'pixscale' in args:
+        kwargs['pixscale'] = float(args['pixscale'])
+
     if 'noellipse' in args:
         kwargs['draw_ellipse'] = False
     
