@@ -21,9 +21,12 @@
         </nav>
         <div id="main">
 
+            <!-- NOTE: Instead, use this in the extending templates -->
+            <!--
             {% for message in get_flashed_messages() %}
                 <div class="flash">{{ message }}</div>
             {% endfor %}
+            -->
 
             {% block content %}{% endblock %}
 

@@ -17,15 +17,18 @@ Padding orders:
 */
 
 html, body {
+    font-family: sans-serif;
     position: relative;
     margin: 0px;
     padding: 0px;
-
     /* color: #E0E0E0;
     background-color: #333333; */
     color: #cfd9e5;
     background-color: #303640;
-    font-family: sans-serif;
+}
+
+a {
+    color: #75aaff
 }
 
 #main {
@@ -33,10 +36,6 @@ html, body {
     margin-top: 40px; /* This is very empirical */
     padding: 15px 15px 15px 15px;
     /* border: 2px solid #00ff00; */
-}
-
-a {
-    color: #75aaff
 }
 
 /* --- Navbar --- */
@@ -59,6 +58,7 @@ nav li {
     display: inline-block;
     position: relative;
     padding: 0px 0px 0px 15px;
+    color: #bdbdbd;
     /* color: #000000; */
 }
 
@@ -84,4 +84,48 @@ nav a:hover {
 .title {
     padding: 0px 0px 10px 0px;
     margin: 0px;
+}
+
+.center-text {
+    text-align: center;
+}
+
+/* --- Register/Login Form --- */
+
+#user-form {
+    width: 40em;
+    margin: auto;
+}
+
+#user-form input[type=text],
+#user-form input[type=password] {
+    width: 100%;
+    padding: 12px 12px;
+    margin: 8px 0px;
+    display: inline-block;
+    border: none;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#user-form input[type=submit] {
+    width: 100%;
+    background-color: #4c9baf;
+    color: #ffffff;
+    padding: 14px 20px;
+    margin: 8px 0px;
+    border: none;
+    border-radius: 4px;
+}
+
+#user-form input[type=submit]:hover {
+    background-color: #488fa1;
+}
+
+#user-form .flash {
+    margin: 1em 0em;
+    padding: 1em;
+    color: #000000;
+    background-color: #a4b2ff;
+    border: 2px solid #3c4ac7;
 }
