@@ -192,11 +192,10 @@ def draw_scalebar(img, pixscale, fontsize=14):
     width, height = img.size
     draw = ImageDraw.ImageDraw(img)
     
-    # bar_offset = 15
-    bar_offset = np.maximum(15, int(4 * np.sqrt(fontsize))) # Seems about right
+    bar_offset = 15
     
     # bar_height = 3
-    bar_height = np.maximum(3, int(fontsize / 4.6)) # Emperically determined
+    bar_height = np.maximum(3, int(fontsize / 4.5)) # Scale bar size with font size
 
     bar_width_increment = 15 
     desired_width_fraction = 1/8
@@ -262,7 +261,7 @@ def draw_scalebar(img, pixscale, fontsize=14):
     scale_label_digits_width, _ = draw.textsize(scale_label_digits, font=scale_label_font)
 
     # vert_offset = 4
-    vert_offset = np.maximum(4, int(fontsize / 3.5)) # Emperically determined
+    vert_offset = np.maximum(4, int(fontsize / 3.5)) # Scale distance between bar and font with font size
 
     font_coords = (
         # width - bar_offset - scale_label_width,
@@ -284,8 +283,7 @@ def draw_galaxyname(img, galaxy_name, fontsize=14):
     draw = ImageDraw.ImageDraw(img)
 
     galaxy_label = galaxy_name
-    # galaxy_label_offset = 15
-    galaxy_label_offset = np.maximum(15, int(4 * np.sqrt(fontsize)))
+    galaxy_label_offset = 15
     galaxy_label_font = ImageFont.truetype(font="FreeSerif", size=fontsize)
 
     draw.text(
@@ -302,8 +300,7 @@ def draw_annotation(img, annotation, fontsize=14):
 
     annotation_font = ImageFont.truetype(font="FreeSerif", size=fontsize)
     annotation_width, _ = draw.textsize(annotation, font=annotation_font)
-    # annotation_offset = 15
-    annotation_offset = np.maximum(15, int(4 * np.sqrt(fontsize)))
+    annotation_offset = 15
 
     draw.text(
         (width - annotation_offset - annotation_width, annotation_offset),

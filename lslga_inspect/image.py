@@ -95,8 +95,10 @@ def lslga():
     if 'fontsize' in args:
         fontarg['fontsize'] = int(args['fontsize'])
 
-    lslga_utils.draw_scalebar(galaxy_img, pixscale, **fontarg)
-    lslga_utils.draw_galaxyname(galaxy_img, GALAXY, **fontarg)
+    if 'noscale' not in args:
+        lslga_utils.draw_scalebar(galaxy_img, pixscale, **fontarg)
+    if 'noname' not in args:
+        lslga_utils.draw_galaxyname(galaxy_img, GALAXY, **fontarg)
     
     if 'annotation' in args:
         annotation = str(args['annotation'])
