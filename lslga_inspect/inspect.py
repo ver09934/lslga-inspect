@@ -1,4 +1,4 @@
-from flask import abort, Blueprint, redirect, render_template, request, Response, url_for
+from flask import abort, Blueprint, flash, g, redirect, render_template, request, Response, url_for
 import random
 from . import lslga_utils
 
@@ -54,8 +54,23 @@ def inspect_catalog(catalog_raw):
     rand_id = lslga_utils.get_lslga_id(rand_index)
     return redirect(url_for('.inspect_galaxy', catalog_raw=catalog_raw, galaxy_id=rand_id))
 
-@bp.route('/inspect/<string:catalog_raw>/<int:galaxy_id>')
+@bp.route('/inspect/<string:catalog_raw>/<int:galaxy_id>', methods=('GET', 'POST'))
 def inspect_galaxy(catalog_raw, galaxy_id):
+
+    if request.method == 'POST':
+
+        if g.user is None:
+            print('-'*60 + "\nUser is not logged in\n" + '-'*60)
+            flash("User must be logged in to submit information!")
+            # abort(500, 'User must be logged in to submit information.')
+        else:
+            print('-'*60)
+            print(
+                "Here is the quality for {} submitted by {}: {}"
+                .format(galaxy_id, g.user['username'], request.form['quality'])
+            )
+            print('-'*60)
+            return redirect(url_for('.inspect_catalog', catalog_raw=catalog_raw))
 
     if catalog_raw != 'all' and catalog_raw not in catalog_match_strings:
         return abort(500, 'Catalog name not found.')

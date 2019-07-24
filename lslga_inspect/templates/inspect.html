@@ -35,6 +35,21 @@
 
     <p></p>
 
+    <form id="galaxy-form" method="post">
+
+        {% for message in get_flashed_messages() %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+
+        Submit image quality:<br/>
+        <input type="radio" name="quality" value="good" checked>Good<br/>
+        <input type="radio" name="quality" value="mediocre">Mediocre<br/>
+        <input type="radio" name="quality" value="bad">Bad<br/>
+        <input type="submit" value="Submit">
+    </form>
+
+    <p></p>
+
     <a href="{{ url_for('inspect.inspect_catalog', catalog_raw=catalog_raw) }}">[New {{catalog_pretty}} galaxy]</a>
     <br/>
     <a href="{{viewer_link|safe}}" target="_blank">[Inspect in Viewer]</a>

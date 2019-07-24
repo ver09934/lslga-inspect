@@ -129,3 +129,27 @@ nav a:hover {
     background-color: #a4b2ff;
     border: 2px solid #3c4ac7;
 }
+
+/* --- Information Submission Form --- */
+
+#galaxy-form input[type=submit] {
+    background-color: #4c9baf;
+    color: #ffffff;
+    padding: 10px 14px;
+    margin: 8px 0px;
+    border: none;
+    border-radius: 4px;
+}
+
+#galaxy-form input[type=submit]:hover {
+    background-color: #488fa1;
+}
+
+#galaxy-form .flash {
+    display: table;
+    margin: 1em 0em;
+    padding: 1em;
+    color: #000000;
+    background-color: #a4b2ff;
+    border: 2px solid #3c4ac7;
+}
