@@ -76,7 +76,15 @@ def test_footprint_radec(ra, dec, layer="dr8", pixscale=3, width=20, height=20):
     ext = img.convert('L').getextrema()
     return ext[0] != ext[1]
 
-def render_galaxy_img(lslga_id, layer="dr8", width=500, height=500, draw_ellipse=True, ellipse_width=3):
+def render_galaxy_img(
+        lslga_id=2,
+        layer="dr8",
+        width=500,
+        height=500,
+        draw_ellipse=False,
+        ellipse_width=3,
+        pixscale=None
+    ):
     
     galaxy = get_lslga_tablerow(lslga_id)
 
@@ -94,9 +102,6 @@ def render_galaxy_img(lslga_id, layer="dr8", width=500, height=500, draw_ellipse
 
     major_axis_arcsec = D25 * 60
     minor_axis_arcsec = major_axis_arcsec * BA
-
-    # semimajor_axis_arcsec = major_axis_arcsec / 2
-    # semiminor_axis_arcsec = minor_axis_arcsec / 2
 
     # Set width or height to None to have that dimension sized for aspect ratio of galaxy
     img_width = width # pixels
@@ -117,27 +122,41 @@ def render_galaxy_img(lslga_id, layer="dr8", width=500, height=500, draw_ellipse
         minor_axis_arcsec * np.absolute(np.sin(np.radians(PA)))
     )
 
-    # A float >= 1, how much larger the image is than the galaxy
-    dimension_conservatism = 3
+    # Default viewer pixscale is 0.262 arcseconds/pixel
 
-    hspan_max *= dimension_conservatism
-    vspan_max *= dimension_conservatism
+    if pixscale is None:
 
-    if img_width is None and img_height is not None:
-        img_width = int(np.round(img_height * (hspan_max / vspan_max), 0))
-        pixscale = vspan_max / img_height
-    elif img_height is None and img_width is not None:
-        img_height = int(np.round(img_width * (vspan_max / hspan_max), 0))
-        pixscale = hspan_max / img_width
-    else:
-        # Compare aspect ratios
-        if (hspan_max / vspan_max) > (img_width / img_height):
+        # A float >= 1, how much larger the image is than the galaxy
+        dimension_conservatism = 3
+
+        hspan_max *= dimension_conservatism
+        vspan_max *= dimension_conservatism
+
+        if img_width is None and img_height is not None:
+            img_width = int(np.round(img_height * (hspan_max / vspan_max), 0))
+            pixscale = vspan_max / img_height
+        elif img_height is None and img_width is not None:
+            img_height = int(np.round(img_width * (vspan_max / hspan_max), 0))
             pixscale = hspan_max / img_width
         else:
-            pixscale = vspan_max / img_height
+            # Compare aspect ratios
+            if (hspan_max / vspan_max) > (img_width / img_height):
+                pixscale = hspan_max / img_width
+            else:
+                pixscale = vspan_max / img_height
+    
+    else:
 
-    # Set pixscale manually
-    # pixscale = 0.8 # arcseconds/pixel, default 0.262 arcsec/pix
+        dim_max = np.maximum(hspan_max, vspan_max)
+
+        # What percent of the longest dimension to add onto each side
+        dim_extra_factor = 0.5
+
+        hspan_max += 2 * dim_max * dim_extra_factor
+        vspan_max += 2 * dim_max * dim_extra_factor
+
+        img_width = hspan_max / pixscale
+        img_height = vspan_max / pixscale
 
     major_axis_pix = major_axis_arcsec / pixscale
     minor_axis_pix = minor_axis_arcsec / pixscale
@@ -422,93 +441,3 @@ def draw_all_ellipses_local(img, ra, dec, pixscale):
         paste_shift_y = int(pix_from_top - rotated_height / 2)
 
         img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
-
-def render_galaxy_img_fixed(lslga_id, layer="dr8", draw_ellipse=False, ellipse_width=3):
-    
-    galaxy = get_lslga_tablerow(lslga_id)
-
-    RA = galaxy['RA']
-    DEC = galaxy['DEC']
-
-    PA = galaxy['PA']
-    D25 = galaxy['D25']
-    BA = galaxy['BA']
-
-    if np.isnan(PA):
-        PA = 90
-    if np.isnan(BA):
-        BA = 1
-
-    major_axis_arcsec = D25 * 60
-    minor_axis_arcsec = major_axis_arcsec * BA
-
-    hspan_max = np.maximum(
-        major_axis_arcsec * np.absolute(np.sin(np.radians(PA))),
-        minor_axis_arcsec * np.absolute(np.cos(np.radians(PA)))
-    )
-    vspan_max = np.maximum(
-        major_axis_arcsec * np.absolute(np.cos(np.radians(PA))),
-        minor_axis_arcsec * np.absolute(np.sin(np.radians(PA)))
-    )
-
-    dim_max = np.maximum(hspan_max, vspan_max)
-
-    # What percent of the longest dimension to add onto each side
-    dim_extra_factor = 0.5
-
-    hspan_max += 2 * dim_max * dim_extra_factor
-    vspan_max += 2 * dim_max * dim_extra_factor
-
-    # I ❤ fixed pixscale
-    pixscale = 0.262
-
-    img_width = hspan_max / pixscale
-    img_height = vspan_max / pixscale
-
-    major_axis_pix = major_axis_arcsec / pixscale
-    minor_axis_pix = minor_axis_arcsec / pixscale
-
-    url = (
-        "http://legacysurvey.org/viewer/jpeg-cutout"
-        "?ra={:.7f}"
-        "&dec={:.7f}"
-        "&layer={}"
-        "&pixscale={:.6f}"
-        "&width={:.0f}"
-        "&height={:.0f}"
-    ).format(RA, DEC, layer, pixscale, img_width, img_height)
-
-    r = requests.get(url)
-
-    # NOTE: Returns None if there is some error opening the image
-    try:
-        img = Image.open(BytesIO(r.content))
-    except IOError:
-        return None
-
-    # NOTE: Returns None if the image is a solid color
-    ext = img.convert('L').getextrema()
-    if ext[0] == ext[1]:
-        return None
-
-    overlay_width = int(np.round(minor_axis_pix, 0))
-    overlay_height = int(np.round(major_axis_pix, 0))
-
-    overlay = Image.new('RGBA', (overlay_width, overlay_height))
-    draw = ImageDraw.ImageDraw(overlay)
-    box_corners = (0, 0, overlay_width, overlay_height)
-    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=ellipse_width)
-
-    # Need expand=True, or else the overlay gets clipped when rotating
-    rotated = overlay.rotate(PA, expand=True)
-
-    rotated_width = rotated.size[0]
-    rotated_height = rotated.size[1]
-
-    paste_shift_x = int(np.round(img_width/2 - rotated_width/2, 0))
-    paste_shift_y = int(np.round(img_height/2 - rotated_height/2, 0))
-
-    if draw_ellipse:
-        img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
-
-    return img

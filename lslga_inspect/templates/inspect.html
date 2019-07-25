@@ -21,17 +21,9 @@
     <!-- May need to write a separate method for simplicity, which is find, because this is the
     only file which depends on the lslga URL being available -->
 
-    <!-- When it gets as convoluted as this, hardcoding is just easier -->
-
-    <img src="/lslga?id={{id}}&layer=dr8&annotation=Data"></img>
-    <img src="/lslga?id={{id}}&layer=dr8-model&annotation=Model"></img>
-    <img src="/lslga?id={{id}}&layer=dr8-resid&annotation=Residual"></img>
-
-    <!--
-    <img src="{{ url_for('image.lslga', id=id, layer='dr8', annotation='Data')|safe }}"></img>
-    <img src="{{ url_for('image.lslga', id=id, layer='dr8-model', annotation='Model')|safe }}"></img>
-    <img src="{{ url_for('image.lslga', id=id, layer='dr8-resid', annotation='Residual')|safe }}"></img>
-    -->
+    <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8&annotation=Data"></img>
+    <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8-model&annotation=Model"></img>
+    <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8-resid&annotation=Residual"></img>
 
     <p></p>
 

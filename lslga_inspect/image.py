@@ -48,40 +48,33 @@ def jpeg_cutout():
 def lslga():
     
     args = request.args
+    kwargs = {}
 
     if 'id' in args:
         lslga_id = int(args['id'])
-    else:
-        lslga_id = 2
-    
+        kwargs['lslga_id'] = lslga_id
     if 'layer' in args:
-        layer = str(args['layer'])
-    else:
-        layer = "dr8"
-
-    kwargs = {}
-
+        kwargs['layer'] = str(args['layer'])
     if 'width' in args:
         if str(args['width']).lower() == 'none':
             width = None
         else:
             width = int(args['width'])
         kwargs['width'] = width
-
     if 'height' in args:
         if str(args['height']).lower() == 'none':
             height = None
         else:
             height = int(args['height'])
         kwargs['height'] = height
-
-    if 'noellipse' in args:
-        kwargs['draw_ellipse'] = False
-    
+    if 'ellipse' in args:
+        kwargs['draw_ellipse'] = True
     if 'ellipsewidth' in args:
         kwargs['ellipse_width'] = int(args['ellipsewidth'])
+    if 'pixscale' in args:
+        kwargs['pixscale'] = float(args['pixscale'])
 
-    rendered = lslga_utils.render_galaxy_img(lslga_id, layer=layer, **kwargs)
+    rendered = lslga_utils.render_galaxy_img(**kwargs)
 
     if rendered is None:
         return abort(500, 'The LSLGA image could not be rendered (likely not in survey footprint).')
@@ -95,9 +88,9 @@ def lslga():
     if 'fontsize' in args:
         fontarg['fontsize'] = int(args['fontsize'])
 
-    if 'noscale' not in args:
+    if 'drawscale' in args:
         lslga_utils.draw_scalebar(galaxy_img, pixscale, **fontarg)
-    if 'noname' not in args:
+    if 'drawname' in args:
         lslga_utils.draw_galaxyname(galaxy_img, GALAXY, **fontarg)
     
     if 'annotation' in args:
@@ -106,33 +99,3 @@ def lslga():
             lslga_utils.draw_annotation(galaxy_img, annotation, **fontarg)
 
     return lslga_utils.get_img_response(galaxy_img)
-
-@bp.route('/lslga-fixed')
-def lslga_fixed():
-
-    args = request.args
-
-    if 'id' in args:
-        lslga_id = int(args['id'])
-    else:
-        lslga_id = 2
-    
-    if 'layer' in args:
-        layer = str(args['layer'])
-    else:
-        layer = "dr8"
-
-    kwargs = {}
-
-    if 'ellipse' in args:
-        kwargs['draw_ellipse'] = True
-    
-    if 'ellipsewidth' in args:
-        kwargs['ellipse_width'] = int(args['ellipsewidth'])
-
-    rendered = lslga_utils.render_galaxy_img_fixed(lslga_id, layer=layer, **kwargs)
-
-    if rendered is None:
-        return abort(500, 'The LSLGA image could not be rendered (likely not in survey footprint).')
-    else:
-        return lslga_utils.get_img_response(rendered)
