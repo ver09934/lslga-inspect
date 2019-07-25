@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Inspections{% endblock %}
+
+{% block content %}
+
+    <h1 class="title">Inspections</h1>
+
+    <style>
+        table, th, td {
+            border: 1px solid #ffffff;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 6px;
+        }
+    </style>
+
+    <table>
+    <tr>
+    {% for key in keys %}
+        <th>{{ key }}</th>
+    {% endfor %}
+    </tr>
+    {% for inspection in inspections %}
+        <tr>
+        {% for item in inspection %}
+            <td>{{ item }}</td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

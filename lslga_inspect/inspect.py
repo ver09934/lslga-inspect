@@ -1,6 +1,7 @@
 from flask import abort, Blueprint, flash, g, redirect, render_template, request, Response, url_for
 import random
 from . import lslga_utils
+from .db import get_db
 
 bp = Blueprint('inspect', __name__)
 
@@ -24,6 +25,27 @@ def tmp_function():
 @bp.route('/inspect')
 def index():
     return render_template('catalog-list.html', pretty_strings=catalog_pretty_strings)
+
+@bp.route('/inspect/list')
+def list():
+    
+    db = get_db()
+    
+    '''
+    inspections = db.execute(
+        "SELECT p.id, title, body, created, author_id, username"
+        " FROM post p JOIN user u ON p.author_id = u.id"
+        " ORDER BY created DESC"
+    ).fetchall()
+    '''
+
+    inspections = db.execute(
+        "SELECT * FROM inspection"
+    ).fetchall()
+
+    keys = inspections[0].keys() if len(inspections) > 0 else []
+
+    return render_template('list.html', keys=keys, inspections=inspections)
 
 @bp.route('/inspect/<string:catalog_raw>')
 def inspect_catalog(catalog_raw):
@@ -60,16 +82,37 @@ def inspect_galaxy(catalog_raw, galaxy_id):
     if request.method == 'POST':
 
         if g.user is None:
-            print('-'*60 + "\nUser is not logged in\n" + '-'*60)
+            # print('-'*60 + "\nUser is not logged in\n" + '-'*60)
             flash("User must be logged in to submit information!")
             # abort(500, 'User must be logged in to submit information.')
         else:
-            print('-'*60)
-            print(
-                "Here is the quality for {} submitted by {}: {}"
-                .format(galaxy_id, g.user['username'], request.form['quality'])
+            # print('-'*60)
+            # print(
+            #     "Here is the quality for {} submitted by {}: {}"
+            #     .format(galaxy_id, g.user['username'], request.form['quality'])
+            # )
+            # print('-'*60)
+
+            # TODO: Check if inspection already exists, and if so, replace it
+            # instead of creating a new entry
+
+            galaxy_name = lslga_utils.get_lslga_tablerow(galaxy_id)['GALAXY']
+            # g.user['id']
+
+            db = get_db()
+
+            db.execute(
+                "INSERT OR IGNORE INTO galaxy (lslga_id, galaxy_name) VALUES (?, ?);",
+                (galaxy_id, galaxy_name)
             )
-            print('-'*60)
+
+            db.execute(
+                "INSERT INTO inspection (lslga_id, user_id, quality) VALUES (?, ?, ?)",
+                (galaxy_id, g.user['id'], request.form['quality'])
+            )
+
+            db.commit()
+
             return redirect(url_for('.inspect_catalog', catalog_raw=catalog_raw))
 
     if catalog_raw != 'all' and catalog_raw not in catalog_match_strings:
