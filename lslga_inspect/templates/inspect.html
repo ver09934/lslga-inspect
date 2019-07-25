@@ -21,9 +21,15 @@
     <!-- May need to write a separate method for simplicity, which is find, because this is the
     only file which depends on the lslga URL being available -->
 
-    <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8&annotation=Data"></img>
-    <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8-model&annotation=Model"></img>
-    <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8-resid&annotation=Residual"></img>
+    <a href="/lslga?id={{id}}&layer=dr8&pixscale=0.262">
+        <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8&annotation=Data"></img>
+    </a>
+    <a href="/lslga?id={{id}}&layer=dr8-model&pixscale=0.262">
+        <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8-model&annotation=Model"></img>
+    </a>
+    <a href="/lslga?id={{id}}&layer=dr8-resid&pixscale=0.262">
+        <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8-resid&annotation=Residual"></img>
+    </a>
 
     <p></p>
 
