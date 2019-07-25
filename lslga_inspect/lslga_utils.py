@@ -422,3 +422,93 @@ def draw_all_ellipses_local(img, ra, dec, pixscale):
         paste_shift_y = int(pix_from_top - rotated_height / 2)
 
         img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
+
+def render_galaxy_img_fixed(lslga_id, layer="dr8", draw_ellipse=False, ellipse_width=3):
+    
+    galaxy = get_lslga_tablerow(lslga_id)
+
+    RA = galaxy['RA']
+    DEC = galaxy['DEC']
+
+    PA = galaxy['PA']
+    D25 = galaxy['D25']
+    BA = galaxy['BA']
+
+    if np.isnan(PA):
+        PA = 90
+    if np.isnan(BA):
+        BA = 1
+
+    major_axis_arcsec = D25 * 60
+    minor_axis_arcsec = major_axis_arcsec * BA
+
+    hspan_max = np.maximum(
+        major_axis_arcsec * np.absolute(np.sin(np.radians(PA))),
+        minor_axis_arcsec * np.absolute(np.cos(np.radians(PA)))
+    )
+    vspan_max = np.maximum(
+        major_axis_arcsec * np.absolute(np.cos(np.radians(PA))),
+        minor_axis_arcsec * np.absolute(np.sin(np.radians(PA)))
+    )
+
+    dim_max = np.maximum(hspan_max, vspan_max)
+
+    # What percent of the longest dimension to add onto each side
+    dim_extra_factor = 0.5
+
+    hspan_max += 2 * dim_max * dim_extra_factor
+    vspan_max += 2 * dim_max * dim_extra_factor
+
+    # I ❤ fixed pixscale
+    pixscale = 0.262
+
+    img_width = hspan_max / pixscale
+    img_height = vspan_max / pixscale
+
+    major_axis_pix = major_axis_arcsec / pixscale
+    minor_axis_pix = minor_axis_arcsec / pixscale
+
+    url = (
+        "http://legacysurvey.org/viewer/jpeg-cutout"
+        "?ra={:.7f}"
+        "&dec={:.7f}"
+        "&layer={}"
+        "&pixscale={:.6f}"
+        "&width={:.0f}"
+        "&height={:.0f}"
+    ).format(RA, DEC, layer, pixscale, img_width, img_height)
+
+    r = requests.get(url)
+
+    # NOTE: Returns None if there is some error opening the image
+    try:
+        img = Image.open(BytesIO(r.content))
+    except IOError:
+        return None
+
+    # NOTE: Returns None if the image is a solid color
+    ext = img.convert('L').getextrema()
+    if ext[0] == ext[1]:
+        return None
+
+    overlay_width = int(np.round(minor_axis_pix, 0))
+    overlay_height = int(np.round(major_axis_pix, 0))
+
+    overlay = Image.new('RGBA', (overlay_width, overlay_height))
+    draw = ImageDraw.ImageDraw(overlay)
+    box_corners = (0, 0, overlay_width, overlay_height)
+    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=ellipse_width)
+
+    # Need expand=True, or else the overlay gets clipped when rotating
+    rotated = overlay.rotate(PA, expand=True)
+
+    rotated_width = rotated.size[0]
+    rotated_height = rotated.size[1]
+
+    paste_shift_x = int(np.round(img_width/2 - rotated_width/2, 0))
+    paste_shift_y = int(np.round(img_height/2 - rotated_height/2, 0))
+
+    if draw_ellipse:
+        img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
+
+    return img

@@ -106,3 +106,33 @@ def lslga():
             lslga_utils.draw_annotation(galaxy_img, annotation, **fontarg)
 
     return lslga_utils.get_img_response(galaxy_img)
+
+@bp.route('/lslga-fixed')
+def lslga_fixed():
+
+    args = request.args
+
+    if 'id' in args:
+        lslga_id = int(args['id'])
+    else:
+        lslga_id = 2
+    
+    if 'layer' in args:
+        layer = str(args['layer'])
+    else:
+        layer = "dr8"
+
+    kwargs = {}
+
+    if 'ellipse' in args:
+        kwargs['draw_ellipse'] = True
+    
+    if 'ellipsewidth' in args:
+        kwargs['ellipse_width'] = int(args['ellipsewidth'])
+
+    rendered = lslga_utils.render_galaxy_img_fixed(lslga_id, layer=layer, **kwargs)
+
+    if rendered is None:
+        return abort(500, 'The LSLGA image could not be rendered (likely not in survey footprint).')
+    else:
+        return lslga_utils.get_img_response(rendered)
