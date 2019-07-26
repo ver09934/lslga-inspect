@@ -3,6 +3,7 @@
     <head>
         <title>{% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        {% block header_extra %}{% endblock %}
     </head>
     <body>
         <nav>
@@ -10,9 +11,10 @@
                 <!-- <li>Inspect</li> -->
                 <!-- <li><a href="">Dummy</a></li> -->
                 <li><a href="{{ url_for('inspect.index') }}">Catalog List</a></li>
+                <li><a href="{{ url_for('inspect.list') }}">Inspection List</a></li>
                 {% if g.user %}
-                    <li class="floatright">{{ g.user['username'] }}</li>
                     <li class="floatright"><a href="{{ url_for('user.logout') }}">Log Out</a></li>
+                    <li class="floatright">{{ g.user['username'] }}</li>
                 {% else %}
                     <li class="floatright"><a href="{{ url_for('user.register') }}">Register</a></li>
                     <li class="floatright"><a href="{{ url_for('user.login') }}">Log In</a></li>

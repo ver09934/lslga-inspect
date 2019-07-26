@@ -30,14 +30,6 @@ def index():
 def list():
     
     db = get_db()
-    
-    '''
-    inspections = db.execute(
-        "SELECT p.id, title, body, created, author_id, username"
-        " FROM post p JOIN user u ON p.author_id = u.id"
-        " ORDER BY created DESC"
-    ).fetchall()
-    '''
 
     inspections = db.execute(
         "SELECT * FROM inspection"
@@ -82,30 +74,14 @@ def inspect_galaxy(catalog_raw, galaxy_id):
     if request.method == 'POST':
 
         if g.user is None:
-            # print('-'*60 + "\nUser is not logged in\n" + '-'*60)
             flash("User must be logged in to submit information!")
-            # abort(500, 'User must be logged in to submit information.')
         else:
-            # print('-'*60)
-            # print(
-            #     "Here is the quality for {} submitted by {}: {}"
-            #     .format(galaxy_id, g.user['username'], request.form['quality'])
-            # )
-            # print('-'*60)
-
             # TODO: Check if inspection already exists, and if so, replace it
             # instead of creating a new entry
 
-            galaxy_name = lslga_utils.get_lslga_tablerow(galaxy_id)['GALAXY']
-            # g.user['id']
-
             db = get_db()
 
-            db.execute(
-                "INSERT OR IGNORE INTO galaxy (lslga_id, galaxy_name) VALUES (?, ?);",
-                (galaxy_id, galaxy_name)
-            )
-
+            # INSERT OR IGNORE INTO...
             db.execute(
                 "INSERT INTO inspection (lslga_id, user_id, quality) VALUES (?, ?, ?)",
                 (galaxy_id, g.user['id'], request.form['quality'])
@@ -113,6 +89,9 @@ def inspect_galaxy(catalog_raw, galaxy_id):
 
             db.commit()
 
+            # TODO: Add options for ordered or unordered, with a back arrow in both cases...
+            # For this reason, should probably add some order/timestamp field to
+            # each inspection entry in the database
             return redirect(url_for('.inspect_catalog', catalog_raw=catalog_raw))
 
     if catalog_raw != 'all' and catalog_raw not in catalog_match_strings:

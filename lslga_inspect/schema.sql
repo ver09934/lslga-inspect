@@ -8,17 +8,19 @@ CREATE TABLE user (
   password TEXT NOT NULL
 );
 
+/*
 CREATE TABLE galaxy (
   lslga_id INTEGER PRIMARY KEY,
   galaxy_name TEXT NOT NULL
 );
+*/
 
 CREATE TABLE inspection (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  inspection_id INTEGER PRIMARY KEY AUTOINCREMENT,
   lslga_id INTEGER,
   user_id INTEGER,
   quality TEXT NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (lslga_id) REFERENCES galaxy (lslga_id),
+  -- FOREIGN KEY (lslga_id) REFERENCES galaxy (lslga_id),
   FOREIGN KEY (user_id) REFERENCES user (id)
 );

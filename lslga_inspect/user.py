@@ -84,6 +84,7 @@ def logout():
     session.clear()
     return redirect(url_for('inspect.index'))
 
+'''
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -91,3 +92,4 @@ def login_required(view):
             return redirect(url_for('user.login'))
         return view(**kwargs)
     return wrapped_view
+'''

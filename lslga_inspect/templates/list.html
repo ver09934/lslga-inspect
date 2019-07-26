@@ -2,19 +2,21 @@
 
 {% block title %}Inspections{% endblock %}
 
+{% block header_extra %}
+<style>
+    table, th, td {
+        border: 1px solid #ffffff;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 6px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
     <h1 class="title">Inspections</h1>
-
-    <style>
-        table, th, td {
-            border: 1px solid #ffffff;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 6px;
-        }
-    </style>
 
     <table>
     <tr>
