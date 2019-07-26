@@ -34,7 +34,7 @@ a {
 #main {
     margin: 0px;
     margin-top: 40px; /* This is very empirical */
-    padding: 15px 15px 15px 15px;
+    padding: 20px;
     /* border: 2px solid #00ff00; */
 }
 
@@ -132,6 +132,11 @@ nav a:hover {
 
 /* --- Information Submission Form --- */
 
+#galaxy-form {
+    /* border: 2px solid #a0a0a0; */
+    /* padding: 20px; */
+}
+
 #galaxy-form input[type=submit] {
     background-color: #4c9baf;
     color: #ffffff;
@@ -143,6 +148,12 @@ nav a:hover {
 
 #galaxy-form input[type=submit]:hover {
     background-color: #488fa1;
+}
+
+#galaxy-form textarea {
+    display: block;
+    width: 40em;
+    height: 15em;
 }
 
 #galaxy-form .flash {

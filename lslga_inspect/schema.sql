@@ -20,6 +20,7 @@ CREATE TABLE inspection (
   lslga_id INTEGER,
   user_id INTEGER,
   quality TEXT NOT NULL,
+  feedback TEXT,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   -- FOREIGN KEY (lslga_id) REFERENCES galaxy (lslga_id),
   FOREIGN KEY (user_id) REFERENCES user (id)

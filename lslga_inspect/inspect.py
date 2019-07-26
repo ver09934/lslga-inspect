@@ -81,6 +81,14 @@ def inspect_galaxy(catalog_raw, galaxy_id):
 
             db = get_db()
 
+            existing_inspection = db.execute(
+                'SELECT * FROM inspection WHERE user_id = ? AND lslga_id = ?',
+                (g.user['id'], galaxy_id)
+            )
+
+            if existing_inspection.fetchone() is not None:
+                pass # TODO: Insert existing information info fields for editing
+
             # INSERT OR IGNORE INTO...
             db.execute(
                 "INSERT INTO inspection (lslga_id, user_id, quality) VALUES (?, ?, ?)",
