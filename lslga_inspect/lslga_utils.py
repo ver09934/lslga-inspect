@@ -329,8 +329,7 @@ def draw_annotation(img, annotation, fontsize=14):
         fill=(255, 255, 255)
     )
 
-# Draw all lslga galaxies in frame using the legacysurvey.org's json query catalog
-def draw_all_ellipses(img, ra, dec, pixscale):
+def draw_all_ellipses(img, ra, dec, pixscale, use_local_catalog=True):
 
     width, height = img.size
 
@@ -339,89 +338,68 @@ def draw_all_ellipses(img, ra, dec, pixscale):
     declo = dec - ((height / 2) * pixscale / 3600)
     dechi = dec + ((height / 2) * pixscale / 3600)
 
-    json_url = ('http://legacysurvey.org/viewer/lslga/1/cat.json'
-        '?ralo={}'
-        '&rahi={}'
-        '&declo={}'
-        '&dechi={}'
-    ).format(ralo, rahi, declo, dechi)
-    
-    r = requests.get(json_url).json()
+    if use_local_catalog:
 
-    for i in range(len(r['rd'])):
+        # TODO: See the method 'query_lslga_radecbox' in
+        # https://github.com/legacysurvey/decals-web/blob/master/map/cats.py
+        # for a better way to do this
 
-        RA, DEC = r['rd'][i]
-        RAD = r['radiusArcsec'][i]
-        AB = r['abRatio'][i]
-        PA = r['posAngle'][i]
+        t = get_t()
 
-        PA = 90 - PA
+        galaxies = []
+        for galaxy in t:
+            RA = galaxy['RA']
+            DEC = galaxy['DEC']
+            if RA > ralo and RA < rahi and DEC > declo and DEC < dechi:
+                galaxies.append(galaxy)
 
-        major_axis_arcsec = RAD * 2
-        minor_axis_arcsec = major_axis_arcsec * AB
+        for galaxy in galaxies:
 
-        overlay_height = int(major_axis_arcsec / pixscale)
-        overlay_width = int(minor_axis_arcsec / pixscale)
+            RA = galaxy['RA']
+            DEC = galaxy['DEC']
 
-        overlay = Image.new('RGBA', (overlay_width, overlay_height))
-        draw = ImageDraw.ImageDraw(overlay)
-        box_corners = (0, 0, overlay_width, overlay_height)
-        draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=3)
+            PA = galaxy['PA']
+            D25 = galaxy['D25']
+            BA = galaxy['BA']
 
-        rotated = overlay.rotate(PA, expand=True)
-        rotated_width, rotated_height = rotated.size
+            if np.isnan(PA):
+                PA = 90
+            if np.isnan(BA):
+                BA = 1
+            if np.isnan(D25):
+                continue
 
-        pix_from_left = (rahi - RA) * 3600 / pixscale
-        pix_from_top = (dechi - DEC) * 3600 / pixscale
+            major_axis_arcsec = D25 * 60
+            minor_axis_arcsec = major_axis_arcsec * BA
 
-        paste_shift_x = int(pix_from_left - rotated_width / 2)
-        paste_shift_y = int(pix_from_top - rotated_height / 2)
+            draw_offcenter_ellipse(img, RA, DEC, PA, major_axis_arcsec, minor_axis_arcsec, pixscale, rahi, dechi)
 
-        img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
+    else:
 
-# Draw all lslga galaxies in frame using a local FITS catalog
-def draw_all_ellipses_local(img, ra, dec, pixscale):
-    
-    t = get_t()
-    
-    width, height = img.size
+        json_url = ('http://legacysurvey.org/viewer/lslga/1/cat.json'
+            '?ralo={}'
+            '&rahi={}'
+            '&declo={}'
+            '&dechi={}'
+        ).format(ralo, rahi, declo, dechi)
+        
+        r = requests.get(json_url).json()
 
-    ralo = ra - ((width / 2) * pixscale / 3600 / np.cos(np.deg2rad(dec)))
-    rahi = ra + ((width / 2) * pixscale / 3600 / np.cos(np.deg2rad(dec)))
-    declo = dec - ((height / 2) * pixscale / 3600)
-    dechi = dec + ((height / 2) * pixscale / 3600)
+        for i in range(len(r['rd'])):
 
-    # TODO: See the method 'query_lslga_radecbox' in
-    # https://github.com/legacysurvey/decals-web/blob/master/map/cats.py
-    # for a better way to do this
+            RA, DEC = r['rd'][i]
+            RAD = r['radiusArcsec'][i]
+            AB = r['abRatio'][i]
+            PA = r['posAngle'][i]
 
-    galaxies = []
-    for galaxy in t:
-        RA = galaxy['RA']
-        DEC = galaxy['DEC']
-        if RA > ralo and RA < rahi and DEC > declo and DEC < dechi:
-            galaxies.append(galaxy)
+            PA = 90 - PA
 
-    for galaxy in galaxies:
+            major_axis_arcsec = RAD * 2
+            minor_axis_arcsec = major_axis_arcsec * AB
 
-        print("Rendering {}".format(galaxy['GALAXY']))
+            draw_offcenter_ellipse(img, RA, DEC, PA, major_axis_arcsec, minor_axis_arcsec, pixscale, rahi, dechi)
 
-        RA = galaxy['RA']
-        DEC = galaxy['DEC']
-
-        PA = galaxy['PA']
-        D25 = galaxy['D25']
-        BA = galaxy['BA']
-
-        if np.isnan(PA):
-            PA = 90
-        if np.isnan(BA):
-            BA = 1
-        if np.isnan(D25):
-            continue
-
-        major_axis_arcsec = D25 * 60
-        minor_axis_arcsec = major_axis_arcsec * BA
+def draw_offcenter_ellipse(img, RA, DEC, PA, major_axis_arcsec, minor_axis_arcsec, pixscale, rahi, dechi):
 
         overlay_height = int(major_axis_arcsec / pixscale)
         overlay_width = int(minor_axis_arcsec / pixscale)
