@@ -32,7 +32,9 @@ def list():
     db = get_db()
 
     inspections = db.execute(
-        "SELECT * FROM inspection"
+        # "SELECT * FROM inspection"
+        "SELECT a.inspection_id, lslga_id, username, quality FROM inspection a LEFT JOIN user ON inspection.user_id = user.id"
+        # "SELECT a.inspection_id, lslga_id, username, quality FROM inspection a LEFT JOIN user b ON a.user_id = b.id"
     ).fetchall()
 
     keys = inspections[0].keys() if len(inspections) > 0 else []
