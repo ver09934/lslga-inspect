@@ -79,24 +79,24 @@ def inspect_galaxy(catalog_raw, galaxy_id):
         if g.user is None:
             flash("User must be logged in to submit information!")
         else:
-            # TODO: Check if inspection already exists, and if so, replace it
-            # instead of creating a new entry
 
             db = get_db()
 
             existing_inspection = db.execute(
                 'SELECT * FROM inspection WHERE user_id = ? AND lslga_id = ?',
                 (g.user['id'], galaxy_id)
-            )
+            ).fetchone()
 
-            if existing_inspection.fetchone() is not None:
-                pass # TODO: Insert existing information info fields for editing
-
-            # INSERT OR IGNORE INTO...
-            db.execute(
-                "INSERT INTO inspection (lslga_id, user_id, quality) VALUES (?, ?, ?)",
-                (galaxy_id, g.user['id'], request.form['quality'])
-            )
+            if existing_inspection is not None:
+                db.execute(
+                    "UPDATE inspection SET quality = ?, feedback = ? WHERE user_id = ? AND lslga_id = ?",
+                    (request.form['quality'], None if request.form['feedback'] == '' else request.form['feedback'], g.user['id'], galaxy_id)
+                )
+            else:
+                db.execute(
+                    "INSERT INTO inspection (user_id, lslga_id, quality, feedback) VALUES (?, ?, ?, ?)",
+                    (g.user['id'], galaxy_id, request.form['quality'], None if request.form['feedback'] == '' else request.form['feedback'])
+                )
 
             db.commit()
 
@@ -118,11 +118,39 @@ def inspect_galaxy(catalog_raw, galaxy_id):
         "&lslga"
     ).format(galaxy_info['RA'], galaxy_info['DEC'])
 
+    db = get_db()
+
+    existing_inspection = db.execute(
+        'SELECT * FROM inspection WHERE user_id = ? AND lslga_id = ?',
+        (g.user['id'], galaxy_id)
+    ).fetchone()
+
+    inspection_options = {
+        'good': 'Good',
+        'bad-ellipse': 'Ellipse wrong size/shape',
+        'spurious-src': 'Spurious source (star/smaller galaxy)',
+        'lsb-resolved': 'Resolved low surface brightness galaxy',
+        'bad-mask': 'Galaxy masked too aggressively'
+    }
+
+    if existing_inspection is not None:
+        checked_option = existing_inspection['quality']
+        load_text = '' if existing_inspection['feedback'] == None else existing_inspection['feedback']
+        submit_button = 'Update'
+    else:
+        checked_option = 'good'
+        load_text = ''
+        submit_button = 'Submit'
+    
     return render_template(
         "inspect.html",
         catalog_raw=catalog_raw,
         catalog_pretty=catalog_pretty_strings[catalog_raw],
         id=galaxy_id,
         info=galaxy_info,
-        viewer_link = viewer_link
+        viewer_link = viewer_link,
+        inspection_options=inspection_options,
+        checked_option=checked_option,
+        load_text=load_text,
+        submit_button=submit_button
     )

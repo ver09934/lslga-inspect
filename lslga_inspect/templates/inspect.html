@@ -51,27 +51,21 @@
         {% endfor %}
 
         Select image quality:<br/>
-        <input type="radio" name="quality" value="good" checked>Good<br/>
-        <input type="radio" name="quality" value="bad-ellipse">Ellipse wrong size/shape<br/>
-        <input type="radio" name="quality" value="spurious-src">Spurious source (star/smaller galaxy)<br/>
-        <input type="radio" name="quality" value="lsb-resolved">Resolved low surface brightness galaxy<br/>
-        <input type="radio" name="quality" value="bad-mask">Galaxy masked too aggressively<br/>
+        {% for key, value in inspection_options.items() %}
+            <input type="radio" name="quality" value="{{key}}"{{ ' checked' if key == checked_option else '' }}>{{ value }}<br/>
+        {% endfor %}
 
         <!--
-        <input type="radio" name="quality" value="other">Other<br/>
-
         <input type="radio" name="quality" value="other">Other (specify):
-        <input type="text" name="other-issue" value="TODO" required><br/>
-
-        <br/>
-        Submit additional feedback (only if neccesary):
-        <textarea name="body" id="body">TODO: Load text from database if already inspected by user.</textarea>
+        <input type="text" name="other-issue" value="TMP" required><br/>
         -->
 
         <br/>
-        <input type="submit" value="Submit">
+        Submit additional feedback (only if neccesary):
+        <textarea name="feedback" id="feedback">{{ load_text }}</textarea>
 
-        <!-- TOOD: Change submit button to update if being updated instead of submitted -->
+        <br/>
+        <input type="submit" value="{{ submit_button }}">
 
     </form>
 

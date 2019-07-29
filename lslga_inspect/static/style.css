@@ -132,10 +132,12 @@ nav a:hover {
 
 /* --- Information Submission Form --- */
 
+/*
 #galaxy-form {
-    /* border: 2px solid #a0a0a0; */
-    /* padding: 20px; */
+    border: 2px solid #a0a0a0;
+    padding: 20px;
 }
+*/
 
 #galaxy-form input[type=submit] {
     background-color: #4c9baf;
