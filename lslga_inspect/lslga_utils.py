@@ -13,14 +13,6 @@ def init_t(app):
     global t
     t = Table.read(catalog_path)
     t.add_index('LSLGA_ID')
-    '''
-    TODO: Would somewhere about here be the best place
-    to generate cuts, or should it be in the view method
-    generating the next galaxy to inspect? Want the whole
-    system to be as 'aware' as possible of what subset
-    is being inspected
-    '''
-    # TODO: Cut based on IN_DESI?
 
 # In case we want to change the way t is returned
 def get_t():
@@ -339,10 +331,6 @@ def draw_all_ellipses(img, ra, dec, pixscale, use_local_catalog=True):
     dechi = dec + ((height / 2) * pixscale / 3600)
 
     if use_local_catalog:
-
-        # TODO: See the method 'query_lslga_radecbox' in
-        # https://github.com/legacysurvey/decals-web/blob/master/map/cats.py
-        # for a better way to do this
 
         t = get_t()
 

@@ -8,6 +8,16 @@ $ mkdir -p instance && cd instance
 $ wget http://www.sos.siena.edu/~jmoustakas/tmp/LSLGA-v2.0.fits
 ```
 
+## Running (Development)
+```bash
+$ export FLASK_APP=lslga_inspect
+$ export FLASK_ENV=development
+$ flask init-db
+$ flask run
+```
+
+<!--- ## Running (Production) --->
+
 ## Dependencies
 An environment with all the neccesary dependencies can be created with Anaconda:
 ```bash

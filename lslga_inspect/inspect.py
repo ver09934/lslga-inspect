@@ -51,7 +51,6 @@ def inspect_catalog(catalog_raw):
 
     t = lslga_utils.get_t()
 
-    # Should maybe cache the bad list somehow
     '''
     while True:
 
@@ -100,9 +99,6 @@ def inspect_galaxy(catalog_raw, galaxy_id):
 
             db.commit()
 
-            # TODO: Add options for ordered or unordered, with a back arrow in both cases...
-            # For this reason, should probably add some order/timestamp field to
-            # each inspection entry in the database
             return redirect(url_for('.inspect_catalog', catalog_raw=catalog_raw))
 
     if catalog_raw != 'all' and catalog_raw not in catalog_match_strings:

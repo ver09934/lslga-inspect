@@ -5,10 +5,6 @@ def create_app():
     
     app = Flask(__name__, instance_relative_config=True)
 
-    # TODO: Examine config options,
-    # perhaps add default config=None arg to create_app
-    # https://hackersandslackers.com/configuring-your-flask-application/
-
     app.config.from_pyfile('config.cfg')
 
     from . import lslga_utils
@@ -29,23 +25,40 @@ def create_app():
 
     return app
 
-# export FLASK_APP=lslga_inspect && export FLASK_ENV=development
-# To run (dev): FLASK_APP=lslga_inspect FLASK_ENV=development flask run
+# ------------------------- TODO: Move these TODOs into README -------------------------
 
-# TODO: Run 'ag TODO' and complete all TODOs
+# --- /lslga_inspect/__init__.py ---
+# TODO: Examine config options, perhaps add default config=None arg to create_app
+    # More info: https://hackersandslackers.com/configuring-your-flask-application/
+
+# --- /lslga_inspect/lslga_utils.py ---
+# TODO: Determine where to generate cuts to create subcatalogs
+    # For example, will want to cut based on IN_DESI?
+    # Want as much of the system as possible to be aware of subcatalog being inspected
+# TODO: If using check footprint, create a database with a list of bad galaxies
+# TODO: Fixed margin instead of ratio for LSLGA images
+# TODO: See the method 'query_lslga_radecbox' to get a better way to find overlapping galaxies
+    # https://github.com/legacysurvey/decals-web/blob/master/map/cats.py
+
+# --- /lslga_inspect/inspect.html ---
+# TODO: Remove atrocious use of <p></p> tags to create space
+
+# --- /lslga_insepct/inspect.py ---
+# TODO: In redirect after form submission, do something better than the current solution?
+# TODO: Add options for ordered or unordered, with a back arrow in both cases...
+# TODO: Might as well record the subset identifier string in database when an inspection is made...
+
+# --- general ---
 # TODO: Transfer ownership to legacysurvey as requested by Dr. Moustakas
-# TODO: Add docstrings
 # TODO: Figure out a better way to do things than returning None and HTTP errors
 # TODO: Make drawing look better by sampling larger and downscaling?
-# https://stackoverflow.com/questions/16640338/python3-pil-pillow-draw-pieslice-bad-arc
-
-# TODO: Pre-populate galaxy forms with user's original input (change submit button to update)
-# Some other ideas:
-# Have backwards and forwards arrow to navigate through user's history
-# Have a counter to show how far through the set the user is...
-
-'''
-Each galaxy has a table of users and their input
-An input table consists of user, good/bad, possibly text
---> Important to note what subset the galaxy is being examined as part of?
-'''
+    # https://stackoverflow.com/questions/16640338/python3-pil-pillow-draw-pieslice-bad-arc
+# TODO: Have backwards and forwards arrow to navigate through user's history
+# TODO: Have a counter to show how far through the set the user is...
+# TODO: Cleanup, comment, and add docstrings (use functools wraps for any annotations)
+    # Particularly in /lslga_inspect/user.py
+# Investigate requirements file options
+    # conda env export > environment.yml, conda env create -f environment.yml (see conda docs)
+    # https://tdhopper.com/blog/my-python-environment-workflow-with-conda/
+# TODO: Complete the meta-TODO in the heading (that makes this TODO a meta-meta-TODO)
+    # TODO: Continue making increasingly meta TODOs until someone finds out and gets angry
