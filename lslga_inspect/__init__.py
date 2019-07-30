@@ -47,6 +47,7 @@ def create_app():
 # TODO: In redirect after form submission, do something better than the current solution?
 # TODO: Add options for ordered or unordered, with a back arrow in both cases...
 # TODO: Might as well record the subset identifier string in database when an inspection is made...
+# TODO: Have the 'set complete' page display a list of links to all inspected galaxies
 
 # --- general ---
 # TODO: Transfer ownership to legacysurvey as requested by Dr. Moustakas

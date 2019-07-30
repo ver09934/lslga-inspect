@@ -2,21 +2,9 @@ from flask import abort, Blueprint, flash, g, redirect, render_template, request
 import random
 from . import lslga_utils
 from .db import get_db
+from . import sets
 
 bp = Blueprint('inspect', __name__)
-
-# Other catalogs: UGC, PGC
-catalog_match_strings = {
-    'ngc': 'NGC',
-    'sdss': 'SDSS',
-    '2mas': '2MAS',
-}
-catalog_pretty_strings = {
-    'all': '',
-    'ngc': 'NGC',
-    'sdss': 'SDSS',
-    '2mas': '2MASS/2MASX',
-}
 
 @bp.route('/')
 def tmp_function():
@@ -24,10 +12,10 @@ def tmp_function():
 
 @bp.route('/inspect')
 def index():
-    return render_template('catalog-list.html', pretty_strings=catalog_pretty_strings)
+    return render_template('catalog-list.html', pretty_strings=sets.set_dict)
 
 @bp.route('/inspect/list')
-def list():
+def list_inspections():
     
     db = get_db()
 
@@ -51,30 +39,33 @@ def list():
 @bp.route('/inspect/<string:catalog_raw>')
 def inspect_catalog(catalog_raw):
 
-    if catalog_raw == 'all':
-        catalog = None
-    elif catalog_raw not in catalog_match_strings:
+    galaxy_list = sets.get_list(catalog_raw)
+
+    if galaxy_list is None:
         return abort(500, 'Catalog name not found.')
+
+    if g.user is not None:
+
+        galaxy_list = set(galaxy_list)
+        user_inspected = set(sets.get_inspected(g.user['id']))
+        to_inspect = galaxy_list - user_inspected
+        to_inspect = list(to_inspect)
+
+        if len(to_inspect) == 0:
+            return render_template(
+                'message.html',
+                title='Set completed',
+                header='Set completed',
+                message='Set {} completed.'.format(sets.set_dict[catalog_raw])
+            )
+
+        rand_id = random.choice(to_inspect)
+        # rand_id = to_inspect[0]
+        return redirect(url_for('.inspect_galaxy', catalog_raw=catalog_raw, galaxy_id=rand_id))
+
     else:
-        catalog = catalog_match_strings[catalog_raw]
-
-    t = lslga_utils.get_t()
-
-    while True:
-
-        length = length = len(t)
-        rand_index = random.randint(0, length - 1)
-
-        if catalog is not None:
-            if t[rand_index]['GALAXY'][:len(catalog)] == catalog:
-                if lslga_utils.test_footprint(rand_index):
-                    break
-        else:
-            if lslga_utils.test_footprint(rand_index):
-                break
-    
-    rand_id = lslga_utils.get_lslga_id(rand_index)
-    return redirect(url_for('.inspect_galaxy', catalog_raw=catalog_raw, galaxy_id=rand_id))
+        rand_id = random.choice(galaxy_list)
+        return redirect(url_for('.inspect_galaxy', catalog_raw=catalog_raw, galaxy_id=rand_id))
 
 @bp.route('/inspect/<string:catalog_raw>/<int:galaxy_id>', methods=('GET', 'POST'))
 def inspect_galaxy(catalog_raw, galaxy_id):
@@ -107,7 +98,7 @@ def inspect_galaxy(catalog_raw, galaxy_id):
 
             return redirect(url_for('.inspect_catalog', catalog_raw=catalog_raw))
 
-    if catalog_raw != 'all' and catalog_raw not in catalog_match_strings:
+    if catalog_raw not in sets.set_dict:
         return abort(500, 'Catalog name not found.')
         
     galaxy_info = lslga_utils.get_lslga_tablerow(galaxy_id)
@@ -156,7 +147,7 @@ def inspect_galaxy(catalog_raw, galaxy_id):
     return render_template(
         "inspect.html",
         catalog_raw=catalog_raw,
-        catalog_pretty=catalog_pretty_strings[catalog_raw],
+        catalog_pretty=sets.set_dict[catalog_raw],
         id=galaxy_id,
         info=galaxy_info,
         viewer_link = viewer_link,

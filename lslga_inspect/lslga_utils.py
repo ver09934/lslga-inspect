@@ -8,7 +8,13 @@ import numpy as np
 
 t = None
 
-def init_t(app):
+def init_t(app, path=None):
+    '''
+    if path is None:
+        catalog_path = app.config['FITS_PATH']
+    else:
+        catalog_path = path
+    '''
     catalog_path = app.config['FITS_PATH']
     global t
     t = Table.read(catalog_path)
