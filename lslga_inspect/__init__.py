@@ -43,11 +43,14 @@ def create_app():
 # --- /lslga_inspect/inspect.html ---
 # TODO: Remove atrocious use of <p></p> tags to create space
 
-# --- /lslga_insepct/inspect.py ---
+# --- /lslga_inspect/inspect.py ---
 # TODO: In redirect after form submission, do something better than the current solution?
 # TODO: Add options for ordered or unordered, with a back arrow in both cases...
 # TODO: Might as well record the subset identifier string in database when an inspection is made...
 # TODO: Have the 'set complete' page display a list of links to all inspected galaxies
+
+# --- /lslga_inspect/sets.py ---
+# TODO: Redo naming (it turns out sets are their own thing in Python, so the current naming is very confusing)
 
 # --- general ---
 # TODO: Transfer ownership to legacysurvey as requested by Dr. Moustakas

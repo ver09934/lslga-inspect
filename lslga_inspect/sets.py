@@ -1,6 +1,5 @@
 from . import lslga_utils
 from .db import get_db
-import os
 
 class Set:
 
@@ -13,31 +12,23 @@ class Set:
 set_list = []
 
 def all_list():
-    # lslga_utils.init_t(None, os.path.expanduser("~/Desktop/Ian/repositories/lslga-inspect/instance/LSLGA-v2.0.fits"))
     t = lslga_utils.get_t()
-    # list = [id for id in t['LSLGA_ID']]
     list = [id for id, in_desi in zip(t['LSLGA_ID'], t['IN_DESI']) if in_desi]
     return list
 
 def string_match_list(catalog):
     def inner_function():
-        # lslga_utils.init_t(None, os.path.expanduser("~/Desktop/Ian/repositories/lslga-inspect/instance/LSLGA-v2.0.fits"))
         t = lslga_utils.get_t()
-        # list = [id for id, galaxy in zip(t['LSLGA_ID'], t['GALAXY']) if galaxy[:len(catalog)] == catalog]
         list = [id for id, galaxy, in_desi in zip(t['LSLGA_ID'], t['GALAXY'], t['IN_DESI']) if galaxy[:len(catalog)] == catalog and in_desi]
         return list
     return inner_function
 
-set_list.append(Set('all', '', all_list))
+set_list.append(Set('all', '', all_list)) # string_match_list('') would probably work as well
 set_list.append(Set('ngc', 'NGC', string_match_list('NGC')))
 set_list.append(Set('sdss', 'SDSS', string_match_list('SDSS')))
-set_list.append(Set('2mas', '2MASS/2MASX', string_match_list('2MASS')))
+set_list.append(Set('2mas', '2MASS/2MASX', string_match_list('2MAS'))) # Change to '2MASS' for testing, only matches 4 galaxies
 
-# set_dict = {key : value for key, value in zip([item.id_string for item in set_list], [item.pretty_string for item in set_list])}
-# set_dict = dict(zip([item.id_string for item in set_list], [item.pretty_string for item in set_list]))
 set_dict = {item.id_string : item.pretty_string for item in set_list}
-
-# print(set_dict)
 
 def get_list(id_string):
     for set in set_list:
