@@ -40,14 +40,16 @@ def create_app():
 # TODO: See the method 'query_lslga_radecbox' to get a better way to find overlapping galaxies
     # https://github.com/legacysurvey/decals-web/blob/master/map/cats.py
 
-# --- /lslga_inspect/inspect.html ---
-# TODO: Remove atrocious use of <p></p> tags to create space
-
 # --- /lslga_inspect/inspect.py ---
 # TODO: In redirect after form submission, do something better than the current solution?
 # TODO: Add options for ordered or unordered, with a back arrow in both cases...
 # TODO: Might as well record the subset identifier string in database when an inspection is made...
 # TODO: Have the 'set complete' page display a list of links to all inspected galaxies
+    # Figure out how to handle forwards/backwards buttons and update button when the
+    # user goes back to a galaxy from here...
+    # Should also make an improved inspection list page for the user, related/same page as this
+    # Also need to make an easy way to get the inspection data (download as a JSON/CSV/FITS file?)
+# TODO: Add forwards/backwards buttons based on chronology of current set
 
 # --- /lslga_inspect/sets.py ---
 # TODO: Redo naming (it turns out sets are their own thing in Python, so the current naming is very confusing)
