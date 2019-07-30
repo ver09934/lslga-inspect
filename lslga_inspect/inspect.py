@@ -32,12 +32,18 @@ def list():
     db = get_db()
 
     inspections = db.execute(
-        # "SELECT * FROM inspection"
-        "SELECT a.inspection_id, lslga_id, username, quality FROM inspection a LEFT JOIN user ON inspection.user_id = user.id"
-        # "SELECT a.inspection_id, lslga_id, username, quality FROM inspection a LEFT JOIN user b ON a.user_id = b.id"
+        ("SELECT a.inspection_id, lslga_id, username, quality, feedback, created "
+        "FROM inspection a LEFT JOIN user b ON a.user_id = b.id")
     ).fetchall()
 
+    # Turn keys and inspections into normal python lists
     keys = inspections[0].keys() if len(inspections) > 0 else []
+    inspections = [[item for item in row] for row in inspections]
+
+    # Replace lslga_id with galaxy name
+    keys[1] = 'galaxy_name'
+    for row in inspections:
+        row[1] = lslga_utils.get_lslga_tablerow(row[1])['GALAXY']
 
     return render_template('list.html', keys=keys, inspections=inspections)
 
