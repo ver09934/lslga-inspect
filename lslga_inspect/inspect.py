@@ -53,7 +53,6 @@ def inspect_catalog(catalog_raw):
 
     t = lslga_utils.get_t()
 
-    '''
     while True:
 
         length = length = len(t)
@@ -66,8 +65,6 @@ def inspect_catalog(catalog_raw):
         else:
             if lslga_utils.test_footprint(rand_index):
                 break
-    '''
-    rand_index = random.randint(0, len(t) - 1)
     
     rand_id = lslga_utils.get_lslga_id(rand_index)
     return redirect(url_for('.inspect_galaxy', catalog_raw=catalog_raw, galaxy_id=rand_id))
