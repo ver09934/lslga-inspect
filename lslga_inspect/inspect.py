@@ -113,13 +113,6 @@ def inspect_galaxy(catalog_raw, galaxy_id):
         "&lslga"
     ).format(galaxy_info['RA'], galaxy_info['DEC'])
 
-    db = get_db()
-
-    existing_inspection = db.execute(
-        'SELECT * FROM inspection WHERE user_id = ? AND lslga_id = ?',
-        (g.user['id'], galaxy_id)
-    ).fetchone()
-
     inspection_options = {
         'good': 'Good',
         'bad-ellipse': 'Ellipse wrong size/shape',
@@ -128,11 +121,27 @@ def inspect_galaxy(catalog_raw, galaxy_id):
         'bad-mask': 'Galaxy masked too aggressively'
     }
 
-    if existing_inspection is not None:
-        checked_option = existing_inspection['quality']
-        load_text = '' if existing_inspection['feedback'] == None else existing_inspection['feedback']
-        submit_button = 'Update'
-    else:
+    db = get_db()
+
+    success = False
+
+    if g.user is not None:
+
+        existing_inspection = db.execute(
+            'SELECT * FROM inspection WHERE user_id = ? AND lslga_id = ?',
+            (g.user['id'], galaxy_id)
+        ).fetchone()
+
+        if existing_inspection is not None:
+
+            checked_option = existing_inspection['quality']
+            load_text = '' if existing_inspection['feedback'] == None else existing_inspection['feedback']
+            submit_button = 'Update'
+
+            success = True
+
+    if not success:
+
         checked_option = 'good'
         load_text = ''
         submit_button = 'Submit'
