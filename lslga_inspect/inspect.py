@@ -34,7 +34,7 @@ def list_inspections():
     for row in inspections:
         row.insert(2, lslga_utils.get_lslga_tablerow(row[1])['GALAXY'])
 
-    return render_template('list.html', keys=keys, inspections=inspections)
+    return render_template('inspection-list.html', keys=keys, inspections=inspections)
 
 @bp.route('/inspect/<string:catalog_raw>')
 def inspect_catalog(catalog_raw):
