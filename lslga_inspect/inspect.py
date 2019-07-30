@@ -40,10 +40,11 @@ def list():
     keys = inspections[0].keys() if len(inspections) > 0 else []
     inspections = [[item for item in row] for row in inspections]
 
-    # Replace lslga_id with galaxy name
-    keys[1] = 'galaxy_name'
+    # Insert galaxy name into lists
+    if len(keys) > 0:
+        keys.insert(2, 'galaxy_name')
     for row in inspections:
-        row[1] = lslga_utils.get_lslga_tablerow(row[1])['GALAXY']
+        row.insert(2, lslga_utils.get_lslga_tablerow(row[1])['GALAXY'])
 
     return render_template('list.html', keys=keys, inspections=inspections)
 
