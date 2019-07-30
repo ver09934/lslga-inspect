@@ -9,7 +9,6 @@
         <nav>
             <ul>
                 <!-- <li>Inspect</li> -->
-                <!-- <li><a href="">Dummy</a></li> -->
                 <li><a href="{{ url_for('inspect.index') }}">Catalog List</a></li>
                 <li><a href="{{ url_for('inspect.list_inspections') }}">Inspection List</a></li>
                 {% if g.user %}
@@ -22,16 +21,7 @@
             </ul>
         </nav>
         <div id="main">
-
-            <!-- NOTE: Instead, use this in the extending templates -->
-            <!--
-            {% for message in get_flashed_messages() %}
-                <div class="flash">{{ message }}</div>
-            {% endfor %}
-            -->
-
             {% block content %}{% endblock %}
-
         </div>
     </body>
 </html>

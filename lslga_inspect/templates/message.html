@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{{ title or 'Message' }}{% endblock %}
 
 {% block content %}
     <h2 class="title">{{ header }}</h1>
