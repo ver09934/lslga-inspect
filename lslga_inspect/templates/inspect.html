@@ -4,57 +4,48 @@
 
 {% block content %}
     <h1 class="title">{{ info['GALAXY'] }}</h1>
-    <b>PGC:</b> {{ info['PGC'] }} <br/>
-    <b>RA:</b> {{ '{:.6f}'.format(info['RA'], 6) }}<br/>
-    <b>DEC:</b> {{ '{:.6f}'.format(info['DEC'], 6) }}<br/>
-    <b>PA:</b> {{ '{:.1f} deg'.format(info['PA'], 1) }}<br/>
-    <b>D(25):</b> {{ '{:.3f} arcmin'.format(info['D25'], 3) }}<br/>
-    <b>B/A:</b> {{ '{:.2f}'.format(info['BA'], 2) }}<br/>
-    <b>Type: </b> {{ info['TYPE'] }}<br/>
-    <b>Redshift:</b> {{ '{:.4f}'.format(info['Z']) }}<br/>
-
-    <p></p>
-
-    <a href="/lslga?id={{id}}&layer=dr8&pixscale=0.262" target="_blank">
-        <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8&annotation=Data"></img>
-    </a>
-    <a href="/lslga?id={{id}}&layer=dr8-model&pixscale=0.262" target="_blank">
-        <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8-model&annotation=Model"></img>
-    </a>
-    <a href="/lslga?id={{id}}&layer=dr8-resid&pixscale=0.262" target="_blank">
-        <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8-resid&annotation=Residual"></img>
-    </a>
-
-    <p></p>
-
+    <div id="galaxy-info">
+        <b>PGC:</b> {{ info['PGC'] }} <br/>
+        <b>RA:</b> {{ '{:.6f}'.format(info['RA'], 6) }}<br/>
+        <b>DEC:</b> {{ '{:.6f}'.format(info['DEC'], 6) }}<br/>
+        <b>PA:</b> {{ '{:.1f} deg'.format(info['PA'], 1) }}<br/>
+        <b>D(25):</b> {{ '{:.3f} arcmin'.format(info['D25'], 3) }}<br/>
+        <b>B/A:</b> {{ '{:.2f}'.format(info['BA'], 2) }}<br/>
+        <b>Type: </b> {{ info['TYPE'] }}<br/>
+        <b>Redshift:</b> {{ '{:.4f}'.format(info['Z']) }}<br/>
+    </div>
+    <div id="other-links">
+            <a href="{{viewer_link|safe}}" target="_blank">[Inspect in Viewer]</a>
+            <!--
+            <br/>
+            <a href="{{ url_for('inspect.inspect_catalog', catalog_raw=catalog_raw) }}">[New {{catalog_pretty}} galaxy]</a>
+            -->
+        </div>
+    <div id="galaxy-images">
+        <a href="/lslga?id={{id}}&layer=dr8&pixscale=0.262" target="_blank">
+            <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8&annotation=Data"></img>
+        </a>
+        <a href="/lslga?id={{id}}&layer=dr8-model&pixscale=0.262" target="_blank">
+            <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8-model&annotation=Model"></img>
+        </a>
+        <a href="/lslga?id={{id}}&layer=dr8-resid&pixscale=0.262" target="_blank">
+            <img src="/lslga?id={{id}}&drawname&drawscale&ellipse&layer=dr8-resid&annotation=Residual"></img>
+        </a>
+    </div>
     <form id="galaxy-form" method="post">
-
         {% for message in get_flashed_messages() %}
             <div class="flash">{{ message }}</div>
         {% endfor %}
-
-        Select image quality:<br/>
+        <div id="quality-label">Select image quality:</div>
         {% for key, value in inspection_options.items() %}
             <input type="radio" name="quality" value="{{key}}"{{ ' checked' if key == checked_option else '' }}>{{ value }}<br/>
         {% endfor %}
-
         <!--
         <input type="radio" name="quality" value="other">Other (specify):
         <input type="text" name="other-issue" value="TMP" required><br/>
         -->
-
-        <br/>
-        Submit additional feedback (only if neccesary):
+        <div id="feedback-label">Submit additional feedback (only if neccesary):</div>
         <textarea name="feedback" id="feedback">{{ load_text }}</textarea>
-
-        <br/>
         <input type="submit" value="{{ submit_button }}">
-
     </form>
-
-    <p></p>
-
-    <a href="{{ url_for('inspect.inspect_catalog', catalog_raw=catalog_raw) }}">[New {{catalog_pretty}} galaxy]</a>
-    <br/>
-    <a href="{{viewer_link|safe}}" target="_blank">[Inspect in Viewer]</a>
 {% endblock %}
