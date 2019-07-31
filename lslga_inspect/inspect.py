@@ -2,7 +2,7 @@ from flask import abort, Blueprint, flash, g, redirect, render_template, request
 import random
 from . import lslga_utils
 from .db import get_db
-from . import sets
+from . import subsets
 
 bp = Blueprint('inspect', __name__)
 
@@ -12,7 +12,7 @@ def tmp_function():
 
 @bp.route('/inspect')
 def index():
-    return render_template('catalog-list.html', pretty_strings=sets.set_dict)
+    return render_template('catalog-list.html', pretty_strings=subsets.pretty_string_dict)
 
 @bp.route('/inspect/list')
 def list_inspections():
@@ -39,7 +39,7 @@ def list_inspections():
 @bp.route('/inspect/<string:catalog_raw>')
 def inspect_catalog(catalog_raw):
 
-    galaxy_list = sets.get_list(catalog_raw)
+    galaxy_list = subsets.get_subset_list(catalog_raw)
 
     if galaxy_list is None:
         return abort(500, 'Catalog name not found.')
@@ -47,7 +47,7 @@ def inspect_catalog(catalog_raw):
     if g.user is not None:
 
         galaxy_list = set(galaxy_list)
-        user_inspected = set(sets.get_inspected(g.user['id']))
+        user_inspected = set(subsets.get_inspected(g.user['id']))
         to_inspect = galaxy_list - user_inspected
         to_inspect = list(to_inspect)
 
@@ -56,7 +56,7 @@ def inspect_catalog(catalog_raw):
                 'message.html',
                 title='Set completed',
                 header='Set completed',
-                message='Set {} completed.'.format(sets.set_dict[catalog_raw])
+                message='Set {} completed.'.format(subsets.pretty_string_dict[catalog_raw])
             )
 
         rand_id = random.choice(to_inspect)
@@ -98,7 +98,7 @@ def inspect_galaxy(catalog_raw, galaxy_id):
 
             return redirect(url_for('.inspect_catalog', catalog_raw=catalog_raw))
 
-    if catalog_raw not in sets.set_dict:
+    if catalog_raw not in subsets.pretty_string_dict:
         return abort(500, 'Catalog name not found.')
         
     galaxy_info = lslga_utils.get_lslga_tablerow(galaxy_id)
@@ -147,7 +147,7 @@ def inspect_galaxy(catalog_raw, galaxy_id):
     return render_template(
         "inspect.html",
         catalog_raw=catalog_raw,
-        catalog_pretty=sets.set_dict[catalog_raw],
+        catalog_pretty=subsets.pretty_string_dict[catalog_raw],
         id=galaxy_id,
         info=galaxy_info,
         viewer_link = viewer_link,

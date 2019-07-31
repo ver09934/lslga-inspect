@@ -1,7 +1,7 @@
 from . import lslga_utils
 from .db import get_db
 
-class Set:
+class Subset:
 
     def __init__(self, id_string, pretty_string, list_create_func):
         self.id_string = id_string
@@ -9,7 +9,7 @@ class Set:
         self.list_create_func = list_create_func
         self.galaxy_list = self.list_create_func()
 
-set_list = []
+subset_list = []
 
 def all_list():
     t = lslga_utils.get_t()
@@ -23,21 +23,20 @@ def string_match_list(catalog):
         return list
     return inner_function
 
-set_list.append(Set('all', '', all_list)) # string_match_list('') would probably work as well
-set_list.append(Set('ngc', 'NGC', string_match_list('NGC')))
-set_list.append(Set('sdss', 'SDSS', string_match_list('SDSS')))
-set_list.append(Set('2mas', '2MASS/2MASX', string_match_list('2MAS'))) # Change to '2MASS' for testing, only matches 4 galaxies
+subset_list.append(Subset('all', '', all_list)) # string_match_list('') would probably work as well
+subset_list.append(Subset('ngc', 'NGC', string_match_list('NGC')))
+subset_list.append(Subset('sdss', 'SDSS', string_match_list('SDSS')))
+subset_list.append(Subset('2mas', '2MASS/2MASX', string_match_list('2MAS'))) # Change to '2MASS' for testing, only matches 4 galaxies
 
-set_dict = {item.id_string : item.pretty_string for item in set_list}
+pretty_string_dict = {item.id_string : item.pretty_string for item in subset_list}
 
-def get_list(id_string):
-    for set in set_list:
+def get_subset_list(id_string):
+    for set in subset_list:
         if set.id_string == id_string:
             return set.galaxy_list
     return []
     # Returning None on failure might be bad practice
 
-# Not sure this is the best module for this method
 def get_inspected(user_id):
     db = get_db()
     inspections = db.execute("SELECT lslga_id FROM inspection WHERE user_id = ?", (user_id,)).fetchall()
