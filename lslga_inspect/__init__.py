@@ -10,9 +10,10 @@ def create_app():
     from . import lslga_utils
     lslga_utils.init_t(app)
 
-    from . import inspect, image
+    from . import inspect, image, viewlist
     app.register_blueprint(inspect.bp)
     app.register_blueprint(image.bp)
+    app.register_blueprint(viewlist.bp)
 
     if not os.path.exists(app.instance_path):
         os.makedirs(app.instance_path)
