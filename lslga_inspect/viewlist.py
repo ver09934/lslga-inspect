@@ -14,7 +14,7 @@ def list_all():
     # ----- All inspections -----
 
     inspections = db.execute(
-        ("SELECT a.inspection_id, lslga_id, username, quality, feedback, created "
+        ("SELECT a.inspection_id, lslga_id, username, quality, feedback, subset, created "
         "FROM inspection a LEFT JOIN user b ON a.user_id = b.id")
     ).fetchall()
 
@@ -33,7 +33,7 @@ def list_all():
     if g.user is not None:
 
         user_inspections = db.execute(
-            ("SELECT a.inspection_id, lslga_id, username, quality, feedback, created "
+            ("SELECT a.inspection_id, lslga_id, username, quality, feedback, subset, created "
             "FROM inspection a LEFT JOIN user b ON a.user_id = b.id WHERE a.user_id = ?"),
             (g.user['id'],)
         ).fetchall()
