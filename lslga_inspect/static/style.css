@@ -179,7 +179,7 @@ nav a:hover {
 /* --- Tables --- */
 
 table, th, td {
-    border: 1px solid #ffffff;
+    border: 1px solid #cfd9e5;
     border-collapse: collapse;
 }
 
@@ -189,24 +189,17 @@ th, td {
 
 /* --- Other things --- */
 
-#galaxy-info {
-    margin: 10px 0px;
-}
-
-#other-links {
-    margin: 10px 0px;
-}
-
-#galaxy-images {
-    margin: 10px 0px;
-}
-
-#galaxy-form {
+.inspect-section {
     margin: 10px 0px;
 }
 
 /*
-.title, #galaxy-info, #galaxy-images, #galaxy-form, #other-links {
+.title, .inspect-section {
     border: 1px solid white;
 }
 */
+
+.table-section {
+    padding: 0px;
+    margin: 0px 0px 20px 0px;
+}
