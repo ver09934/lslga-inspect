@@ -1,8 +1,7 @@
-from flask import make_response, current_app
+from flask import make_response
 import requests
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
-import os
 from astropy.table import Table
 import numpy as np
 
@@ -14,7 +13,6 @@ def init_t(app):
     t = Table.read(catalog_path)
     t.add_index('LSLGA_ID')
 
-# In case we want to change the way t is returned
 def get_t():
     return t
 
@@ -28,51 +26,20 @@ def get_img_response(img):
     img_io = BytesIO()
     img.save(img_io, 'JPEG', quality=70)
     img_io.seek(0)
-
     response = make_response(img_io.getvalue())
     response.headers['Content-Type'] = 'image/jpeg'
     return response
 
-# NOTE: This now accepts lslga_id, not index
-# To access by index, just access
-# lslga_utils.get(t)[index][index]
 def get_lslga_tablerow(lslga_id):
     lslga_index = get_lslga_index(lslga_id)
     t = get_t()
     return t[lslga_index]
 
-def test_footprint(lslga_index):
-    t = get_t()
-    ra, dec = t[lslga_index]['RA'], t[lslga_index]['DEC']
-    return test_footprint_radec(ra, dec)
-
-# This is not a good solution
-def test_footprint_radec(ra, dec, layer="dr8", pixscale=3, width=20, height=20):
-
-    url = (
-        "http://legacysurvey.org/viewer/jpeg-cutout"
-        "?ra={:.7f}"
-        "&dec={:.7f}"
-        "&layer={}"
-        "&pixscale={:.6f}"
-        "&width={:.0f}"
-        "&height={:.0f}"
-    ).format(ra, dec, layer, pixscale, width, height)
-
-    r = requests.get(url)
-
-    try:
-        img = Image.open(BytesIO(r.content))
-    except IOError:
-        return False
-    ext = img.convert('L').getextrema()
-    return ext[0] != ext[1]
-
 def render_galaxy_img(
         lslga_id=2,
         layer="dr8",
-        width=500,
-        height=500,
+        img_width=500,
+        img_height=500,
         draw_ellipse=False,
         ellipse_width=3,
         pixscale=None
@@ -83,7 +50,7 @@ def render_galaxy_img(
     RA = galaxy['RA']
     DEC = galaxy['DEC']
 
-    PA = galaxy['PA'] # position angle (positive from north to east) [degrees]
+    PA = galaxy['PA'] # position angle in degrees
     D25 = galaxy['D25'] # diameter in arcminutes
     BA = galaxy['BA'] # minor-to-major axis ratio
 
@@ -96,11 +63,7 @@ def render_galaxy_img(
     minor_axis_arcsec = major_axis_arcsec * BA
 
     # Set width or height to None to have that dimension sized for aspect ratio of galaxy
-    img_width = width # pixels
-    img_height = height # pixels
-
     assert img_width is not None or img_height is not None
-
     img_width = int(np.round(img_width, 0)) if img_width is not None else None
     img_height = int(np.round(img_height, 0)) if img_height is not None else None
 
@@ -115,7 +78,6 @@ def render_galaxy_img(
     )
 
     # Default viewer pixscale is 0.262 arcseconds/pixel
-
     if pixscale is None:
 
         # A float >= 1, how much larger the image is than the galaxy
@@ -165,13 +127,11 @@ def render_galaxy_img(
 
     r = requests.get(url)
 
-    # NOTE: Returns None if there is some error opening the image
+    # NOTE: Returns None if error opening image or image is solid color
     try:
         img = Image.open(BytesIO(r.content))
     except IOError:
         return None
-
-    # NOTE: Returns None if the image is a solid color
     ext = img.convert('L').getextrema()
     if ext[0] == ext[1]:
         return None
@@ -199,7 +159,7 @@ def render_galaxy_img(
     return img, pixscale
 
 # Take an img object and draw the galaxy name and a scalebar
-def draw_scalebar(img, pixscale, fontsize=14):
+def draw_scalebar(img, pixscale, fontsize=14, try_arcmin=False):
 
     width, height = img.size
     draw = ImageDraw.ImageDraw(img)
@@ -249,16 +209,15 @@ def draw_scalebar(img, pixscale, fontsize=14):
     scale_label_digits = str(bar_width_arcsec)
     scale_label_units = '"'
 
-    '''
-    # Optionally, convert to arcminutes if it comes out to a nice value
-    bar_width_arcmin = bar_width_arcsec / 60
-    if bar_width_arcmin % 1 == 0:
-        scale_label_digits = str(int(bar_width_arcmin))
-        scale_label_units = "'"
-    elif bar_width_arcmin % 0.5 == 0:
-        scale_label_digits = str(bar_width_arcmin)
-        scale_label_units = "'"
-    '''
+    if try_arcmin:
+        # convert to arcminutes if it comes out to a nice value
+        bar_width_arcmin = bar_width_arcsec / 60
+        if bar_width_arcmin % 1 == 0:
+            scale_label_digits = str(int(bar_width_arcmin))
+            scale_label_units = "'"
+        elif bar_width_arcmin % 0.5 == 0:
+            scale_label_digits = str(bar_width_arcmin)
+            scale_label_units = "'"
 
     scale_label = "{}{}".format(scale_label_digits, scale_label_units)
 
@@ -272,14 +231,14 @@ def draw_scalebar(img, pixscale, fontsize=14):
     scale_label_width, scale_label_height = draw.textsize(scale_label, font=scale_label_font)
     scale_label_digits_width, _ = draw.textsize(scale_label_digits, font=scale_label_font)
 
-    # vert_offset = 4
-    vert_offset = np.maximum(4, int(fontsize / 3.5)) # Scale distance between bar and font with font size
+    # Scale distance between bar and font with font size
+    vert_offset = np.maximum(4, int(fontsize / 3.5))
+
+    # Or, set the offset manually
+    # bar_width_arcsec = 4
 
     font_coords = (
-        # width - bar_offset - scale_label_width,
-        # width - bar_offset - (bar_width_pix)/2 - (scale_label_width)/2,
         width - bar_offset - (bar_width_pix)/2 - (scale_label_digits_width)/2,
-        # width - bar_offset - bar_width_pix
         height - bar_offset - bar_height - scale_label_height - vert_offset
     )
 
@@ -321,6 +280,7 @@ def draw_annotation(img, annotation, fontsize=14):
         fill=(255, 255, 255)
     )
 
+# NOTE: This method has some issues that need to be debugged
 def draw_all_ellipses(img, ra, dec, pixscale, use_local_catalog=True):
 
     width, height = img.size

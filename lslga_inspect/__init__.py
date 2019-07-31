@@ -32,13 +32,11 @@ def create_app():
     # More info: https://hackersandslackers.com/configuring-your-flask-application/
 
 # --- /lslga_inspect/lslga_utils.py ---
-# TODO: Determine where to generate cuts to create subcatalogs
-    # For example, will want to cut based on IN_DESI?
-    # Want as much of the system as possible to be aware of subcatalog being inspected
-# TODO: If using check footprint, create a database with a list of bad galaxies
 # TODO: Fixed margin instead of ratio for LSLGA images
 # TODO: See the method 'query_lslga_radecbox' to get a better way to find overlapping galaxies
     # https://github.com/legacysurvey/decals-web/blob/master/map/cats.py
+# TODO: Perhaps just do away with pixscale option entirely...
+    # Then, just make dimconservatism options more flexible
 
 # --- /lslga_inspect/inspect.py ---
 # TODO: In redirect after form submission, do something better than the current solution?
@@ -50,9 +48,6 @@ def create_app():
     # Should also make an improved inspection list page for the user, related/same page as this
     # Also need to make an easy way to get the inspection data (download as a JSON/CSV/FITS file?)
 # TODO: Add forwards/backwards buttons based on chronology of current set
-
-# --- /lslga_inspect/sets.py ---
-# TODO: Redo naming (it turns out sets are their own thing in Python, so the current naming is very confusing)
 
 # --- general ---
 # TODO: Transfer ownership to legacysurvey as requested by Dr. Moustakas

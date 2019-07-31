@@ -19,7 +19,10 @@ def all_list():
 def string_match_list(catalog):
     def inner_function():
         t = lslga_utils.get_t()
-        list = [id for id, galaxy, in_desi in zip(t['LSLGA_ID'], t['GALAXY'], t['IN_DESI']) if galaxy[:len(catalog)] == catalog and in_desi]
+        list = [
+            id for id, galaxy, in_desi in zip(t['LSLGA_ID'], t['GALAXY'], t['IN_DESI'])
+            if galaxy[:len(catalog)] == catalog and in_desi
+        ]
         return list
     return inner_function
 

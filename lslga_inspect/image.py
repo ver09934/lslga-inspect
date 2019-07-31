@@ -1,4 +1,4 @@
-from flask import abort, Blueprint, render_template, request, Response
+from flask import abort, Blueprint, render_template, request
 import requests
 from PIL import Image
 from io import BytesIO
@@ -52,7 +52,9 @@ def lslga():
 
     if 'id' in args:
         lslga_id = int(args['id'])
-        kwargs['lslga_id'] = lslga_id
+    else:
+        lslga_id = 2 # Smallest value of lslga_id in the catalog
+    kwargs['lslga_id'] = lslga_id
     if 'layer' in args:
         kwargs['layer'] = str(args['layer'])
     if 'width' in args:
@@ -60,13 +62,13 @@ def lslga():
             width = None
         else:
             width = int(args['width'])
-        kwargs['width'] = width
+        kwargs['img_width'] = width
     if 'height' in args:
         if str(args['height']).lower() == 'none':
             height = None
         else:
             height = int(args['height'])
-        kwargs['height'] = height
+        kwargs['img_height'] = height
     if 'ellipse' in args:
         kwargs['draw_ellipse'] = True
     if 'ellipsewidth' in args:

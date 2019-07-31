@@ -1,4 +1,4 @@
-from flask import abort, Blueprint, flash, g, redirect, render_template, request, Response, url_for
+from flask import abort, Blueprint, flash, g, redirect, render_template, request, url_for
 import random
 from . import lslga_utils
 from .db import get_db
