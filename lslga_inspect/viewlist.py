@@ -11,6 +11,8 @@ def list_all():
     
     db = get_db()
 
+    # ----- All inspections -----
+
     inspections = db.execute(
         ("SELECT a.inspection_id, lslga_id, username, quality, feedback, created "
         "FROM inspection a LEFT JOIN user b ON a.user_id = b.id")
@@ -26,4 +28,27 @@ def list_all():
     for row in inspections:
         row.insert(2, lslga_utils.get_lslga_tablerow(row[1])['GALAXY'])
 
-    return render_template('inspection-list.html', keys=keys, inspections=inspections)
+    # ----- User inspections -----
+
+    if g.user is not None:
+
+        user_inspections = db.execute(
+            ("SELECT a.inspection_id, lslga_id, username, quality, feedback, created "
+            "FROM inspection a LEFT JOIN user b ON a.user_id = b.id WHERE a.user_id = ?"),
+            (g.user['id'],)
+        ).fetchall()
+
+        user_keys = user_inspections[0].keys() if len(user_inspections) > 0 else []
+        user_inspections = [[item for item in row] for row in user_inspections]
+
+        if len(user_keys) > 0:
+            user_keys.insert(2, 'galaxy_name')
+        for row in user_inspections:
+            row.insert(2, lslga_utils.get_lslga_tablerow(row[1])['GALAXY'])
+
+    else:
+
+        user_keys = []
+        user_inspections = []
+
+    return render_template('inspection-list.html', keys=keys, inspections=inspections, user_keys=user_keys, user_inspections=user_inspections)

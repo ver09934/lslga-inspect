@@ -3,19 +3,40 @@
 {% block title %}Inspections{% endblock %}
 
 {% block content %}
-    <h1 class="title">All Inspections</h1>
-    <table>
-    <tr>
-    {% for key in keys %}
-        <th>{{ key }}</th>
-    {% endfor %}
-    </tr>
-    {% for inspection in inspections %}
-        <tr>
-        {% for item in inspection %}
-            <td>{{ item }}</td>
-        {% endfor %}
-        </tr>
-    {% endfor %}
-    </table>
+    <div class="table-section">
+        <h2 class="title">All Inspections</h2>
+        <table>
+            <tr>
+            {% for key in keys %}
+                <th>{{ key }}</th>
+            {% endfor %}
+            </tr>
+            {% for inspection in inspections %}
+                <tr>
+                {% for item in inspection %}
+                    <td>{{ item }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% if g.user is not none %}
+        <div class="table-section">
+            <h2 class="title">User Inspections</h2>
+            <table>
+                <tr>
+                {% for key in user_keys %}
+                    <th>{{ key }}</th>
+                {% endfor %}
+                </tr>
+                {% for inspection in user_inspections %}
+                    <tr>
+                    {% for item in inspection %}
+                        <td>{{ item }}</td>
+                    {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
 {% endblock %}
