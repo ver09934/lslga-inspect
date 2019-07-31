@@ -39,7 +39,7 @@ def list_inspections():
 @bp.route('/inspect/<string:catalog_raw>')
 def inspect_catalog(catalog_raw):
 
-    galaxy_list = subsets.get_subset_list(catalog_raw)
+    galaxy_list = subsets.galaxy_list_dict[catalog_raw]
 
     if galaxy_list is None:
         return abort(500, 'Catalog name not found.')

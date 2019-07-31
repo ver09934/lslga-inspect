@@ -29,13 +29,7 @@ subset_list.append(Subset('sdss', 'SDSS', string_match_list('SDSS')))
 subset_list.append(Subset('2mas', '2MASS/2MASX', string_match_list('2MAS'))) # Change to '2MASS' for testing, only matches 4 galaxies
 
 pretty_string_dict = {item.id_string : item.pretty_string for item in subset_list}
-
-def get_subset_list(id_string):
-    for set in subset_list:
-        if set.id_string == id_string:
-            return set.galaxy_list
-    return []
-    # Returning None on failure might be bad practice
+galaxy_list_dict = {item.id_string : item.galaxy_list for item in subset_list}
 
 def get_inspected(user_id):
     db = get_db()
