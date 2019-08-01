@@ -38,8 +38,8 @@ def get_lslga_tablerow(lslga_id):
 def render_galaxy_img(
         lslga_id=2,
         layer="dr8",
-        img_width=500,
-        img_height=500,
+        img_width=432,
+        img_height=432,
         draw_ellipse=False,
         ellipse_width=3,
         pixscale=None
