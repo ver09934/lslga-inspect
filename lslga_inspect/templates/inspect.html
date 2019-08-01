@@ -19,15 +19,15 @@
             <a href="{{viewer_link|safe}}" target="_blank">[Inspect in Viewer]</a>
             <br/><br/>
             {% if prev_id is not none %}
-                <a href="/inspect/{{ catalog_raw }}/{{ prev_id }}">[Prev]</a>
+                <a href="{{ url_for('inspect.inspect_galaxy', catalog_raw=catalog_raw, galaxy_id=prev_id) }}">[Prev]</a>
             {% else %}
                 <mytag style="color: #707070; text-decoration: underline;">[Prev]</mytag>
             {% endif %}
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             {% if next_id == 'new' %}
-                <a href="/inspect/{{ catalog_raw }}">[Next]</a>
+                <a href="{{ url_for('inspect.inspect_catalog', catalog_raw=catalog_raw) }}">[Next]</a>
             {% elif next_id is not none %}
-                <a href="/inspect/{{ catalog_raw }}/{{ next_id }}">[Next]</a>
+                <a href="{{ url_for('inspect.inspect_galaxy', catalog_raw=catalog_raw, galaxy_id=next_id) }}">[Next]</a>
             {% else %}
                 <mytag style="color: #707070; text-decoration: underline;">[Next]</mytag>
             {% endif %}
