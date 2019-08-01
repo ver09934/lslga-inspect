@@ -47,7 +47,7 @@ def list_all():
         for row in user_inspections:
             row.insert(2, lslga_utils.get_lslga_tablerow(row[1])['GALAXY'])
             row.append('<a href="{}">{}</a>'.format(url_for('inspect.inspect_galaxy', catalog_raw=row[6], galaxy_id=row[1]),
-                lslga_utils.get_lslga_tablerow(row[1])['GALAXY'] + '-subset-' + row[6]))
+                '{} ({})'.format(lslga_utils.get_lslga_tablerow(row[1])['GALAXY'], row[6])))
             # The above is a temporary solution
 
     else:
