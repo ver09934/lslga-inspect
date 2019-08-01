@@ -92,10 +92,10 @@ def inspect_galaxy(catalog_raw, galaxy_id):
 
     inspection_options = {
         'good': 'Good',
-        'bad-ellipse': 'Ellipse wrong size/shape',
+        'bad-ellipse': 'Ellipse wrong size/shape/position',
         'spurious-src': 'Spurious source (star/smaller galaxy)',
-        'lsb-resolved': 'Resolved low surface brightness galaxy',
-        'bad-mask': 'Galaxy masked too aggressively'
+        'lsb-resolved': 'Resolved, low surface brightness galaxy',
+        'bad-mask': 'Galaxy masked too aggressively by pipeline'
     }
 
     db = get_db()
