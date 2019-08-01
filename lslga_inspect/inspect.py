@@ -38,8 +38,8 @@ def inspect_catalog(catalog_raw):
                 message='Set {} completed.'.format(subsets.pretty_string_dict[catalog_raw])
             )
 
-        rand_id = random.choice(to_inspect)
-        # rand_id = to_inspect[0]
+        # rand_id = random.choice(to_inspect)
+        rand_id = to_inspect[0]
         return redirect(url_for('.inspect_galaxy', catalog_raw=catalog_raw, galaxy_id=rand_id))
 
     else:
