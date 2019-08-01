@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}Catalog List{% endblock %}
+{% block title %}Subset List{% endblock %}
 
 {% block content %}
-    <h3 class="title">Select a catalog to inspect:</h3>
+    <h3 class="title">Select a subset to inspect:</h3>
     {% for key, value in pretty_strings.items() %}
         {% if key == 'all' %}
             <a href="{{ url_for('inspect.inspect_catalog', catalog_raw=key) }}">Inspect {{key}} galaxies</a><br/>
