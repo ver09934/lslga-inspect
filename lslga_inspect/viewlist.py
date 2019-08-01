@@ -43,8 +43,12 @@ def list_all():
 
         if len(user_keys) > 0:
             user_keys.insert(2, 'galaxy_name')
+            user_keys.append('inspect_link')
         for row in user_inspections:
             row.insert(2, lslga_utils.get_lslga_tablerow(row[1])['GALAXY'])
+            row.append('<a href="{}">{}</a>'.format(url_for('inspect.inspect_galaxy', catalog_raw=row[6], galaxy_id=row[1]),
+                lslga_utils.get_lslga_tablerow(row[1])['GALAXY'] + '-subset-' + row[6]))
+            # The above is a temporary solution
 
     else:
 

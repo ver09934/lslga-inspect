@@ -32,7 +32,7 @@
                 {% for inspection in user_inspections %}
                     <tr>
                     {% for item in inspection %}
-                        <td>{{ item }}</td>
+                        <td>{{ item|safe }}</td> <!-- |safe so links can be passed in... -->
                     {% endfor %}
                     </tr>
                 {% endfor %}
