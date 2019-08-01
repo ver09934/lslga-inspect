@@ -119,34 +119,29 @@ def inspect_galaxy(catalog_raw, galaxy_id):
 
         prev_inspections = subsets.get_inspected(g.user['id'])
         catalog_galaxies = subsets.galaxy_list_dict[catalog_raw]
-        orig = prev_inspections
-        print(prev_inspections)
-        prev_inspections = set(prev_inspections)
-        catalog_galaxies = set(catalog_galaxies)
-        print(prev_inspections)
-        prev_inspections = list(prev_inspections & catalog_galaxies)
-        print(prev_inspections)
-        prev_inspections = sorted(prev_inspections, key=orig.index)
-        print(prev_inspections)
+        prev_inspections_set = set(prev_inspections)
+        catalog_galaxies_set = set(catalog_galaxies)
+        intersecting_inspections = prev_inspections_set & catalog_galaxies_set
+        sorted_inspections = sorted(list(intersecting_inspections), key=prev_inspections.index)
 
         index = None
-        for i, test_id in enumerate(prev_inspections):
+        for i, test_id in enumerate(sorted_inspections):
             if test_id == galaxy_id:
                 index = i
                 break
         if index is None:
-            if len(prev_inspections) > 0:
-                prev_id = prev_inspections[-1]
+            if len(sorted_inspections) > 0:
+                prev_id = sorted_inspections[-1]
             else:
                 prev_id = None
             next_id = None
         else:
             if index > 0:
-                prev_id = prev_inspections[index - 1]
+                prev_id = sorted_inspections[index - 1]
             else:
                 prev_id = None
-            if index < len(prev_inspections) - 1:
-                next_id = prev_inspections[index + 1]
+            if index < len(sorted_inspections) - 1:
+                next_id = sorted_inspections[index + 1]
             else:
                 next_id = None
     else:

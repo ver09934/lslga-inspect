@@ -15,11 +15,20 @@
         <b>Redshift:</b> {{ '{:.4f}'.format(info['Z']) }}<br/>
     </div>
     <div class="inspect-section">
+            <!-- TODO: Style this properly... -->
             <a href="{{viewer_link|safe}}" target="_blank">[Inspect in Viewer]</a>
-            <br/>
-            <a href="{{ '/inspect/{}/{}'.format(catalog_raw, prev_id) if prev_id is not none else ''}}">[Prev]</a>
-            -------
-            <a href="{{ '/inspect/{}/{}'.format(catalog_raw, next_id) if next_id is not none else ''}}">[Next]</a>
+            <br/><br/>
+            {% if prev_id is not none %}
+                <a href="/inspect/{{ catalog_raw }}/{{ prev_id }}">[Prev]</a>
+            {% else %}
+                <mytag style="color: #707070; text-decoration: underline;">[Prev]</mytag>
+            {% endif %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {% if next_id is not none %}
+                <a href="/inspect/{{ catalog_raw }}/{{ next_id }}">[Next]</a>
+            {% else %}
+                <mytag style="color: #707070; text-decoration: underline;">[Next]</mytag>
+            {% endif %}
             <!--
             <br/>
             <a href="{{ url_for('inspect.inspect_catalog', catalog_raw=catalog_raw) }}">[New {{catalog_pretty}} galaxy]</a>
