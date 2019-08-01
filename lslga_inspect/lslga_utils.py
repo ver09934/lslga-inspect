@@ -207,17 +207,17 @@ def draw_scalebar(img, pixscale, fontsize=14, try_arcmin=False):
         bar_width_arcsec = int(bar_width_arcsec)
 
     scale_label_digits = str(bar_width_arcsec)
-    scale_label_units = '"'
+    scale_label_units = '″'
 
     if try_arcmin:
         # convert to arcminutes if it comes out to a nice value
         bar_width_arcmin = bar_width_arcsec / 60
         if bar_width_arcmin % 1 == 0:
             scale_label_digits = str(int(bar_width_arcmin))
-            scale_label_units = "'"
+            scale_label_units = "′"
         elif bar_width_arcmin % 0.5 == 0:
             scale_label_digits = str(bar_width_arcmin)
-            scale_label_units = "'"
+            scale_label_units = "′"
 
     scale_label = "{}{}".format(scale_label_digits, scale_label_units)
 
