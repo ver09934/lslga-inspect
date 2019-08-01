@@ -50,17 +50,17 @@ def create_app():
     # Also need to make an easy way to get the inspection data (download as a JSON/CSV/FITS file?)
 # TODO: Add forwards/backwards buttons based on chronology of current set
 
+# --- /lslga_inspect/viewlist.py ---
+# TODO: List all subsets a galaxy is a member of for greater clarity
+
 # --- general ---
-# TODO: Transfer ownership to legacysurvey as requested by Dr. Moustakas
+# TODO: Transfer ownership to legacysurvey group
 # TODO: Figure out a better way to do things than returning None and HTTP errors
 # TODO: Make drawing look better by sampling larger and downscaling?
     # https://stackoverflow.com/questions/16640338/python3-pil-pillow-draw-pieslice-bad-arc
-# TODO: Have backwards and forwards arrow to navigate through user's history
 # TODO: Have a counter to show how far through the set the user is...
 # TODO: Cleanup, comment, and add docstrings (use functools wraps for any annotations)
     # Particularly in /lslga_inspect/user.py
 # Investigate requirements file options
     # conda env export > environment.yml, conda env create -f environment.yml (see conda docs)
     # https://tdhopper.com/blog/my-python-environment-workflow-with-conda/
-# TODO: Complete the meta-TODO in the heading (that makes this TODO a meta-meta-TODO)
-    # TODO: Continue making increasingly meta TODOs until someone finds out and gets angry
