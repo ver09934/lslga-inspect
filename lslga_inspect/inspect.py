@@ -69,8 +69,8 @@ def inspect_galaxy(catalog_raw, galaxy_id):
                 )
             else:
                 db.execute(
-                    "INSERT INTO inspection (user_id, lslga_id, quality, feedback) VALUES (?, ?, ?, ?)",
-                    (g.user['id'], galaxy_id, request.form['quality'], None if request.form['feedback'] == '' else request.form['feedback'])
+                    "INSERT INTO inspection (user_id, lslga_id, quality, feedback, subset) VALUES (?, ?, ?, ?, ?)",
+                    (g.user['id'], galaxy_id, request.form['quality'], None if request.form['feedback'] == '' else request.form['feedback'], catalog_raw)
                 )
 
             db.commit()
