@@ -24,7 +24,9 @@
                 <mytag style="color: #707070; text-decoration: underline;">[Prev]</mytag>
             {% endif %}
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            {% if next_id is not none %}
+            {% if next_id == 'new' %}
+                <a href="/inspect/{{ catalog_raw }}">[Next]</a>
+            {% elif next_id is not none %}
                 <a href="/inspect/{{ catalog_raw }}/{{ next_id }}">[Next]</a>
             {% else %}
                 <mytag style="color: #707070; text-decoration: underline;">[Next]</mytag>

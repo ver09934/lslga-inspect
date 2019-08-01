@@ -140,7 +140,10 @@ def inspect_galaxy(catalog_raw, galaxy_id):
                 prev_id = sorted_inspections[index - 1]
             else:
                 prev_id = None
-            if index < len(sorted_inspections) - 1:
+
+            if index == len(sorted_inspections) - 1:
+                next_id = 'new'
+            elif index < len(sorted_inspections) - 1:
                 next_id = sorted_inspections[index + 1]
             else:
                 next_id = None
