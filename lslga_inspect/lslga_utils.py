@@ -226,7 +226,7 @@ def draw_scalebar(img, pixscale, fontsize=14, try_arcmin=False):
     # sans_font = ImageFont.truetype(font="FreeSans", size=14)
     # serif_font = ImageFont.truetype(font="FreeSerif", size=14)
 
-    scale_label_font = ImageFont.truetype(font="FreeMono", size=fontsize)
+    scale_label_font = ImageFont.truetype(font="FreeMono.ttf", size=fontsize)
 
     scale_label_width, scale_label_height = draw.textsize(scale_label, font=scale_label_font)
     scale_label_digits_width, _ = draw.textsize(scale_label_digits, font=scale_label_font)
@@ -255,7 +255,7 @@ def draw_galaxyname(img, galaxy_name, fontsize=14):
 
     galaxy_label = galaxy_name
     galaxy_label_offset = 15
-    galaxy_label_font = ImageFont.truetype(font="FreeSerif", size=fontsize)
+    galaxy_label_font = ImageFont.truetype(font="FreeSerif.ttf", size=fontsize)
 
     draw.text(
         (galaxy_label_offset, galaxy_label_offset),
@@ -269,7 +269,7 @@ def draw_annotation(img, annotation, fontsize=14):
     draw = ImageDraw.ImageDraw(img)
     width, _ = img.size
 
-    annotation_font = ImageFont.truetype(font="FreeSerif", size=fontsize)
+    annotation_font = ImageFont.truetype(font="FreeSerif.ttf", size=fontsize)
     annotation_width, _ = draw.textsize(annotation, font=annotation_font)
     annotation_offset = 15
 
