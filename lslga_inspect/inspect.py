@@ -90,13 +90,20 @@ def inspect_galaxy(catalog_raw, galaxy_id):
         "&lslga"
     ).format(galaxy_info['RA'], galaxy_info['DEC'])
 
-    inspection_options = {
-        'good': 'Good',
-        'bad-ellipse': 'Ellipse wrong size/shape/position',
-        'spurious-src': 'Spurious source (star/smaller galaxy)',
-        'lsb-resolved': 'Resolved, low surface brightness galaxy',
-        'bad-mask': 'Galaxy masked too aggressively by pipeline'
-    }
+    # TODO: Iterate over all questions
+    # TODO: Will need to figure out how to migrate old DB into this one...
+    inspection_questions = [
+        {
+            'good': 'Good',
+            'bad-ellipse': 'Ellipse wrong size/shape/position',
+            'spurious-src': 'Spurious source (star/smaller galaxy)',
+            'lsb-resolved': 'Resolved, low surface brightness galaxy',
+            'bad-mask': 'Galaxy masked too aggressively by pipeline'
+        },
+        {
+            'tmp': 'tmp',
+        }
+    ]
 
     db = get_db()
 
