@@ -125,6 +125,12 @@ def render_galaxy_img(
         "&height={:.0f}"
     ).format(RA, DEC, layer, pixscale, img_width, img_height)
 
+    if draw_ellipse:
+        url += "&lslga"
+        url += "&lslgawidth={0:.0f}".format(ellipse_width)
+
+    # print(("\n"*3 + "{}" + "\n"*3).format(url))
+
     r = requests.get(url)
 
     # NOTE: Returns None if error opening image or image is solid color
@@ -135,26 +141,6 @@ def render_galaxy_img(
     ext = img.convert('L').getextrema()
     if ext[0] == ext[1]:
         return None
-
-    overlay_width = int(np.round(minor_axis_pix, 0))
-    overlay_height = int(np.round(major_axis_pix, 0))
-
-    overlay = Image.new('RGBA', (overlay_width, overlay_height))
-    draw = ImageDraw.ImageDraw(overlay)
-    box_corners = (0, 0, overlay_width, overlay_height)
-    draw.ellipse(box_corners, fill=None, outline=(0, 0, 255), width=ellipse_width)
-
-    # Need expand=True, or else the overlay gets clipped when rotating
-    rotated = overlay.rotate(PA, expand=True)
-
-    rotated_width = rotated.size[0]
-    rotated_height = rotated.size[1]
-
-    paste_shift_x = int(np.round(img_width/2 - rotated_width/2, 0))
-    paste_shift_y = int(np.round(img_height/2 - rotated_height/2, 0))
-
-    if draw_ellipse:
-        img.paste(rotated, (paste_shift_x, paste_shift_y), rotated)
 
     return img, pixscale
 
