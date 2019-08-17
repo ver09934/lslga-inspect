@@ -24,4 +24,30 @@ $ flask init-db
 $ flask run
 ```
 
-<!--- ## Running (Production) --->
+## Running (Production)
+The application can be run using `apache2` with `mod_wsgi`. On Ubuntu/Debian systems, the neccesary packages can be installed by running
+```bash
+$ sudo apt install apache2 libapache2-mod-wsgi-py3
+```
+
+<!--- Is `apache2-dev` needed? --->
+
+An example virtualhost file (using a virtual environment) is shown below.
+```apache
+<VirtualHost *:80>
+    ServerName example.com
+    # Don't include the python-home option if packages are installed globally
+    WSGIDaemonProcess lslga_inspect python-home=/path/to/venv
+    WSGIScriptAlias / /path/to/lslga-inspect/lslga_inspect.wsgi
+    <Directory /path/to/lslga-inspect>
+        WSGIProcessGroup lslga_inspect
+        WSGIApplicationGroup %{GLOBAL}
+        Require all granted
+        Order deny,allow
+        Allow from all
+    </Directory>
+    LogLevel warn
+    ErrorLog ${APACHE_LOG_DIR}/lslga-error.log
+    CustomLog ${APACHE_LOG_DIR}/lslga-access.log combined
+</VirtualHost>
+```
