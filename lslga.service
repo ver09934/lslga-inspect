@@ -1,0 +1,14 @@
+[Unit]
+Description=LSLGA Inspector
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/bin/bash /home/admin/lslga-inspect/startup.sh
+
+[Install]
+WantedBy=multi-user.target
+
